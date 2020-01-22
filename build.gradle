@@ -6,6 +6,7 @@ plugins {
 }
 
 version = "${project_version}" + getBuildNumber() + (isSnapshot() ? "-snapshot" : '')
+description = 'A library for Diluv\'s databases.'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -99,8 +100,9 @@ uploadArchives {
 
             pom.project {
 
-                name 'Confluencia'
+                name "${archivesBaseName}"
                 packaging 'jar'
+                description project.description
                 url 'https://github.com/Diluv/Confluencia'
 
                 scm {
