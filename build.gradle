@@ -94,10 +94,12 @@ nexusPublishing {
     }
 }
 
-nexusStaging {
-    stagingProfileId = '1282c5e0d73bd2'
-    username = System.getenv("OSSRH_USERNAME")
-    password = System.getenv("OSSRH_PASSWORD")
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from(components.java)
+        }
+    }
 }
 
 static String getBuildNumber() {
