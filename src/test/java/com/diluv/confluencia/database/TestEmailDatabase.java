@@ -8,6 +8,12 @@ import com.diluv.confluencia.ConfluenciaTest;
 public class TestEmailDatabase extends ConfluenciaTest {
 
     @Test
+    public void insertDomainBlacklist () {
+
+        Assert.assertTrue(ConfluenciaTest.EMAIL.insertDomainBlacklist(new String[]{"blacklisted2.com"}));
+    }
+
+    @Test
     public void existsBlacklist () {
 
         // Allowed

@@ -9,7 +9,25 @@ import com.diluv.confluencia.database.dao.EmailDAO;
 import com.diluv.confluencia.utils.SQLHandler;
 
 public class EmailDatabase implements EmailDAO {
+    private static final String INSERT_DOMAIN_BLACKLIST = SQLHandler.readFile("email/insertDomainBlacklist");
     private static final String EXISTS_BLACKLIST = SQLHandler.readFile("email/existsBlacklist");
+
+    @Override
+    public boolean insertDomainBlacklist (String[] domains) {
+
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(INSERT_DOMAIN_BLACKLIST)) {
+            for (String domain : domains) {
+                stmt.setString(1, domain);
+                stmt.addBatch();
+            }
+            stmt.executeLargeBatch();
+            return true;
+        }
+        catch (SQLException e) {
+            Confluencia.LOGGER.error("Failed to insert email domain blacklist {}.", e);
+        }
+        return false;
+    }
 
     @Override
     public boolean existsBlacklist (String email, String domain) {
