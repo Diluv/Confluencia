@@ -1,8 +1,8 @@
 plugins {
     id 'java'
-    id 'maven'
     id 'signing'
     id 'io.codearte.nexus-staging' version '0.21.2'
+    id "de.marcphilipp.nexus-publish" version "0.3.0"
 }
 
 version = "${project_version}" + getBuildNumber() + (isSnapshot() ? "-snapshot" : '')
@@ -85,47 +85,11 @@ tasks.withType(Sign) {
     onlyIf { !isSnapshot() }
 }
 
-uploadArchives {
+nexusPublishing {
     repositories {
-        mavenDeployer {
-            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-
-            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2") {
-                authentication(userName: System.getenv("OSSRH_USERNAME"), password: System.getenv("OSSRH_PASSWORD"))
-            }
-
-            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-                authentication(userName: System.getenv("OSSRH_USERNAME"), password: System.getenv("OSSRH_PASSWORD"))
-            }
-
-            pom.project {
-
-                name "${archivesBaseName}"
-                packaging 'jar'
-                description project.description
-                url 'https://github.com/Diluv/Confluencia'
-
-                scm {
-                    connection 'scm:git:git://github.com/Diluv/Confluencia.git'
-                    developerConnection 'scm:git:ssh://github.com/Diluv/Confluencia.git'
-                    url 'https://github.com/Diluv/Confluencia'
-                }
-
-                licenses {
-                    license {
-                        name 'GNU Lesser General Public License v2.1'
-                        url 'https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html'
-                    }
-                }
-
-                developers {
-                    developer {
-                        id 'lclc98'
-                        name 'lclc98'
-                        email 'lclc98@lclc98.com'
-                    }
-                }
-            }
+        sonatype {
+            username = System.getenv("OSSRH_USERNAME")
+            password = System.getenv("OSSRH_PASSWORD")
         }
     }
 }

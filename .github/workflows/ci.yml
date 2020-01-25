@@ -41,7 +41,7 @@ jobs:
 
       - name: Release Build
         if: startsWith(github.ref, 'refs/tags/v')
-        run: ./gradlew uploadArchives && ./gradlew closeAndReleaseRepository
+        run: ./gradlew publishToSonatype closeAndReleaseRepository
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
