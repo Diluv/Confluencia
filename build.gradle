@@ -78,7 +78,7 @@ gradle.taskGraph.whenReady { taskGraph ->
 
 signing {
     useGpgCmd()
-    sign configurations.archives
+    sign publishing.publications
 }
 
 tasks.withType(Sign) {
@@ -97,9 +97,45 @@ nexusPublishing {
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            from(components.java)
+            group = project.group
+            artifactId = project.name
+            version = project.version
+
+            from components.java
+
+            pom {
+                name = project.name
+                description = project.description
+                url = 'https://github.com/Diluv/Confluencia'
+
+                scm {
+                    connection = 'scm:git:git://github.com/Diluv/Confluencia.git'
+                    developerConnection = 'scm:git:ssh://github.com/Diluv/Confluencia.git'
+                    url = 'https://github.com/Diluv/Confluencia'
+                }
+
+                licenses {
+                    license {
+                        name = 'GNU Lesser General Public License v2.1'
+                        url = 'https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = 'lclc98'
+                        name = 'lclc98'
+                        email = 'lclc98@lclc98.com'
+                    }
+                }
+            }
         }
     }
+}
+
+nexusStaging {
+    username = System.getenv("OSSRH_USERNAME")
+    password = System.getenv("OSSRH_PASSWORD")
 }
 
 static String getBuildNumber() {
