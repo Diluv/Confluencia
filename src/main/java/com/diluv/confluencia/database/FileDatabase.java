@@ -10,7 +10,7 @@ import java.util.List;
 import com.diluv.confluencia.Confluencia;
 import com.diluv.confluencia.database.dao.FileDAO;
 import com.diluv.confluencia.database.record.ProjectFileRecord;
-import com.diluv.confluencia.database.records.FileQueueRecord;
+import com.diluv.confluencia.database.record.FileQueueRecord;
 import com.diluv.confluencia.utils.SQLHandler;
 
 public class FileDatabase implements FileDAO {

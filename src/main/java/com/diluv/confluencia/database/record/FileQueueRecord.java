@@ -1,4 +1,4 @@
-package com.diluv.confluencia.database.records;
+package com.diluv.confluencia.database.record;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

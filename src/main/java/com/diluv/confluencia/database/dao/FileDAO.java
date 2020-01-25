@@ -4,7 +4,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import com.diluv.confluencia.database.record.ProjectFileRecord;
-import com.diluv.confluencia.database.records.FileQueueRecord;
+import com.diluv.confluencia.database.record.FileQueueRecord;
 
 
 public interface FileDAO {
