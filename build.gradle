@@ -85,6 +85,12 @@ tasks.withType(Sign) {
     onlyIf { !isSnapshot() }
 }
 
+nexusStaging {
+    packageGroup = 'com.diluv'
+    numberOfRetries = 20
+    delayBetweenRetriesInMillis = 3000
+}
+
 nexusPublishing {
     repositories {
         sonatype {
@@ -102,6 +108,8 @@ publishing {
             version = project.version
 
             from components.java
+            artifact sourcesJar
+            artifact javadocJar
 
             pom {
                 name = project.name
