@@ -1,18 +1,13 @@
 package com.diluv.confluencia.util;
 
-import java.io.File;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import org.apache.commons.io.FileUtils;
-
 import com.diluv.confluencia.Confluencia;
 import com.diluv.confluencia.utils.SQLHandler;
-
-import org.apache.commons.io.IOUtils;
 
 public final class TestSQLHandler {
 
@@ -26,7 +21,14 @@ public final class TestSQLHandler {
             InputStream stream = SQLHandler.class.getClassLoader().getResourceAsStream("db/insert/" + filename + ".sql");
             if (stream == null)
                 throw new IOException();
-            return IOUtils.toString(stream, Charset.defaultCharset());
+
+            ByteArrayOutputStream result = new ByteArrayOutputStream();
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = stream.read(buffer)) != -1) {
+                result.write(buffer, 0, length);
+            }
+            return result.toString("UTF-8");
         }
         catch (final IOException e) {
             e.printStackTrace();
