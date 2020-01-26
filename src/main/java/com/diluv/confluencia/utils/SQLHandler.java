@@ -3,11 +3,6 @@ package com.diluv.confluencia.utils;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
-
-import javax.annotation.Nullable;
-
-import org.apache.commons.io.IOUtils;
 
 import com.diluv.confluencia.Confluencia;
 
