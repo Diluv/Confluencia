@@ -5,7 +5,7 @@ plugins {
     id "de.marcphilipp.nexus-publish" version "0.4.0"
 }
 
-version = "${project_version}" + getBuildNumber() + (isSnapshot() ? "-snapshot" : '')
+version = "${project_version}" + (isSnapshot() ? '.' + getBuildNumber() : '')
 description = 'A library for Diluv\'s databases.'
 
 sourceCompatibility = 1.8
