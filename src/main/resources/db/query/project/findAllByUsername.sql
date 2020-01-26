@@ -9,7 +9,7 @@ SELECT p.name,
        p.project_type_slug,
        p.released,
        p.reviewed,
-       u.username as username
+       p.user_id
 FROM projects p,
      games g,
      users u

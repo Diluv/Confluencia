@@ -15,7 +15,6 @@ public class ProjectFileRecord {
     private long projectId;
     private long userId;
 
-
     public ProjectFileRecord () {
 
     }

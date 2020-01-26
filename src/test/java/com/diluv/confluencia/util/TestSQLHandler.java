@@ -2,6 +2,7 @@ package com.diluv.confluencia.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -10,6 +11,8 @@ import org.apache.commons.io.FileUtils;
 
 import com.diluv.confluencia.Confluencia;
 import com.diluv.confluencia.utils.SQLHandler;
+
+import org.apache.commons.io.IOUtils;
 
 public final class TestSQLHandler {
 
@@ -20,8 +23,10 @@ public final class TestSQLHandler {
     public static String readFile (String filename) {
 
         try {
-            final File f = new File(SQLHandler.class.getClassLoader().getResource("db/insert/" + filename + ".sql").getFile());
-            return FileUtils.readFileToString(f, Charset.defaultCharset());
+            InputStream stream = SQLHandler.class.getClassLoader().getResourceAsStream("db/insert/" + filename + ".sql");
+            if (stream == null)
+                throw new IOException();
+            return IOUtils.toString(stream, Charset.defaultCharset());
         }
         catch (final IOException e) {
             e.printStackTrace();

@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class ProjectRecord {
+
     private String name;
     private String slug;
     private String summary;
@@ -15,6 +16,7 @@ public class ProjectRecord {
     private String projectTypeSlug;
     private boolean released;
     private boolean reviewed;
+    private long userId;
 
     public ProjectRecord (ResultSet rs) throws SQLException {
 
@@ -29,6 +31,23 @@ public class ProjectRecord {
         this.projectTypeSlug = rs.getString("project_type_slug");
         this.reviewed = rs.getBoolean("reviewed");
         this.released = rs.getBoolean("released");
+        this.userId = rs.getLong("user_id");
+    }
+
+    public ProjectRecord (String name, String slug, String summary, String description, long cachedDownloads, long createdAt, long updatedAt, String gameSlug, String projectTypeSlug, boolean released, boolean reviewed, long userId) {
+
+        this.name = name;
+        this.slug = slug;
+        this.summary = summary;
+        this.description = description;
+        this.cachedDownloads = cachedDownloads;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.gameSlug = gameSlug;
+        this.projectTypeSlug = projectTypeSlug;
+        this.released = released;
+        this.reviewed = reviewed;
+        this.userId = userId;
     }
 
     public String getName () {
@@ -84,5 +103,10 @@ public class ProjectRecord {
     public boolean isReviewed () {
 
         return this.reviewed;
+    }
+
+    public long getUserId () {
+
+        return this.userId;
     }
 }
