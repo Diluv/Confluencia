@@ -9,8 +9,8 @@ import java.util.List;
 
 import com.diluv.confluencia.Confluencia;
 import com.diluv.confluencia.database.dao.FileDAO;
-import com.diluv.confluencia.database.record.ProjectFileRecord;
 import com.diluv.confluencia.database.record.FileQueueRecord;
+import com.diluv.confluencia.database.record.ProjectFileRecord;
 import com.diluv.confluencia.utils.SQLHandler;
 
 public class FileDatabase implements FileDAO {
@@ -19,6 +19,7 @@ public class FileDatabase implements FileDAO {
     private static final String UPDATE_STATUS_BY_ID = SQLHandler.readFile("file_queue/updateStatusById");
 
     private static final String FIND_ALL_PROJECTFILES_BY_GAMESLUG_AND_PROJECTYPESLUG_AND_PROJECTSLUG = SQLHandler.readFile("project_files/findAllByGameSlugAndProjectTypeAndProjectSlug");
+    private static final String INSERT_PROJECT_FILE_QUEUE = SQLHandler.readFile("project_files/insertProjectFileQueue");
 
     @Override
     public List<FileQueueRecord> findAllWherePending (int amount) {
@@ -104,5 +105,34 @@ public class FileDatabase implements FileDAO {
             e.printStackTrace();
         }
         return projects;
+    }
+
+    @Override
+    public Long insertProjectFileQueue (String name, String changelog, long projectId, long userId) {
+
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(INSERT_PROJECT_FILE_QUEUE, new String[]{"id"})) {
+            stmt.setString(1, name);
+            stmt.setString(2, changelog);
+            stmt.setLong(3, projectId);
+            stmt.setLong(4, userId);
+
+            int affectedRows = stmt.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Creating project file failed, no rows affected.");
+            }
+
+            try (ResultSet rs = stmt.getGeneratedKeys()) {
+                if (rs.next()) {
+                    return rs.getLong(1);
+                }
+                else {
+                    throw new SQLException("Creating project file failed, no ID obtained.");
+                }
+            }
+        }
+        catch (SQLException e) {
+            Confluencia.LOGGER.error("Failed to insert project file queue {}.", e);
+        }
+        return null;
     }
 }

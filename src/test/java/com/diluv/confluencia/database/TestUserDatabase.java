@@ -38,12 +38,12 @@ public class TestUserDatabase extends ConfluenciaTest {
     public void insertUser () {
 
         // Duplicate
-        Assert.assertFalse(ConfluenciaTest.USER.insertUser("test4@example.com", "test", "","", new Timestamp(System.currentTimeMillis())));
-        Assert.assertFalse(ConfluenciaTest.USER.insertUser("test@example.com", "test4", "","", new Timestamp(System.currentTimeMillis())));
-        Assert.assertFalse(ConfluenciaTest.USER.insertUser("test@example.com", "test", "","", new Timestamp(System.currentTimeMillis())));
+        Assert.assertFalse(ConfluenciaTest.USER.insertUser("test4@example.com", "test", "", "", new Timestamp(System.currentTimeMillis())));
+        Assert.assertFalse(ConfluenciaTest.USER.insertUser("test@example.com", "test4", "", "", new Timestamp(System.currentTimeMillis())));
+        Assert.assertFalse(ConfluenciaTest.USER.insertUser("test@example.com", "test", "", "", new Timestamp(System.currentTimeMillis())));
 
         // Valid
-        Assert.assertTrue(ConfluenciaTest.USER.insertUser("test4@example.com", "test4", "","", new Timestamp(System.currentTimeMillis())));
+        Assert.assertTrue(ConfluenciaTest.USER.insertUser("test4@example.com", "test4", "", "", new Timestamp(System.currentTimeMillis())));
     }
 
     @Test
