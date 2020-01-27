@@ -1,4 +1,5 @@
-SELECT pf.name,
+SELECT pf.id,
+       pf.name,
        pf.sha512,
        pf.size,
        pf.changelog,
@@ -9,7 +10,8 @@ SELECT pf.name,
        pf.user_id
 FROM project_files pf,
      projects p
-WHERE pf.id = p.id
+WHERE pf.released = TRUE
+  AND pf.project_id = p.id
   AND p.game_slug = ?
   AND p.project_type_slug = ?
   AND p.slug = ?

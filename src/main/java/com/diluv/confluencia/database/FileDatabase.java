@@ -9,7 +9,7 @@ import java.util.List;
 
 import com.diluv.confluencia.Confluencia;
 import com.diluv.confluencia.database.dao.FileDAO;
-import com.diluv.confluencia.database.record.FileQueueRecord;
+import com.diluv.confluencia.database.record.ProjectFileQueueRecord;
 import com.diluv.confluencia.database.record.ProjectFileRecord;
 import com.diluv.confluencia.utils.SQLHandler;
 
@@ -22,14 +22,14 @@ public class FileDatabase implements FileDAO {
     private static final String INSERT_PROJECT_FILE_QUEUE = SQLHandler.readFile("project_files/insertProjectFileQueue");
 
     @Override
-    public List<FileQueueRecord> findAllWherePending (int amount) {
+    public List<ProjectFileQueueRecord> findAllWherePending (int amount) {
 
-        final List<FileQueueRecord> fileQueueRecord = new ArrayList<>();
+        final List<ProjectFileQueueRecord> fileQueueRecord = new ArrayList<>();
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL_WHERE_PENDING)) {
             stmt.setInt(1, amount);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    fileQueueRecord.add(new FileQueueRecord(rs));
+                    fileQueueRecord.add(new ProjectFileQueueRecord(rs));
                 }
             }
         }
@@ -56,9 +56,9 @@ public class FileDatabase implements FileDAO {
     }
 
     @Override
-    public List<FileQueueRecord> getLatestFileQueueRecord (int amount) throws SQLException {
+    public List<ProjectFileQueueRecord> getLatestFileQueueRecord (int amount) throws SQLException {
 
-        List<FileQueueRecord> fileQueueRecord;
+        List<ProjectFileQueueRecord> fileQueueRecord;
         final Connection connection = Confluencia.connection();
         final int previousIsolationLevel = connection.getTransactionIsolation();
         try {
@@ -71,7 +71,7 @@ public class FileDatabase implements FileDAO {
                 return fileQueueRecord;
             }
 
-            final Long[] idList = fileQueueRecord.stream().map(FileQueueRecord::getId).toArray(Long[]::new);
+            final Long[] idList = fileQueueRecord.stream().map(ProjectFileQueueRecord::getId).toArray(Long[]::new);
             for (final Long id : idList) {
                 if (!this.updateFileQueueStatusById(id)) {
                     // TODO didn't work but didnt throw an exception

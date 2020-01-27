@@ -3,15 +3,15 @@ package com.diluv.confluencia.database.record;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class FileQueueRecord {
-    private final long id;
-    private final String name;
-    private final String changelog;
-    private final long createdAt;
-    private final long projectId;
-    private final long userId;
+public class ProjectFileQueueRecord {
+    private long id;
+    private String name;
+    private String changelog;
+    private long createdAt;
+    private long projectId;
+    private long userId;
 
-    public FileQueueRecord (ResultSet rs) throws SQLException {
+    public ProjectFileQueueRecord (ResultSet rs) throws SQLException {
 
         this.id = rs.getLong("id");
         this.name = rs.getString("name");

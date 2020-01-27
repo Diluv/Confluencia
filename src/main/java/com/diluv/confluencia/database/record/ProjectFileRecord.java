@@ -2,18 +2,59 @@ package com.diluv.confluencia.database.record;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 
 public class ProjectFileRecord {
 
-    private String name;
-    private String sha512;
-    private long size;
-    private String changelog;
-    private long createdAt;
-    private long updatedAt;
-    private boolean released;
-    private long projectId;
-    private long userId;
+    /**
+     * An internally unique identifier for the file.
+     */
+    public long id;
+
+    /**
+     * The display name of the file.
+     */
+    public String name;
+
+    /**
+     * A SHA 512 hash of the file.
+     */
+    public String sha512;
+
+    /**
+     * The size of the file in bytes.
+     */
+    public long size;
+
+    /**
+     * The change log text for the file.
+     */
+    public String changelog;
+
+    /**
+     * The date the file was initially uploaded.
+     */
+    public long createdAt;
+
+    /**
+     * The date the file was last modified.
+     */
+    public long updatedAt;
+
+    /**
+     * Whether or not the file has been released.
+     */
+    public boolean released;
+
+    /**
+     * The id of the project that this file belongs to.
+     */
+    public long projectId;
+
+    /**
+     * The id of the user who uploaded the file.
+     */
+    public long userId;
 
     public ProjectFileRecord () {
 
@@ -21,6 +62,7 @@ public class ProjectFileRecord {
 
     public ProjectFileRecord (ResultSet rs) throws SQLException {
 
+        this.id = rs.getLong("id");
         this.name = rs.getString("name");
         this.sha512 = rs.getString("sha512");
         this.size = rs.getLong("size");
