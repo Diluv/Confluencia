@@ -5,6 +5,7 @@ import java.sql.SQLException;
 
 public class ProjectRecord {
 
+    private long id;
     private String name;
     private String slug;
     private String summary;
@@ -20,6 +21,7 @@ public class ProjectRecord {
 
     public ProjectRecord (ResultSet rs) throws SQLException {
 
+        this.id = rs.getLong("id");
         this.name = rs.getString("name");
         this.slug = rs.getString("slug");
         this.summary = rs.getString("summary");
@@ -34,8 +36,9 @@ public class ProjectRecord {
         this.userId = rs.getLong("user_id");
     }
 
-    public ProjectRecord (String name, String slug, String summary, String description, long cachedDownloads, long createdAt, long updatedAt, String gameSlug, String projectTypeSlug, boolean released, boolean reviewed, long userId) {
+    public ProjectRecord (long id, String name, String slug, String summary, String description, long cachedDownloads, long createdAt, long updatedAt, String gameSlug, String projectTypeSlug, boolean released, boolean reviewed, long userId) {
 
+        this.id = id;
         this.name = name;
         this.slug = slug;
         this.summary = summary;
@@ -48,6 +51,11 @@ public class ProjectRecord {
         this.released = released;
         this.reviewed = reviewed;
         this.userId = userId;
+    }
+
+    public long getId () {
+
+        return this.id;
     }
 
     public String getName () {

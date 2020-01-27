@@ -1,4 +1,5 @@
-SELECT p.name,
+SELECT p.id,
+       p.name,
        p.slug,
        p.summary,
        p.description,
