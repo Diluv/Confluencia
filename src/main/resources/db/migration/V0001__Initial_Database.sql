@@ -96,10 +96,12 @@ CREATE TABLE game_versions
 
 CREATE TABLE project_types
 (
-    game_slug VARCHAR(200) NOT NULL,
-    slug      VARCHAR(200) NOT NULL,
+    game_slug VARCHAR(200)    NOT NULL,
+    slug      VARCHAR(200)    NOT NULL,
 
-    name      VARCHAR(200) NOT NULL,
+    name      VARCHAR(200)    NOT NULL,
+
+    max_size  BIGINT UNSIGNED NOT NULL DEFAULT 5000000,
 
     PRIMARY KEY (game_slug, slug),
     FOREIGN KEY (game_slug) REFERENCES games (slug)
@@ -231,5 +233,5 @@ CREATE TABLE project_file_modloaders
 INSERT IGNORE INTO games(slug, name, url)
 VALUES ('minecraft', 'Minecraft', 'https://minecraft.net/');
 
-INSERT IGNORE INTO project_types(game_slug, slug, name)
-VALUES ('minecraft', 'mods', 'Mods')
+INSERT IGNORE INTO project_types(game_slug, slug, name, max_size)
+VALUES ('minecraft', 'mods', 'Mods', 25000000)

@@ -7,6 +7,7 @@ public class ProjectTypeRecord {
     private String slug;
     private String name;
     private String gameSlug;
+    private long maxSize;
 
     public ProjectTypeRecord () {
 
@@ -17,6 +18,7 @@ public class ProjectTypeRecord {
         this.slug = rs.getString("slug");
         this.name = rs.getString("name");
         this.gameSlug = rs.getString("game_slug");
+        this.maxSize = rs.getLong("max_size");
     }
 
     public String getSlug () {
@@ -32,5 +34,10 @@ public class ProjectTypeRecord {
     public String getGameSlug () {
 
         return this.gameSlug;
+    }
+
+    public long getMaxSize () {
+
+        return this.maxSize;
     }
 }
