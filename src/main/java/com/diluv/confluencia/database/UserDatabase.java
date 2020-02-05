@@ -14,13 +14,13 @@ import com.diluv.confluencia.utils.SQLHandler;
 
 public class UserDatabase implements UserDAO {
 
-    private static final String FIND_USERID_BY_EMAIL = SQLHandler.readFile("user/findUserIdByEmail");
-    private static final String FIND_USERID_BY_USERNAME = SQLHandler.readFile("user/findUserIdByUsername");
+    private static final String EXISTS_USER_BY_EMAIL = SQLHandler.readFile("user/existsUserByEmail");
+    private static final String EXISTS_USER_BY_USERNAME = SQLHandler.readFile("user/existsUserByUsername");
     private static final String FIND_USER_BY_USERNAME = SQLHandler.readFile("user/findUserByUsername");
     private static final String INSERT_USER = SQLHandler.readFile("user/insertUser");
 
-    private static final String EXIST_TEMPUSER_BY_EMAIL = SQLHandler.readFile("temp_user/existTempUserByEmail");
-    private static final String EXIST_TEMPUSER_BY_USERNAME = SQLHandler.readFile("temp_user/existTempUserByUsername");
+    private static final String EXISTS_TEMPUSER_BY_EMAIL = SQLHandler.readFile("temp_user/existsTempUserByEmail");
+    private static final String EXISTS_TEMPUSER_BY_USERNAME = SQLHandler.readFile("temp_user/existsTempUserByUsername");
     private static final String INSERT_TEMPUSER = SQLHandler.readFile("temp_user/insertTempUser");
     private static final String FIND_TEMPUSER_BY_EMAIL_AND_USERNAME = SQLHandler.readFile("temp_user/findTempUserByEmailAndUsername");
     private static final String FIND_TEMPUSER_BY_EMAIL_AND_CODE = SQLHandler.readFile("temp_user/findTempUserByEmailAndCode");
@@ -31,39 +31,35 @@ public class UserDatabase implements UserDAO {
     private static final String DELETE_REFRESHTOKEN_BY_USERID_AND_CODE = SQLHandler.readFile("user_refresh/deleteRefreshTokenByUserIdAndCode");
 
     @Override
-    public Long findUserIdByEmail (String email) {
+    public boolean existsUserByEmail (String email) {
 
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_USERID_BY_EMAIL)) {
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(EXISTS_USER_BY_EMAIL)) {
             stmt.setString(1, email);
 
             try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getLong("id");
-                }
+                return rs.next();
             }
         }
         catch (SQLException e) {
             Confluencia.LOGGER.error("Failed to find user for email.", e);
         }
-        return null;
+        return false;
     }
 
     @Override
-    public Long findUserIdByUsername (String username) {
+    public boolean existsUserByUsername (String username) {
 
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_USERID_BY_USERNAME)) {
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(EXISTS_USER_BY_USERNAME)) {
             stmt.setString(1, username);
 
             try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getLong("id");
-                }
+                return rs.next();
             }
         }
         catch (SQLException e) {
             Confluencia.LOGGER.error("Failed to find user by username.");
         }
-        return null;
+        return false;
     }
 
     @Override
@@ -103,9 +99,9 @@ public class UserDatabase implements UserDAO {
     }
 
     @Override
-    public boolean existTempUserByEmail (String email) {
+    public boolean existsTempUserByEmail (String email) {
 
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(EXIST_TEMPUSER_BY_EMAIL)) {
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(EXISTS_TEMPUSER_BY_EMAIL)) {
             stmt.setString(1, email);
 
             try (ResultSet rs = stmt.executeQuery()) {
@@ -119,9 +115,9 @@ public class UserDatabase implements UserDAO {
     }
 
     @Override
-    public boolean existTempUserByUsername (String username) {
+    public boolean existsTempUserByUsername (String username) {
 
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(EXIST_TEMPUSER_BY_USERNAME)) {
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(EXISTS_TEMPUSER_BY_USERNAME)) {
             stmt.setString(1, username);
 
             try (ResultSet rs = stmt.executeQuery()) {

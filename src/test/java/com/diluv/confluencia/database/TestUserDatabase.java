@@ -10,19 +10,19 @@ import com.diluv.confluencia.ConfluenciaTest;
 public class TestUserDatabase extends ConfluenciaTest {
 
     @Test
-    public void findUserIdByEmail () {
+    public void existsUserByEmail () {
 
-        Assert.assertNull(ConfluenciaTest.USER.findUserIdByEmail("invalid@example.com"));
-        Assert.assertNotNull(ConfluenciaTest.USER.findUserIdByEmail("test@example.com"));
-        Assert.assertNotNull(ConfluenciaTest.USER.findUserIdByEmail("test2@example.com"));
+        Assert.assertFalse(ConfluenciaTest.USER.existsUserByEmail("invalid@example.com"));
+        Assert.assertTrue(ConfluenciaTest.USER.existsUserByEmail("test@example.com"));
+        Assert.assertTrue(ConfluenciaTest.USER.existsUserByEmail("test2@example.com"));
     }
 
     @Test
-    public void findUserIdByUsername () {
+    public void existsUserByUsername () {
 
-        Assert.assertNull(ConfluenciaTest.USER.findUserIdByUsername("invalid"));
-        Assert.assertNotNull(ConfluenciaTest.USER.findUserIdByUsername("test"));
-        Assert.assertNotNull(ConfluenciaTest.USER.findUserIdByUsername("test2"));
+        Assert.assertFalse(ConfluenciaTest.USER.existsUserByUsername("invalid"));
+        Assert.assertTrue(ConfluenciaTest.USER.existsUserByUsername("test"));
+        Assert.assertTrue(ConfluenciaTest.USER.existsUserByUsername("test2"));
     }
 
     @Test
@@ -47,19 +47,19 @@ public class TestUserDatabase extends ConfluenciaTest {
     }
 
     @Test
-    public void existTempUserByEmail () {
+    public void existsTempUserByEmail () {
 
-        Assert.assertFalse(ConfluenciaTest.USER.existTempUserByEmail("invalid@example.com"));
-        Assert.assertTrue(ConfluenciaTest.USER.existTempUserByEmail("tempuser@example.com"));
-        Assert.assertTrue(ConfluenciaTest.USER.existTempUserByEmail("tempuser2@example.com"));
+        Assert.assertFalse(ConfluenciaTest.USER.existsTempUserByEmail("invalid@example.com"));
+        Assert.assertTrue(ConfluenciaTest.USER.existsTempUserByEmail("tempuser@example.com"));
+        Assert.assertTrue(ConfluenciaTest.USER.existsTempUserByEmail("tempuser2@example.com"));
     }
 
     @Test
-    public void existTempUserByUsername () {
+    public void existsTempUserByUsername () {
 
-        Assert.assertFalse(ConfluenciaTest.USER.existTempUserByUsername("invalid"));
-        Assert.assertTrue(ConfluenciaTest.USER.existTempUserByUsername("tempuser"));
-        Assert.assertTrue(ConfluenciaTest.USER.existTempUserByUsername("tempuser2"));
+        Assert.assertFalse(ConfluenciaTest.USER.existsTempUserByUsername("invalid"));
+        Assert.assertTrue(ConfluenciaTest.USER.existsTempUserByUsername("tempuser"));
+        Assert.assertTrue(ConfluenciaTest.USER.existsTempUserByUsername("tempuser2"));
     }
 
     @Test

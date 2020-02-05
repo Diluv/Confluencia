@@ -8,17 +8,17 @@ import com.diluv.confluencia.database.record.UserRecord;
 
 public interface UserDAO {
 
-    Long findUserIdByEmail (String email);
+    boolean existsUserByEmail (String email);
 
-    Long findUserIdByUsername (String username);
+    boolean existsUserByUsername (String username);
 
     UserRecord findOneByUsername (String username);
 
     boolean insertUser (String email, String username, String password, String passwordType, Timestamp createdAt);
 
-    boolean existTempUserByEmail (String email);
+    boolean existsTempUserByEmail (String email);
 
-    boolean existTempUserByUsername (String username);
+    boolean existsTempUserByUsername (String username);
 
     boolean insertTempUser (String email, String username, String password, String passwordType, String verificationCode);
 
