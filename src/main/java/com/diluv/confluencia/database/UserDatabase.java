@@ -22,6 +22,7 @@ public class UserDatabase implements UserDAO {
     private static final String EXISTS_TEMPUSER_BY_EMAIL = SQLHandler.readFile("temp_user/existsTempUserByEmail");
     private static final String EXISTS_TEMPUSER_BY_USERNAME = SQLHandler.readFile("temp_user/existsTempUserByUsername");
     private static final String INSERT_TEMPUSER = SQLHandler.readFile("temp_user/insertTempUser");
+    private static final String UPDATE_TEMPUSER = SQLHandler.readFile("temp_user/updateTempUser");
     private static final String FIND_TEMPUSER_BY_EMAIL_AND_USERNAME = SQLHandler.readFile("temp_user/findTempUserByEmailAndUsername");
     private static final String FIND_TEMPUSER_BY_EMAIL_AND_CODE = SQLHandler.readFile("temp_user/findTempUserByEmailAndCode");
     private static final String DELETE_TEMPUSER = SQLHandler.readFile("temp_user/deleteTempUser");
@@ -139,6 +140,22 @@ public class UserDatabase implements UserDAO {
             stmt.setString(3, password);
             stmt.setString(4, passwordType);
             stmt.setString(5, verificationCode);
+
+            return stmt.executeUpdate() == 1;
+        }
+        catch (SQLException e) {
+            Confluencia.LOGGER.error("Failed to insertTempUser.", e);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean updateTempUser (String email, String username, String verificationCode) {
+
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(UPDATE_TEMPUSER)) {
+            stmt.setString(1, verificationCode);
+            stmt.setString(2, email);
+            stmt.setString(3, username);
 
             return stmt.executeUpdate() == 1;
         }

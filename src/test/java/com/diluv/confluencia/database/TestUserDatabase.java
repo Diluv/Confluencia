@@ -93,6 +93,13 @@ public class TestUserDatabase extends ConfluenciaTest {
         Assert.assertFalse(ConfluenciaTest.USER.deleteTempUser("invalid@example.com", "invalid"));
     }
 
+
+    @Test
+    public void updateTempUser () {
+
+        Assert.assertTrue(ConfluenciaTest.USER.updateTempUser("tempuser3@example.com", "tempuser3", "2d60b654-a41a-467b-b7ce-b453c7f4b365"));
+    }
+
     @Test
     public void findRefreshTokenByUserIdAndCode () {
 
