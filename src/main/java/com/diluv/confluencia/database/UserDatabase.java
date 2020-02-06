@@ -160,7 +160,7 @@ public class UserDatabase implements UserDAO {
             return stmt.executeUpdate() == 1;
         }
         catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to insertTempUser.", e);
+            Confluencia.LOGGER.error("Failed to updateTempUser.", e);
         }
         return false;
     }
