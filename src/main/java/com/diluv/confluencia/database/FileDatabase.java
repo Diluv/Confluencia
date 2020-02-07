@@ -12,15 +12,18 @@ import com.diluv.confluencia.database.dao.FileDAO;
 import com.diluv.confluencia.database.record.BaseProjectFileRecord;
 import com.diluv.confluencia.database.record.ProjectFileQueueRecord;
 import com.diluv.confluencia.database.record.ProjectFileRecord;
+import com.diluv.confluencia.database.record.UserRecord;
 import com.diluv.confluencia.utils.SQLHandler;
 
 public class FileDatabase implements FileDAO {
 
     private static final String FIND_X_WHERE_PENDING = SQLHandler.readFile("file_queue/findXWherePending");
     private static final String UPDATE_STATUS_BY_ID = SQLHandler.readFile("file_queue/updateStatusById");
+    private static final String FIND_ONE_PROJECT_FILE_QUEUE_BY_FILE_ID = SQLHandler.readFile("file_queue/findOneProjectFileQueueByFileId");
 
     private static final String FIND_ALL_PROJECTFILES_BY_GAMESLUG_AND_PROJECTYPESLUG_AND_PROJECTSLUG = SQLHandler.readFile("project_files/findAllByGameSlugAndProjectTypeAndProjectSlug");
     private static final String INSERT_PROJECT_FILE_QUEUE = SQLHandler.readFile("project_files/insertProjectFileQueue");
+
 
     @Override
     public List<ProjectFileQueueRecord> findAllWherePending (int amount) {
@@ -134,6 +137,24 @@ public class FileDatabase implements FileDAO {
         }
         catch (SQLException e) {
             Confluencia.LOGGER.error("Failed to insert project file queue {}.", e);
+        }
+        return null;
+    }
+
+    @Override
+    public ProjectFileQueueRecord findOneProjectFileQueueByFileId (long fileId) {
+
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ONE_PROJECT_FILE_QUEUE_BY_FILE_ID)) {
+            stmt.setLong(1, fileId);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return new ProjectFileQueueRecord(rs);
+                }
+            }
+        }
+        catch (SQLException e) {
+            Confluencia.LOGGER.error("Failed to find user by username.", e);
         }
         return null;
     }

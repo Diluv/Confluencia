@@ -43,4 +43,11 @@ public class TestFileDatabase extends ConfluenciaTest {
         Assert.assertNotNull(id);
         Assert.assertEquals(2L, id.longValue());
     }
+
+    @Test
+    public void findOneProjectFileQueueByFileId () {
+
+        Assert.assertNotNull(ConfluenciaTest.FILE.findOneProjectFileQueueByFileId(1));
+        Assert.assertNull(ConfluenciaTest.FILE.findOneProjectFileQueueByFileId(5));
+    }
 }

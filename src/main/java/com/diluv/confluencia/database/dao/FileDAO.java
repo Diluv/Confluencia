@@ -3,6 +3,7 @@ package com.diluv.confluencia.database.dao;
 import java.sql.SQLException;
 import java.util.List;
 
+import com.diluv.confluencia.database.record.BaseProjectFileRecord;
 import com.diluv.confluencia.database.record.ProjectFileQueueRecord;
 import com.diluv.confluencia.database.record.ProjectFileRecord;
 
@@ -16,4 +17,6 @@ public interface FileDAO {
     List<ProjectFileRecord> findAllProjectFilesByGameSlugAndProjectType (String gameSlug, String projectTypeSlug, String projectSlug);
 
     Long insertProjectFileQueue (String name, long size, String changelog, long projectId, long userId);
+
+    ProjectFileQueueRecord findOneProjectFileQueueByFileId (long fileId);
 }
