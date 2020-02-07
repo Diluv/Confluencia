@@ -1,11 +1,11 @@
 package com.diluv.confluencia.database;
 
+import java.sql.SQLException;
+
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
 import com.diluv.confluencia.ConfluenciaTest;
-
-import java.sql.SQLException;
 
 public class TestFileDatabase extends ConfluenciaTest {
 
@@ -23,6 +23,7 @@ public class TestFileDatabase extends ConfluenciaTest {
 
     @Test
     public void getLatestFileQueueRecord () throws SQLException {
+
         Assert.assertFalse(ConfluenciaTest.FILE.getLatestFileQueueRecord(5).isEmpty());
     }
 
@@ -38,7 +39,7 @@ public class TestFileDatabase extends ConfluenciaTest {
     @Test
     public void insertProjectFileQueue () {
 
-        Long id = ConfluenciaTest.FILE.insertProjectFileQueue("test.jar", "", 1, 1);
+        Long id = ConfluenciaTest.FILE.insertProjectFileQueue("test.jar", 10, "", 1, 1);
         Assert.assertNotNull(id);
         Assert.assertEquals(2L, id.longValue());
     }

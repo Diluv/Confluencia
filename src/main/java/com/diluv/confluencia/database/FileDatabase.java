@@ -9,13 +9,14 @@ import java.util.List;
 
 import com.diluv.confluencia.Confluencia;
 import com.diluv.confluencia.database.dao.FileDAO;
+import com.diluv.confluencia.database.record.BaseProjectFileRecord;
 import com.diluv.confluencia.database.record.ProjectFileQueueRecord;
 import com.diluv.confluencia.database.record.ProjectFileRecord;
 import com.diluv.confluencia.utils.SQLHandler;
 
 public class FileDatabase implements FileDAO {
 
-    private static final String FIND_ALL_WHERE_PENDING = SQLHandler.readFile("file_queue/findOneWherePending");
+    private static final String FIND_X_WHERE_PENDING = SQLHandler.readFile("file_queue/findXWherePending");
     private static final String UPDATE_STATUS_BY_ID = SQLHandler.readFile("file_queue/updateStatusById");
 
     private static final String FIND_ALL_PROJECTFILES_BY_GAMESLUG_AND_PROJECTYPESLUG_AND_PROJECTSLUG = SQLHandler.readFile("project_files/findAllByGameSlugAndProjectTypeAndProjectSlug");
@@ -25,7 +26,7 @@ public class FileDatabase implements FileDAO {
     public List<ProjectFileQueueRecord> findAllWherePending (int amount) {
 
         final List<ProjectFileQueueRecord> fileQueueRecord = new ArrayList<>();
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL_WHERE_PENDING)) {
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_X_WHERE_PENDING)) {
             stmt.setInt(1, amount);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
@@ -71,7 +72,7 @@ public class FileDatabase implements FileDAO {
                 return fileQueueRecord;
             }
 
-            final Long[] idList = fileQueueRecord.stream().map(ProjectFileQueueRecord::getId).toArray(Long[]::new);
+            final Long[] idList = fileQueueRecord.stream().map(BaseProjectFileRecord::getId).toArray(Long[]::new);
             for (final Long id : idList) {
                 if (!this.updateFileQueueStatusById(id)) {
                     // TODO didn't work but didnt throw an exception
@@ -108,13 +109,14 @@ public class FileDatabase implements FileDAO {
     }
 
     @Override
-    public Long insertProjectFileQueue (String name, String changelog, long projectId, long userId) {
+    public Long insertProjectFileQueue (String name, long size, String changelog, long projectId, long userId) {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(INSERT_PROJECT_FILE_QUEUE, new String[]{"id"})) {
             stmt.setString(1, name);
-            stmt.setString(2, changelog);
-            stmt.setLong(3, projectId);
-            stmt.setLong(4, userId);
+            stmt.setLong(2, size);
+            stmt.setString(3, changelog);
+            stmt.setLong(4, projectId);
+            stmt.setLong(5, userId);
 
             int affectedRows = stmt.executeUpdate();
             if (affectedRows == 0) {

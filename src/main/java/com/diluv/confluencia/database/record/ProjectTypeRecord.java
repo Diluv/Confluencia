@@ -4,14 +4,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class ProjectTypeRecord {
-    private String slug;
-    private String name;
-    private String gameSlug;
-    private long maxSize;
-
-    public ProjectTypeRecord () {
-
-    }
+    private final String slug;
+    private final String name;
+    private final String gameSlug;
+    private final long maxSize;
 
     public ProjectTypeRecord (ResultSet rs) throws SQLException {
 

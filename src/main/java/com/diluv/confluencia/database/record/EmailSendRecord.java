@@ -10,6 +10,7 @@ public class EmailSendRecord {
     private final long sentAt;
 
     public EmailSendRecord (ResultSet rs) throws SQLException {
+
         this.messageId = rs.getString("message_id");
         this.email = rs.getString("email");
         this.type = rs.getString("type");

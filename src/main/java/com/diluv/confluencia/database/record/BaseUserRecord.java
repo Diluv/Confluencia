@@ -2,19 +2,14 @@ package com.diluv.confluencia.database.record;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 
 public class BaseUserRecord {
-    private long id;
-    private String username;
-    private String email;
-    private String password;
-    private String passwordType;
-    private long createdAt;
-
-    protected BaseUserRecord () {
-
-    }
+    private final long id;
+    private final String username;
+    private final String email;
+    private final String password;
+    private final String passwordType;
+    private final long createdAt;
 
     protected BaseUserRecord (ResultSet rs) throws SQLException {
 
@@ -24,16 +19,6 @@ public class BaseUserRecord {
         this.password = rs.getString("password");
         this.passwordType = rs.getString("password_type");
         this.createdAt = rs.getTimestamp("created_at").getTime();
-    }
-
-    public BaseUserRecord (long id, String email, String username, String password, String passwordType, Timestamp createdAt) {
-
-        this.id = id;
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.passwordType = passwordType;
-        this.createdAt = createdAt.getTime();
     }
 
     public long getId () {

@@ -5,13 +5,9 @@ import java.sql.SQLException;
 
 public class RefreshTokenRecord {
 
-    private long userId;
-    private String code;
-    private long expiredAt;
-
-    public RefreshTokenRecord () {
-
-    }
+    private final long userId;
+    private final String code;
+    private final long expiredAt;
 
     public RefreshTokenRecord (ResultSet rs) throws SQLException {
 

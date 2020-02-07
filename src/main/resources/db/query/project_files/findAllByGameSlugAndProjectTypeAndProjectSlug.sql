@@ -7,11 +7,14 @@ SELECT pf.id,
        pf.updated_at,
        pf.released,
        pf.project_id,
-       pf.user_id
+       pf.user_id,
+       u.username as username
 FROM project_files pf,
-     projects p
+     projects p,
+     users u
 WHERE pf.released = TRUE
   AND pf.project_id = p.id
+  AND u.id = pf.user_id
   AND p.game_slug = ?
   AND p.project_type_slug = ?
   AND p.slug = ?

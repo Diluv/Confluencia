@@ -6,7 +6,6 @@ import java.util.List;
 import com.diluv.confluencia.database.record.ProjectFileQueueRecord;
 import com.diluv.confluencia.database.record.ProjectFileRecord;
 
-
 public interface FileDAO {
     List<ProjectFileQueueRecord> findAllWherePending (int amount);
 
@@ -16,5 +15,5 @@ public interface FileDAO {
 
     List<ProjectFileRecord> findAllProjectFilesByGameSlugAndProjectType (String gameSlug, String projectTypeSlug, String projectSlug);
 
-    Long insertProjectFileQueue (String name, String changelog, long projectId, long userId);
+    Long insertProjectFileQueue (String name, long size, String changelog, long projectId, long userId);
 }

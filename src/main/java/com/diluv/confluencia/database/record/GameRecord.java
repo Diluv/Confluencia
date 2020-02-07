@@ -4,13 +4,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class GameRecord {
-    private String slug;
-    private String name;
-    private String url;
-
-    public GameRecord () {
-
-    }
+    private final String slug;
+    private final String name;
+    private final String url;
 
     public GameRecord (ResultSet rs) throws SQLException {
 

@@ -173,6 +173,7 @@ CREATE TABLE project_file_queue
 
     name               VARCHAR(255)    NOT NULL,
 
+    size               BIGINT UNSIGNED NOT NULL,
     changelog          TEXT            NOT NULL,
     created_at         TIMESTAMP       NOT NULL             DEFAULT NOW(),
 

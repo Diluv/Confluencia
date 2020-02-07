@@ -8,5 +8,5 @@ VALUES (2, 'ProjectFile2.jar',
         '5E96A9A98839D073C298BBD0AC73A510E1F13A64151E2C4895440ECDBCD6D483EDA994D2CD5E69C5C00A96783280F7BC1E933667B4A25C53CE3918007D5C77E3',
         101, 'Project file changelog', NOW(), NOW(), 0, 1, 1);
 
-INSERT INTO project_file_queue(name, changelog, project_id, user_id)
-VALUES ('ProjectFile.jar', 'Changing', 1, 1)
+INSERT INTO project_file_queue(name, size, changelog, project_id, user_id)
+VALUES ('ProjectFile.jar', 1000, 'Changing', 1, 1)

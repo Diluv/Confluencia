@@ -5,19 +5,19 @@ import java.sql.SQLException;
 
 public class ProjectRecord {
 
-    private long id;
-    private String name;
-    private String slug;
-    private String summary;
-    private String description;
-    private long cachedDownloads;
-    private long createdAt;
-    private long updatedAt;
-    private String gameSlug;
-    private String projectTypeSlug;
-    private boolean released;
-    private boolean reviewed;
-    private long userId;
+    private final long id;
+    private final String name;
+    private final String slug;
+    private final String summary;
+    private final String description;
+    private final long cachedDownloads;
+    private final long createdAt;
+    private final long updatedAt;
+    private final String gameSlug;
+    private final String projectTypeSlug;
+    private final boolean released;
+    private final boolean reviewed;
+    private final long userId;
 
     public ProjectRecord (ResultSet rs) throws SQLException {
 
