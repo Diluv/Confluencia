@@ -154,7 +154,7 @@ public class FileDatabase implements FileDAO {
             }
         }
         catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to find user by username.", e);
+            Confluencia.LOGGER.error("Failed to project file queue by id.", e);
         }
         return null;
     }
