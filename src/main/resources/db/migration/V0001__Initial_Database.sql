@@ -114,7 +114,7 @@ CREATE TABLE projects
     name              VARCHAR(255)    NOT NULL,
     slug              VARCHAR(255)    NOT NULL,
     summary           VARCHAR(255)    NOT NULL,
-    description       VARCHAR(255)    NOT NULL,
+    description       TEXT            NOT NULL,
     cached_downloads  BIGINT UNSIGNED NOT NULL DEFAULT 0,
 
     reviewed          BOOL                     DEFAULT FALSE,
