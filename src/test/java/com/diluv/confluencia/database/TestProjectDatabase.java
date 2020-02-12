@@ -44,7 +44,7 @@ public class TestProjectDatabase extends ConfluenciaTest {
 
         Assert.assertEquals(0, ConfluenciaTest.PROJECT.findAllProjectsByGameSlugAndProjectType("invalid", "invalid").size());
         Assert.assertEquals(0, ConfluenciaTest.PROJECT.findAllProjectsByGameSlugAndProjectType("minecraft", "invalid").size());
-        Assert.assertEquals(3, ConfluenciaTest.PROJECT.findAllProjectsByGameSlugAndProjectType("minecraft", "mods").size());
+        Assert.assertEquals(1, ConfluenciaTest.PROJECT.findAllProjectsByGameSlugAndProjectType("minecraft", "mods").size());
     }
 
     @Test
@@ -60,7 +60,6 @@ public class TestProjectDatabase extends ConfluenciaTest {
     @Test
     public void insertProject () {
 
-        // Allowed
         Assert.assertTrue(ConfluenciaTest.PROJECT.insertProject("project_insert", "Insert", "Insert Summary", "Insert Description", 3, "minecraft", "mods"));
     }
 }
