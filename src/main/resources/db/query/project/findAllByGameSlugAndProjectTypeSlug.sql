@@ -14,7 +14,8 @@ SELECT p.id,
 FROM projects p,
      games g,
      users u
-WHERE p.user_id = u.id
+WHERE p.released = TRUE
+  AND p.user_id = u.id
   AND p.game_slug = ?
   AND p.project_type_slug = ?
 LIMIT 20;
