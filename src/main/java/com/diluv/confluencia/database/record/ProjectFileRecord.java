@@ -3,12 +3,37 @@ package com.diluv.confluencia.database.record;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class ProjectFileRecord extends BaseProjectFileRecord {
+public class ProjectFileRecord {
+
+    /**
+     * An internally unique identifier for the file.
+     */
+    private final long id;
+
+    /**
+     * The display name of the file.
+     */
+    private final String name;
 
     /**
      * A SHA 512 hash of the file.
      */
     private final String sha512;
+
+    /**
+     * The size of the file in bytes.
+     */
+    private final long size;
+
+    /**
+     * The change log text for the file.
+     */
+    private final String changelog;
+
+    /**
+     * The date the file was initially uploaded.
+     */
+    private final long createdAt;
 
     /**
      * The date the file was last modified.
@@ -20,17 +45,69 @@ public class ProjectFileRecord extends BaseProjectFileRecord {
      */
     private final boolean released;
 
+    private final String status;
+    private final long statusChangeTime;
+
+    /**
+     * The id of the project that this file belongs to.
+     */
+    private final long projectId;
+
+    /**
+     * The id of the user who uploaded the file.
+     */
+    private final long userId;
+
+    /**
+     * The username of the user who uploaded the file.
+     */
+    private final String username;
+
     public ProjectFileRecord (ResultSet rs) throws SQLException {
 
-        super(rs);
+        this.id = rs.getLong("id");
+        this.name = rs.getString("name");
         this.sha512 = rs.getString("sha512");
+        this.size = rs.getLong("size");
+        this.changelog = rs.getString("changelog");
+        this.createdAt = rs.getTimestamp("created_at").getTime();
         this.updatedAt = rs.getTimestamp("updated_at").getTime();
         this.released = rs.getBoolean("released");
+        this.status = rs.getString("status");
+        this.statusChangeTime = rs.getTimestamp("status_change_time").getTime();
+        this.projectId = rs.getLong("project_id");
+        this.userId = rs.getLong("user_id");
+        this.username = rs.getString("username");
+    }
+
+    public long getId () {
+
+        return this.id;
+    }
+
+    public String getName () {
+
+        return this.name;
     }
 
     public String getSha512 () {
 
         return this.sha512;
+    }
+
+    public long getSize () {
+
+        return this.size;
+    }
+
+    public String getChangelog () {
+
+        return this.changelog;
+    }
+
+    public long getCreatedAt () {
+
+        return this.createdAt;
     }
 
     public long getUpdatedAt () {
@@ -43,4 +120,28 @@ public class ProjectFileRecord extends BaseProjectFileRecord {
         return this.released;
     }
 
+    public String getStatus () {
+
+        return this.status;
+    }
+
+    public long getStatusChangeTime () {
+
+        return this.statusChangeTime;
+    }
+
+    public long getProjectId () {
+
+        return this.projectId;
+    }
+
+    public long getUserId () {
+
+        return this.userId;
+    }
+
+    public String getUsername () {
+
+        return this.username;
+    }
 }

@@ -9,6 +9,8 @@ public interface ProjectDAO {
 
     List<ProjectRecord> findAllByUsername (String username);
 
+    List<ProjectRecord> findAllByUsernameWhereAuthorized (String username);
+
     List<ProjectTypeRecord> findAllProjectTypesByGameSlug (String gameSlug);
 
     ProjectTypeRecord findOneProjectTypeByGameSlugAndProjectTypeSlug (String gameSlug, String projectTypeSlug);

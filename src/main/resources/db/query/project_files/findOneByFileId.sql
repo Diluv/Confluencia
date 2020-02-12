@@ -12,11 +12,7 @@ SELECT pf.id,
        pf.user_id,
        u.username as username
 FROM project_files pf
-         JOIN projects p ON (p.id = pf.project_id)
          JOIN users u ON (u.id = pf.user_id)
          LEFT OUTER JOIN project_file_hash pfh ON (pf.id = pfh.project_file_id)
-WHERE pf.released = TRUE
-  AND p.game_slug = ?
-  AND p.project_type_slug = ?
-  AND p.slug = ?
-LIMIT 20;
+WHERE pf.id = ?
+LIMIT 1;

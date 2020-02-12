@@ -16,6 +16,7 @@ public class ProjectDatabase implements ProjectDAO {
 
     private static final String INSERT_PROJECT = SQLHandler.readFile("project/insertProject");
     private static final String FIND_ALL_BY_USERNAME = SQLHandler.readFile("project/findAllByUsername");
+    private static final String FIND_ALL_BY_USERNAME_AUTHORIZED = SQLHandler.readFile("project/findAllByUsernameWhereAuthorized");
     private static final String FIND_ALL_BY_GAMESLUG_AND_PROJECTYPESLUG = SQLHandler.readFile("project/findAllByGameSlugAndProjectTypeSlug");
     private static final String FIND_ONE_BY_GAMESLUG_AND_PROJECTYPESLUG_AND_PROJECTSLUG = SQLHandler.readFile("project/findOneByGameSlugAndProjectTypeSlugAndProjectSlug");
 
@@ -37,6 +38,25 @@ public class ProjectDatabase implements ProjectDAO {
         }
         catch (SQLException e) {
             Confluencia.LOGGER.error("Failed to run findAllByUsername database script for user {}.", username, e);
+        }
+        return projects;
+    }
+
+    @Override
+    public List<ProjectRecord> findAllByUsernameWhereAuthorized (String username) {
+
+        List<ProjectRecord> projects = new ArrayList<>();
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL_BY_USERNAME_AUTHORIZED)) {
+            stmt.setString(1, username);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    projects.add(new ProjectRecord(rs));
+                }
+            }
+        }
+        catch (SQLException e) {
+            Confluencia.LOGGER.error("Failed to run findAllByUsernameWhereAuthorized database script for user {}.", username, e);
         }
         return projects;
     }

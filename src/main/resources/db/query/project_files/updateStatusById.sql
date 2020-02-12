@@ -1,4 +1,4 @@
-UPDATE project_file_queue
+UPDATE project_files
 SET status             = 'running',
     status_change_time = NOW()
 WHERE id = ?;

@@ -12,8 +12,16 @@ public class TestProjectDatabase extends ConfluenciaTest {
     public void findAllByUsername () {
 
         Assert.assertEquals(0, ConfluenciaTest.PROJECT.findAllByUsername("invalid").size());
-        Assert.assertEquals(2, ConfluenciaTest.PROJECT.findAllByUsername("test").size());
+        Assert.assertEquals(1, ConfluenciaTest.PROJECT.findAllByUsername("test").size());
         Assert.assertEquals(0, ConfluenciaTest.PROJECT.findAllByUsername("test2").size());
+    }
+
+    @Test
+    public void findAllByUsernameWhereAuthorized () {
+
+        Assert.assertEquals(0, ConfluenciaTest.PROJECT.findAllByUsernameWhereAuthorized("invalid").size());
+        Assert.assertEquals(2, ConfluenciaTest.PROJECT.findAllByUsernameWhereAuthorized("test").size());
+        Assert.assertEquals(0, ConfluenciaTest.PROJECT.findAllByUsernameWhereAuthorized("test2").size());
     }
 
     @Test

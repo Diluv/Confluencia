@@ -15,7 +15,6 @@ FROM projects p,
      games g,
      users u
 WHERE u.username = ?
-  AND p.released = TRUE
   AND (p.user_id = u.id OR EXISTS(
         SELECT *
         FROM project_authors

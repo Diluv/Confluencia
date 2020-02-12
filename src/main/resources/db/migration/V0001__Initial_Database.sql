@@ -166,48 +166,37 @@ CREATE TABLE project_links
     FOREIGN KEY (project_id) REFERENCES projects (id)
 );
 
-# Project File Queue
-CREATE TABLE project_file_queue
+CREATE TABLE project_files
 (
     id                 BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
 
     name               VARCHAR(255)    NOT NULL,
-
     size               BIGINT UNSIGNED NOT NULL,
+
     changelog          TEXT            NOT NULL,
-    created_at         TIMESTAMP       NOT NULL             DEFAULT NOW(),
+    created_at         TIMESTAMP       NOT NULL                     DEFAULT NOW(),
+    updated_at         TIMESTAMP       NOT NULL                     DEFAULT NOW() ON UPDATE NOW(),
+
+    released           BOOL            NOT NULL                     DEFAULT FALSE,
+
+    status             ENUM ('pending', 'running', 'done', 'error') DEFAULT 'pending',
+    status_change_time TIMESTAMP       NOT NULL                     DEFAULT NOW(),
 
     project_id         BIGINT UNSIGNED NOT NULL,
     user_id            BIGINT UNSIGNED NOT NULL,
-
-    status             ENUM ('pending', 'running', 'error') DEFAULT 'pending',
-    status_change_time TIMESTAMP       NOT NULL             DEFAULT NOW(),
 
     PRIMARY KEY (id),
     FOREIGN KEY (project_id) REFERENCES projects (id),
     FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
-CREATE TABLE project_files
+CREATE TABLE project_file_hash
 (
-    id         BIGINT UNSIGNED NOT NULL,
+    project_file_id BIGINT UNSIGNED NOT NULL,
+    sha512          VARCHAR(128)    NOT NULL,
 
-    name       VARCHAR(255)    NOT NULL,
-    sha512     VARCHAR(128)    NOT NULL,
-    size       BIGINT UNSIGNED NOT NULL,
-
-    changelog  TEXT            NOT NULL,
-    created_at TIMESTAMP       NOT NULL DEFAULT NOW(),
-    updated_at TIMESTAMP       NOT NULL DEFAULT NOW() ON UPDATE NOW(),
-
-    released   BOOL            NOT NULL DEFAULT FALSE,
-
-    project_id BIGINT UNSIGNED NOT NULL,
-    user_id    BIGINT UNSIGNED NOT NULL,
-
-    PRIMARY KEY (id),
-    FOREIGN KEY (project_id) REFERENCES projects (id),
-    FOREIGN KEY (user_id) REFERENCES users (id)
+    PRIMARY KEY (project_file_id),
+    FOREIGN KEY (project_file_id) REFERENCES project_files (id)
 );
 
 CREATE TABLE project_file_versions
@@ -235,4 +224,4 @@ INSERT IGNORE INTO games(slug, name, url)
 VALUES ('minecraft', 'Minecraft', 'https://minecraft.net/');
 
 INSERT IGNORE INTO project_types(game_slug, slug, name, max_size)
-VALUES ('minecraft', 'mods', 'Mods', 25000000)
+VALUES ('minecraft', 'mods', 'Mods', 25000000);
