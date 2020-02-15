@@ -1,5 +1,8 @@
 package com.diluv.confluencia;
 
+import com.diluv.confluencia.database.NewsDatabase;
+import com.diluv.confluencia.database.dao.NewsDAO;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.testcontainers.containers.MariaDBContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -31,6 +34,7 @@ public abstract class ConfluenciaTest {
     public static final GameDAO GAME = new GameDatabase();
     public static final ProjectDAO PROJECT = new ProjectDatabase();
     public static final UserDAO USER = new UserDatabase();
+    public static final NewsDAO NEWS = new NewsDatabase();
 
     private static boolean init;
 
@@ -40,6 +44,7 @@ public abstract class ConfluenciaTest {
         if (!init) {
             Confluencia.init(ConfluenciaTest.CONTAINER.getJdbcUrl(), ConfluenciaTest.CONTAINER.getUsername(), ConfluenciaTest.CONTAINER.getPassword(), true);
 
+            TestSQLHandler.loadData("news");
             TestSQLHandler.loadData("email");
             TestSQLHandler.loadData("user");
             TestSQLHandler.loadData("temp_user");

@@ -219,6 +219,21 @@ CREATE TABLE project_file_modloaders
     FOREIGN KEY (modloader_id) REFERENCES game_modloaders (id)
 );
 
+CREATE TABLE news
+(
+    slug        VARCHAR(50)     NOT NULL,
+
+    title       VARCHAR(255)    NOT NULL,
+    summary     VARCHAR(255)    NOT NULL,
+
+    description TEXT            NOT NULL,
+
+    username    VARCHAR(255)    NOT NULL,
+
+    created_at  TIMESTAMP       NOT NULL DEFAULT NOW(),
+    PRIMARY KEY (slug)
+);
+
 # Insert default data
 INSERT IGNORE INTO games(slug, name, url)
 VALUES ('minecraft', 'Minecraft', 'https://minecraft.net/');
