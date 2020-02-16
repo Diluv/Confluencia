@@ -20,4 +20,34 @@ public class NewsRecord {
         this.username = rs.getString("username");
         this.createdAt = rs.getTimestamp("created_at").getTime();
     }
+
+    public String getSlug () {
+
+        return this.slug;
+    }
+
+    public String getTitle () {
+
+        return this.title;
+    }
+
+    public String getSummary () {
+
+        return this.summary;
+    }
+
+    public String getDescription () {
+
+        return this.description;
+    }
+
+    public String getUsername () {
+
+        return this.username;
+    }
+
+    public long getCreatedAt () {
+
+        return this.createdAt;
+    }
 }

@@ -1,16 +1,15 @@
 package com.diluv.confluencia.database;
 
-import com.diluv.confluencia.Confluencia;
-import com.diluv.confluencia.database.dao.NewsDAO;
-import com.diluv.confluencia.database.record.NewsRecord;
-import com.diluv.confluencia.database.record.ProjectFileRecord;
-import com.diluv.confluencia.utils.SQLHandler;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.diluv.confluencia.Confluencia;
+import com.diluv.confluencia.database.dao.NewsDAO;
+import com.diluv.confluencia.database.record.NewsRecord;
+import com.diluv.confluencia.utils.SQLHandler;
 
 public class NewsDatabase implements NewsDAO {
     private static final String FIND_ALL = SQLHandler.readFile("news/findAll");
