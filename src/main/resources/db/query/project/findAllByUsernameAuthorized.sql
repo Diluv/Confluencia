@@ -9,16 +9,14 @@ SELECT p.id,
        p.game_slug,
        p.project_type_slug,
        p.released,
-       p.reviewed,
+       p.review,
        p.user_id
 FROM projects p,
-     games g,
      users u
 WHERE u.username = ?
   AND (p.user_id = u.id OR EXISTS(
         SELECT *
         FROM project_authors
-        WHERE author_id = u.id
+        WHERE p.user_id = u.id
     ))
-  AND p.game_slug = g.slug
 LIMIT 20;

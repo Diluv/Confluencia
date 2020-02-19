@@ -9,11 +9,8 @@ SELECT p.id,
        p.game_slug,
        p.project_type_slug,
        p.released,
-       p.reviewed,
+       p.review,
        p.user_id
-FROM projects p,
-     games g,
-     users u
-WHERE p.user_id = u.id
-  AND (p.game_slug = ? AND p.project_type_slug = ? AND p.slug = ?)
+FROM projects p
+WHERE (p.game_slug = ? AND p.project_type_slug = ? AND p.slug = ?)
 LIMIT 1;

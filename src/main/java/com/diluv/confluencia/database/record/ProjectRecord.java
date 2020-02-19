@@ -16,7 +16,7 @@ public class ProjectRecord {
     private final String gameSlug;
     private final String projectTypeSlug;
     private final boolean released;
-    private final boolean reviewed;
+    private final boolean review;
     private final long userId;
 
     public ProjectRecord (ResultSet rs) throws SQLException {
@@ -31,12 +31,12 @@ public class ProjectRecord {
         this.updatedAt = rs.getTimestamp("updated_at").getTime();
         this.gameSlug = rs.getString("game_slug");
         this.projectTypeSlug = rs.getString("project_type_slug");
-        this.reviewed = rs.getBoolean("reviewed");
+        this.review = rs.getBoolean("review");
         this.released = rs.getBoolean("released");
         this.userId = rs.getLong("user_id");
     }
 
-    public ProjectRecord (long id, String name, String slug, String summary, String description, long cachedDownloads, long createdAt, long updatedAt, String gameSlug, String projectTypeSlug, boolean released, boolean reviewed, long userId) {
+    public ProjectRecord (long id, String name, String slug, String summary, String description, long cachedDownloads, long createdAt, long updatedAt, String gameSlug, String projectTypeSlug, boolean released, boolean review, long userId) {
 
         this.id = id;
         this.name = name;
@@ -49,7 +49,7 @@ public class ProjectRecord {
         this.gameSlug = gameSlug;
         this.projectTypeSlug = projectTypeSlug;
         this.released = released;
-        this.reviewed = reviewed;
+        this.review = review;
         this.userId = userId;
     }
 
@@ -108,9 +108,9 @@ public class ProjectRecord {
         return this.released;
     }
 
-    public boolean isReviewed () {
+    public boolean reviewNeeded () {
 
-        return this.reviewed;
+        return this.review;
     }
 
     public long getUserId () {

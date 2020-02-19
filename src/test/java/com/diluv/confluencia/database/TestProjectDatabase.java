@@ -1,7 +1,6 @@
 package com.diluv.confluencia.database;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.jupiter.api.Test;
 
 import com.diluv.confluencia.ConfluenciaTest;
@@ -56,7 +55,12 @@ public class TestProjectDatabase extends ConfluenciaTest {
         Assert.assertNotNull(ConfluenciaTest.PROJECT.findOneProjectByGameSlugAndProjectTypeSlugAndProjectSlug("minecraft", "mods", "project_1"));
     }
 
-    @Before
+    @Test
+    public void findAllByProjectId () {
+
+        Assert.assertEquals(1, ConfluenciaTest.PROJECT.findAllByProjectId(1).size());
+    }
+
     @Test
     public void insertProject () {
 

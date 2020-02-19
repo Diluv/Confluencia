@@ -72,7 +72,7 @@ CREATE TABLE projects
     description       TEXT            NOT NULL,
     cached_downloads  BIGINT UNSIGNED NOT NULL DEFAULT 0,
 
-    reviewed          BOOL                     DEFAULT FALSE,
+    review            BOOL                     DEFAULT FALSE,
     released          BOOL                     DEFAULT FALSE,
 
     created_at        TIMESTAMP       NOT NULL DEFAULT NOW(),
@@ -85,6 +85,29 @@ CREATE TABLE projects
     FOREIGN KEY (user_id) REFERENCES users (id),
     FOREIGN KEY (game_slug, project_type_slug) REFERENCES project_types (game_slug, slug),
     FOREIGN KEY (game_slug) REFERENCES games (slug)
+);
+
+CREATE TABLE project_authors
+(
+    id         BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+
+    project_id BIGINT UNSIGNED NOT NULL,
+    user_id    BIGINT UNSIGNED NOT NULL,
+
+    role       VARCHAR(255)    NOT NULL,
+
+    PRIMARY KEY (id),
+    FOREIGN KEY (project_id) REFERENCES projects (id),
+    FOREIGN KEY (user_id) REFERENCES users (id)
+);
+
+CREATE TABLE project_author_permissions
+(
+    project_author_id BIGINT UNSIGNED NOT NULL,
+    permission        VARCHAR(255)    NOT NULL,
+
+    PRIMARY KEY (project_author_id, permission),
+    FOREIGN KEY (project_author_id) REFERENCES project_authors (id)
 );
 
 CREATE TABLE project_files
@@ -123,16 +146,16 @@ CREATE TABLE project_file_hash
 
 CREATE TABLE news
 (
-    slug        VARCHAR(50)     NOT NULL,
+    slug        VARCHAR(50)  NOT NULL,
 
-    title       VARCHAR(255)    NOT NULL,
-    summary     VARCHAR(255)    NOT NULL,
+    title       VARCHAR(255) NOT NULL,
+    summary     VARCHAR(255) NOT NULL,
 
-    description TEXT            NOT NULL,
+    description TEXT         NOT NULL,
 
-    username    VARCHAR(255)    NOT NULL,
+    username    VARCHAR(255) NOT NULL,
 
-    created_at  TIMESTAMP       NOT NULL DEFAULT NOW(),
+    created_at  TIMESTAMP    NOT NULL DEFAULT NOW(),
     PRIMARY KEY (slug)
 );
 

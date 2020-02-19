@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.diluv.confluencia.Confluencia;
 import com.diluv.confluencia.database.dao.ProjectDAO;
+import com.diluv.confluencia.database.record.ProjectAuthorRecord;
 import com.diluv.confluencia.database.record.ProjectRecord;
 import com.diluv.confluencia.database.record.ProjectTypeRecord;
 import com.diluv.confluencia.utils.SQLHandler;
@@ -16,12 +17,34 @@ public class ProjectDatabase implements ProjectDAO {
 
     private static final String INSERT_PROJECT = SQLHandler.readFile("project/insertProject");
     private static final String FIND_ALL_BY_USERNAME = SQLHandler.readFile("project/findAllByUsername");
-    private static final String FIND_ALL_BY_USERNAME_AUTHORIZED = SQLHandler.readFile("project/findAllByUsernameWhereAuthorized");
+    private static final String FIND_ALL_BY_USERNAME_AUTHORIZED = SQLHandler.readFile("project/findAllByUsernameAuthorized");
     private static final String FIND_ALL_BY_GAMESLUG_AND_PROJECTYPESLUG = SQLHandler.readFile("project/findAllByGameSlugAndProjectTypeSlug");
     private static final String FIND_ONE_BY_GAMESLUG_AND_PROJECTYPESLUG_AND_PROJECTSLUG = SQLHandler.readFile("project/findOneByGameSlugAndProjectTypeSlugAndProjectSlug");
 
-    private static final String FIND_ONE_PROJECTTYPES_BY_GAMESLUG_AND_PROJECTYPESLUG = SQLHandler.readFile("project_types/findOneByGameSlugAndProjectTypeSlug");
     private static final String FIND_ALL_PROJECTTYPES_BY_GAMESLUG = SQLHandler.readFile("project_types/findAllByGameSlug");
+    private static final String FIND_ONE_PROJECTTYPES_BY_GAMESLUG_AND_PROJECTYPESLUG = SQLHandler.readFile("project_types/findOneByGameSlugAndProjectTypeSlug");
+
+    private static final String FIND_ALL_BY_PROJECT_ID = SQLHandler.readFile("project_author/findAllByProjectId");
+
+    @Override
+    public boolean insertProject (String slug, String name, String summary, String description, long userId, String gameSlug, String projectTypeSlug) {
+
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(INSERT_PROJECT)) {
+            stmt.setString(1, slug);
+            stmt.setString(2, name);
+            stmt.setString(3, summary);
+            stmt.setString(4, description);
+            stmt.setLong(5, userId);
+            stmt.setString(6, gameSlug);
+            stmt.setString(7, projectTypeSlug);
+
+            return stmt.executeUpdate() == 1;
+        }
+        catch (SQLException e) {
+            Confluencia.LOGGER.error("Failed to run insertProject script for project {} with name {} by {}.", slug, name, userId, e);
+        }
+        return false;
+    }
 
     @Override
     public List<ProjectRecord> findAllByUsername (String username) {
@@ -140,22 +163,21 @@ public class ProjectDatabase implements ProjectDAO {
     }
 
     @Override
-    public boolean insertProject (String slug, String name, String summary, String description, long userId, String gameSlug, String projectTypeSlug) {
+    public List<ProjectAuthorRecord> findAllByProjectId (long projectId) {
 
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(INSERT_PROJECT)) {
-            stmt.setString(1, slug);
-            stmt.setString(2, name);
-            stmt.setString(3, summary);
-            stmt.setString(4, description);
-            stmt.setLong(5, userId);
-            stmt.setString(6, gameSlug);
-            stmt.setString(7, projectTypeSlug);
+        List<ProjectAuthorRecord> projectAuthors = new ArrayList<>();
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL_BY_PROJECT_ID)) {
+            stmt.setLong(1, projectId);
 
-            return stmt.executeUpdate() == 1;
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    projectAuthors.add(new ProjectAuthorRecord(rs));
+                }
+            }
         }
         catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to run insertProject script for project {} with name {} by {}.", slug, name, userId, e);
+            Confluencia.LOGGER.error("Failed to run findAllByProjectId script for project id {}.", projectId, e);
         }
-        return false;
+        return projectAuthors;
     }
 }

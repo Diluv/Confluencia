@@ -43,29 +43,6 @@ CREATE TABLE game_versions
     FOREIGN KEY (game_slug) REFERENCES games (slug)
 );
 
-CREATE TABLE project_authors
-(
-    id         BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-
-    project_id BIGINT UNSIGNED NOT NULL,
-    author_id  BIGINT UNSIGNED NOT NULL,
-
-    role       VARCHAR(255)    NOT NULL,
-
-    PRIMARY KEY (id),
-    FOREIGN KEY (project_id) REFERENCES projects (id),
-    FOREIGN KEY (author_id) REFERENCES users (id)
-);
-
-CREATE TABLE project_author_permissions
-(
-    project_author_id BIGINT UNSIGNED NOT NULL,
-    permission        VARCHAR(255)    NOT NULL,
-
-    PRIMARY KEY (project_author_id, permission),
-    FOREIGN KEY (project_author_id) REFERENCES project_authors (id)
-);
-
 CREATE TABLE project_links
 (
     project_id BIGINT UNSIGNED NOT NULL,
