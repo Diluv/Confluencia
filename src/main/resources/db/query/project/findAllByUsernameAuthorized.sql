@@ -10,7 +10,8 @@ SELECT p.id,
        p.project_type_slug,
        p.released,
        p.review,
-       p.user_id
+       p.user_id,
+       u.username
 FROM projects p,
      users u
 WHERE u.username = ?

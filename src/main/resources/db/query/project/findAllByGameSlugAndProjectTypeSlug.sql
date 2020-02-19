@@ -10,9 +10,10 @@ SELECT p.id,
        p.project_type_slug,
        p.released,
        p.review,
-       p.user_id
-FROM projects p,
-     games g
+       p.user_id,
+       u.username
+FROM projects p
+         JOIN users u on (u.id = p.user_id)
 WHERE p.released = TRUE
   AND p.game_slug = ?
   AND p.project_type_slug = ?

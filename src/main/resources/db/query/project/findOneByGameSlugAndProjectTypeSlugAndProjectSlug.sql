@@ -10,7 +10,9 @@ SELECT p.id,
        p.project_type_slug,
        p.released,
        p.review,
-       p.user_id
+       p.user_id,
+       u.username
 FROM projects p
+         JOIN users u on (u.id = p.user_id)
 WHERE (p.game_slug = ? AND p.project_type_slug = ? AND p.slug = ?)
 LIMIT 1;
