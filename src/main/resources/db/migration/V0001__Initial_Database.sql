@@ -112,37 +112,36 @@ CREATE TABLE project_author_permissions
 
 CREATE TABLE project_files
 (
-    id                 BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    id            BIGINT UNSIGNED  NOT NULL AUTO_INCREMENT,
 
-    name               VARCHAR(255)    NOT NULL,
-    size               BIGINT UNSIGNED NOT NULL,
+    name          VARCHAR(255)     NOT NULL,
+    size          BIGINT UNSIGNED  NOT NULL,
+    sha512        VARCHAR(128)     NOT NULL,
 
-    changelog          TEXT            NOT NULL,
-    created_at         TIMESTAMP       NOT NULL                     DEFAULT NOW(),
-    updated_at         TIMESTAMP       NOT NULL                     DEFAULT NOW() ON UPDATE NOW(),
+    changelog     TEXT             NOT NULL,
+    created_at    TIMESTAMP        NOT NULL DEFAULT NOW(),
+    updated_at    TIMESTAMP        NOT NULL DEFAULT NOW() ON UPDATE NOW(),
 
-    released           BOOL            NOT NULL                     DEFAULT FALSE,
+    status        TINYINT UNSIGNED NOT NULL DEFAULT 0,
+    status_change TIMESTAMP        NOT NULL DEFAULT NOW(),
+    released      BOOL             NOT NULL DEFAULT FALSE,
 
-    status             ENUM ('pending', 'running', 'done', 'error') DEFAULT 'pending',
-    status_change_time TIMESTAMP       NOT NULL                     DEFAULT NOW(),
-
-    project_id         BIGINT UNSIGNED NOT NULL,
-    user_id            BIGINT UNSIGNED NOT NULL,
+    project_id    BIGINT UNSIGNED  NOT NULL,
+    user_id       BIGINT UNSIGNED  NOT NULL,
 
     PRIMARY KEY (id),
     FOREIGN KEY (project_id) REFERENCES projects (id),
     FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
-CREATE TABLE project_file_hash
+CREATE TABLE project_file_antivirus
 (
     project_file_id BIGINT UNSIGNED NOT NULL,
-    sha512          VARCHAR(128)    NOT NULL,
+    malware         VARCHAR(128)    NOT NULL,
 
     PRIMARY KEY (project_file_id),
     FOREIGN KEY (project_file_id) REFERENCES project_files (id)
 );
-
 
 CREATE TABLE news
 (

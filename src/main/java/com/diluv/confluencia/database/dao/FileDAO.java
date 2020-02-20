@@ -13,7 +13,7 @@ public interface FileDAO {
 
     List<ProjectFileRecord> getLatestFileQueueRecord (int amount) throws SQLException;
 
-    Long insertProjectFile (String name, long size, String changelog, long projectId, long userId);
+    Long insertProjectFile (String name, long size, String changelog, String sha512, long projectId, long userId);
 
     ProjectFileRecord findOneProjectFileQueueByFileId (long fileId);
 
@@ -21,5 +21,5 @@ public interface FileDAO {
 
     List<ProjectFileRecord> findAllProjectFilesByGameSlugAndProjectTypeAndProjectSlugAuthorized (String gameSlug, String projectTypeSlug, String projectSlug);
 
-    boolean insertProjectFileHash (long id, String hash);
+    boolean insertProjectFileAntivirus (long projectId, String malware);
 }

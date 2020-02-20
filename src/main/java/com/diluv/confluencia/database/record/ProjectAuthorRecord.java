@@ -13,6 +13,7 @@ public class ProjectAuthorRecord {
     private final List<String> permissions;
 
     public ProjectAuthorRecord (ResultSet rs) throws SQLException {
+
         this.userId = rs.getLong("user_id");
         this.username = rs.getString("username");
         this.role = rs.getString("role");

@@ -1,8 +1,5 @@
 package com.diluv.confluencia;
 
-import com.diluv.confluencia.database.NewsDatabase;
-import com.diluv.confluencia.database.dao.NewsDAO;
-
 import org.junit.jupiter.api.BeforeAll;
 import org.testcontainers.containers.MariaDBContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -10,11 +7,13 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import com.diluv.confluencia.database.EmailDatabase;
 import com.diluv.confluencia.database.FileDatabase;
 import com.diluv.confluencia.database.GameDatabase;
+import com.diluv.confluencia.database.NewsDatabase;
 import com.diluv.confluencia.database.ProjectDatabase;
 import com.diluv.confluencia.database.UserDatabase;
 import com.diluv.confluencia.database.dao.EmailDAO;
 import com.diluv.confluencia.database.dao.FileDAO;
 import com.diluv.confluencia.database.dao.GameDAO;
+import com.diluv.confluencia.database.dao.NewsDAO;
 import com.diluv.confluencia.database.dao.ProjectDAO;
 import com.diluv.confluencia.database.dao.UserDAO;
 import com.diluv.confluencia.util.TestSQLHandler;

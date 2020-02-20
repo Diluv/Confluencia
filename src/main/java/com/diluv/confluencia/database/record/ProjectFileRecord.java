@@ -45,8 +45,8 @@ public class ProjectFileRecord {
      */
     private final boolean released;
 
-    private final String status;
-    private final long statusChangeTime;
+    private final FileStatus status;
+    private final long statusChange;
 
     /**
      * The id of the project that this file belongs to.
@@ -73,8 +73,8 @@ public class ProjectFileRecord {
         this.createdAt = rs.getTimestamp("created_at").getTime();
         this.updatedAt = rs.getTimestamp("updated_at").getTime();
         this.released = rs.getBoolean("released");
-        this.status = rs.getString("status");
-        this.statusChangeTime = rs.getTimestamp("status_change_time").getTime();
+        this.status = FileStatus.values()[rs.getInt("status")];
+        this.statusChange = rs.getTimestamp("status_change").getTime();
         this.projectId = rs.getLong("project_id");
         this.userId = rs.getLong("user_id");
         this.username = rs.getString("username");
@@ -120,14 +120,14 @@ public class ProjectFileRecord {
         return this.released;
     }
 
-    public String getStatus () {
+    public FileStatus getStatus () {
 
         return this.status;
     }
 
-    public long getStatusChangeTime () {
+    public long getStatusChange () {
 
-        return this.statusChangeTime;
+        return this.statusChange;
     }
 
     public long getProjectId () {

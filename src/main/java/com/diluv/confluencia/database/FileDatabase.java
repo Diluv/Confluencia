@@ -21,7 +21,7 @@ public class FileDatabase implements FileDAO {
     private static final String FIND_ALL_BY_GAMESLUG_AND_PROJECTYPESLUG_AND_PROJECTSLUG = SQLHandler.readFile("project_files/findAllByGameSlugAndProjectTypeAndProjectSlug");
     private static final String FIND_ALL_BY_GAMESLUG_AND_PROJECTYPESLUG_AND_PROJECTSLUG_AUTHORIZED = SQLHandler.readFile("project_files/findAllByGameSlugAndProjectTypeAndProjectSlugWhereAuthorized");
 
-    private static final String INSERT_PROJECT_FILE_HASH = SQLHandler.readFile("project_files/insertProjectFileHash");
+    private static final String INSERT_PROJECT_FILE_ANTIVIRUS = SQLHandler.readFile("project_files/insertProjectFileAntivirus");
 
     @Override
     public boolean updateFileQueueStatusById (long id) throws SQLException {
@@ -88,14 +88,15 @@ public class FileDatabase implements FileDAO {
     }
 
     @Override
-    public Long insertProjectFile (String name, long size, String changelog, long projectId, long userId) {
+    public Long insertProjectFile (String name, long size, String changelog, String sha512, long projectId, long userId) {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(INSERT_PROJECT_FILE, new String[]{"id"})) {
             stmt.setString(1, name);
             stmt.setLong(2, size);
             stmt.setString(3, changelog);
-            stmt.setLong(4, projectId);
-            stmt.setLong(5, userId);
+            stmt.setString(4, sha512);
+            stmt.setLong(5, projectId);
+            stmt.setLong(6, userId);
 
             int affectedRows = stmt.executeUpdate();
             if (affectedRows == 0) {
@@ -138,7 +139,6 @@ public class FileDatabase implements FileDAO {
     @Override
     public List<ProjectFileRecord> findAllProjectFilesByGameSlugAndProjectTypeAndProjectSlug (String gameSlug, String projectTypeSlug, String projectSlug) {
 
-        //TODO Add boolean param to include/exclude non-public files
         List<ProjectFileRecord> projects = new ArrayList<>();
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL_BY_GAMESLUG_AND_PROJECTYPESLUG_AND_PROJECTSLUG)) {
             stmt.setString(1, gameSlug);
@@ -160,7 +160,6 @@ public class FileDatabase implements FileDAO {
     @Override
     public List<ProjectFileRecord> findAllProjectFilesByGameSlugAndProjectTypeAndProjectSlugAuthorized (String gameSlug, String projectTypeSlug, String projectSlug) {
 
-        //TODO Add boolean param to include/exclude non-public files
         List<ProjectFileRecord> projects = new ArrayList<>();
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL_BY_GAMESLUG_AND_PROJECTYPESLUG_AND_PROJECTSLUG_AUTHORIZED)) {
             stmt.setString(1, gameSlug);
@@ -180,11 +179,11 @@ public class FileDatabase implements FileDAO {
     }
 
     @Override
-    public boolean insertProjectFileHash (long id, String hash) {
+    public boolean insertProjectFileAntivirus (long projectId, String malware) {
 
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(INSERT_PROJECT_FILE_HASH)) {
-            stmt.setLong(1, id);
-            stmt.setString(2, hash);
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(INSERT_PROJECT_FILE_ANTIVIRUS)) {
+            stmt.setLong(1, projectId);
+            stmt.setString(2, malware);
             if (stmt.executeUpdate() == 1) {
                 return true;
             }
