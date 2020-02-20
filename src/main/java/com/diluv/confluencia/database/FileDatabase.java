@@ -21,6 +21,8 @@ public class FileDatabase implements FileDAO {
     private static final String FIND_ALL_BY_GAMESLUG_AND_PROJECTYPESLUG_AND_PROJECTSLUG = SQLHandler.readFile("project_files/findAllByGameSlugAndProjectTypeAndProjectSlug");
     private static final String FIND_ALL_BY_GAMESLUG_AND_PROJECTYPESLUG_AND_PROJECTSLUG_AUTHORIZED = SQLHandler.readFile("project_files/findAllByGameSlugAndProjectTypeAndProjectSlugWhereAuthorized");
 
+    private static final String INSERT_PROJECT_FILE_HASH = SQLHandler.readFile("project_files/insertProjectFileHash");
+
     @Override
     public boolean updateFileQueueStatusById (long id) throws SQLException {
 
@@ -175,5 +177,21 @@ public class FileDatabase implements FileDAO {
             e.printStackTrace();
         }
         return projects;
+    }
+
+    @Override
+    public boolean insertProjectFileHash (long id, String hash) {
+
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(INSERT_PROJECT_FILE_HASH)) {
+            stmt.setLong(1, id);
+            stmt.setString(2, hash);
+            if (stmt.executeUpdate() == 1) {
+                return true;
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

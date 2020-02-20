@@ -20,4 +20,6 @@ public interface FileDAO {
     List<ProjectFileRecord> findAllProjectFilesByGameSlugAndProjectTypeAndProjectSlug (String gameSlug, String projectTypeSlug, String projectSlug);
 
     List<ProjectFileRecord> findAllProjectFilesByGameSlugAndProjectTypeAndProjectSlugAuthorized (String gameSlug, String projectTypeSlug, String projectSlug);
+
+    boolean insertProjectFileHash (long id, String hash);
 }

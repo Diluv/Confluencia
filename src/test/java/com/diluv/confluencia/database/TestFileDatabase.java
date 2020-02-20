@@ -59,4 +59,9 @@ public class TestFileDatabase extends ConfluenciaTest {
         Assert.assertNotNull(ConfluenciaTest.FILE.findOneProjectFileQueueByFileId(1));
         Assert.assertNull(ConfluenciaTest.FILE.findOneProjectFileQueueByFileId(100));
     }
+
+    @Test
+    public void insertProjectFileHash () {
+        Assert.assertTrue(ConfluenciaTest.FILE.insertProjectFileHash(3, "00a77e35-09cb-4170-9a19-3e4ea29a4a6e"));
+    }
 }
