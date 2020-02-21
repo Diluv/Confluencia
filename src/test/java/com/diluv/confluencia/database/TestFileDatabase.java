@@ -60,4 +60,15 @@ public class TestFileDatabase extends ConfluenciaTest {
 
         Assertions.assertTrue(ConfluenciaTest.FILE.insertProjectFileAntivirus(5, "Java.Malware.Agent-5601374-0"));
     }
+
+    @Test
+    public void getLatestFiles(){
+
+        try {
+            Assertions.assertEquals(1,ConfluenciaTest.FILE.getLatestFiles(1).size());
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

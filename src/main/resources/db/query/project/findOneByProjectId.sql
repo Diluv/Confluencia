@@ -14,7 +14,5 @@ SELECT p.id,
        u.username
 FROM projects p
          JOIN users u on (u.id = p.user_id)
-WHERE p.game_slug = ?
-  AND p.project_type_slug = ?
-  AND p.slug = ?
+WHERE p.id = ?
 LIMIT 1;

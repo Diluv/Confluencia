@@ -10,17 +10,19 @@ public interface ProjectDAO {
 
     boolean insertProject (String slug, String name, String summary, String description, long userId, String gameSlug, String projectTypeSlug);
 
+    ProjectRecord findOneProjectByProjectId (long id);
+
+    ProjectRecord findOneProjectByGameSlugAndProjectTypeSlugAndProjectSlug (String gameSlug, String projectTypeSlug, String projectSlug);
+
     List<ProjectRecord> findAllByUsername (String username);
 
     List<ProjectRecord> findAllByUsernameWhereAuthorized (String username);
+
+    List<ProjectRecord> findAllProjectsByGameSlugAndProjectType (String gameSlug, String projectTypeSlug);
 
     List<ProjectTypeRecord> findAllProjectTypesByGameSlug (String gameSlug);
 
     ProjectTypeRecord findOneProjectTypeByGameSlugAndProjectTypeSlug (String gameSlug, String projectTypeSlug);
 
-    List<ProjectRecord> findAllProjectsByGameSlugAndProjectType (String gameSlug, String projectTypeSlug);
-
-    ProjectRecord findOneProjectByGameSlugAndProjectTypeSlugAndProjectSlug (String gameSlug, String projectTypeSlug, String projectSlug);
-
-    List<ProjectAuthorRecord> findAllByProjectId (long projectId);
+    List<ProjectAuthorRecord> findAllProjectAuthorsByProjectId (long projectId);
 }

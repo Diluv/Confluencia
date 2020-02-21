@@ -8,6 +8,12 @@ import com.diluv.confluencia.ConfluenciaTest;
 public class TestProjectDatabase extends ConfluenciaTest {
 
     @Test
+    public void findOneProjectByProjectId () {
+
+        Assertions.assertNotNull(ConfluenciaTest.PROJECT.findOneProjectByProjectId(1));
+    }
+
+    @Test
     public void findAllByUsername () {
 
         Assertions.assertEquals(0, ConfluenciaTest.PROJECT.findAllByUsername("invalid").size());
@@ -56,9 +62,9 @@ public class TestProjectDatabase extends ConfluenciaTest {
     }
 
     @Test
-    public void findAllByProjectId () {
+    public void findAllProjectAuthorsByProjectId () {
 
-        Assertions.assertEquals(1, ConfluenciaTest.PROJECT.findAllByProjectId(1).size());
+        Assertions.assertEquals(1, ConfluenciaTest.PROJECT.findAllProjectAuthorsByProjectId(1).size());
     }
 
     @Test

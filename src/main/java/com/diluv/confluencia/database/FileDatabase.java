@@ -1,5 +1,6 @@
 package com.diluv.confluencia.database;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -51,6 +52,36 @@ public class FileDatabase implements FileDAO {
         }
         catch (final SQLException e) {
             e.printStackTrace();
+        }
+        return fileQueueRecord;
+    }
+
+    @Override
+    public List<ProjectFileRecord> getLatestFiles (int amount) throws SQLException {
+
+        List<ProjectFileRecord> fileQueueRecord;
+        final Connection connection = Confluencia.connection();
+        final int previousIsolationLevel = connection.getTransactionIsolation();
+        try {
+            connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+            connection.setAutoCommit(false);
+
+            fileQueueRecord = this.findAllWhereStatusAndLimit(FileStatus.PENDING, amount);
+
+            if (fileQueueRecord.isEmpty()) {
+                return fileQueueRecord;
+            }
+
+            final Long[] idList = fileQueueRecord.stream().map(ProjectFileRecord::getId).toArray(Long[]::new);
+            for (final Long id : idList) {
+                if (!this.updateStatusById(id, FileStatus.RUNNING)) {
+                    // TODO didn't work but didnt throw an exception
+                }
+            }
+            connection.commit();
+        } finally {
+            connection.setAutoCommit(true);
+            connection.setTransactionIsolation(previousIsolationLevel);
         }
         return fileQueueRecord;
     }

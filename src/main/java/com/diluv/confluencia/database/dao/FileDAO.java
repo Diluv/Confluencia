@@ -12,6 +12,8 @@ public interface FileDAO {
 
     List<ProjectFileRecord> findAllWhereStatusAndLimit (FileStatus status, int amount);
 
+    List<ProjectFileRecord> getLatestFiles (int amount) throws SQLException;
+
     Long insertProjectFile (String name, long size, String changelog, String sha512, long projectId, long userId);
 
     ProjectFileRecord findOneProjectFileQueueByFileId (long fileId);
