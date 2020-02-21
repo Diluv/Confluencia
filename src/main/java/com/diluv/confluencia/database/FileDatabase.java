@@ -1,6 +1,5 @@
 package com.diluv.confluencia.database;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,6 +8,7 @@ import java.util.List;
 
 import com.diluv.confluencia.Confluencia;
 import com.diluv.confluencia.database.dao.FileDAO;
+import com.diluv.confluencia.database.record.FileStatus;
 import com.diluv.confluencia.database.record.ProjectFileRecord;
 import com.diluv.confluencia.utils.SQLHandler;
 
@@ -16,7 +16,7 @@ public class FileDatabase implements FileDAO {
 
     private static final String INSERT_PROJECT_FILE = SQLHandler.readFile("project_files/insertProjectFile");
     private static final String UPDATE_STATUS_BY_ID = SQLHandler.readFile("project_files/updateStatusById");
-    private static final String FIND_X_WHERE_PENDING = SQLHandler.readFile("project_files/findXWherePending");
+    private static final String FIND_ALL_WHERE_STATUS_AND_LIMIT = SQLHandler.readFile("project_files/findAllWhereStatusAndLimit");
     private static final String FIND_ONE_PROJECT_FILE_QUEUE_BY_FILE_ID = SQLHandler.readFile("project_files/findOneByFileId");
     private static final String FIND_ALL_BY_GAMESLUG_AND_PROJECTYPESLUG_AND_PROJECTSLUG = SQLHandler.readFile("project_files/findAllByGameSlugAndProjectTypeAndProjectSlug");
     private static final String FIND_ALL_BY_GAMESLUG_AND_PROJECTYPESLUG_AND_PROJECTSLUG_AUTHORIZED = SQLHandler.readFile("project_files/findAllByGameSlugAndProjectTypeAndProjectSlugWhereAuthorized");
@@ -24,27 +24,25 @@ public class FileDatabase implements FileDAO {
     private static final String INSERT_PROJECT_FILE_ANTIVIRUS = SQLHandler.readFile("project_files/insertProjectFileAntivirus");
 
     @Override
-    public boolean updateFileQueueStatusById (long id) throws SQLException {
+    public boolean updateStatusById (long id, FileStatus status) throws SQLException {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(UPDATE_STATUS_BY_ID)) {
-            stmt.setLong(1, id);
+            stmt.setLong(1, status.ordinal());
+            stmt.setLong(2, id);
             if (stmt.executeUpdate() == 1) {
                 return true;
             }
-        }
-        catch (final SQLException e) {
-            Confluencia.connection().rollback();
-            throw e;
         }
         return false;
     }
 
     @Override
-    public List<ProjectFileRecord> findAllWherePending (int amount) {
+    public List<ProjectFileRecord> findAllWhereStatusAndLimit (FileStatus status, int amount) {
 
         final List<ProjectFileRecord> fileQueueRecord = new ArrayList<>();
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_X_WHERE_PENDING)) {
-            stmt.setInt(1, amount);
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL_WHERE_STATUS_AND_LIMIT)) {
+            stmt.setInt(1, status.ordinal());
+            stmt.setInt(2, amount);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     fileQueueRecord.add(new ProjectFileRecord(rs));
@@ -53,36 +51,6 @@ public class FileDatabase implements FileDAO {
         }
         catch (final SQLException e) {
             e.printStackTrace();
-        }
-        return fileQueueRecord;
-    }
-
-    @Override
-    public List<ProjectFileRecord> getLatestFileQueueRecord (int amount) throws SQLException {
-
-        List<ProjectFileRecord> fileQueueRecord;
-        final Connection connection = Confluencia.connection();
-        final int previousIsolationLevel = connection.getTransactionIsolation();
-        try {
-            connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
-            connection.setAutoCommit(false);
-
-            fileQueueRecord = this.findAllWherePending(amount);
-
-            if (fileQueueRecord.isEmpty()) {
-                return fileQueueRecord;
-            }
-
-            final Long[] idList = fileQueueRecord.stream().map(ProjectFileRecord::getId).toArray(Long[]::new);
-            for (final Long id : idList) {
-                if (!this.updateFileQueueStatusById(id)) {
-                    // TODO didn't work but didnt throw an exception
-                }
-            }
-            connection.commit();
-        } finally {
-            connection.setAutoCommit(true);
-            connection.setTransactionIsolation(previousIsolationLevel);
         }
         return fileQueueRecord;
     }
@@ -137,7 +105,7 @@ public class FileDatabase implements FileDAO {
     }
 
     @Override
-    public List<ProjectFileRecord> findAllProjectFilesByGameSlugAndProjectTypeAndProjectSlug (String gameSlug, String projectTypeSlug, String projectSlug) {
+    public List<ProjectFileRecord> findAllByGameSlugAndProjectTypeAndProjectSlug (String gameSlug, String projectTypeSlug, String projectSlug) {
 
         List<ProjectFileRecord> projects = new ArrayList<>();
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL_BY_GAMESLUG_AND_PROJECTYPESLUG_AND_PROJECTSLUG)) {
@@ -158,7 +126,7 @@ public class FileDatabase implements FileDAO {
     }
 
     @Override
-    public List<ProjectFileRecord> findAllProjectFilesByGameSlugAndProjectTypeAndProjectSlugAuthorized (String gameSlug, String projectTypeSlug, String projectSlug) {
+    public List<ProjectFileRecord> findAllByGameSlugAndProjectTypeAndProjectSlugAuthorized (String gameSlug, String projectTypeSlug, String projectSlug) {
 
         List<ProjectFileRecord> projects = new ArrayList<>();
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL_BY_GAMESLUG_AND_PROJECTYPESLUG_AND_PROJECTSLUG_AUTHORIZED)) {

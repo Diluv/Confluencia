@@ -3,23 +3,22 @@ package com.diluv.confluencia.database.dao;
 import java.sql.SQLException;
 import java.util.List;
 
+import com.diluv.confluencia.database.record.FileStatus;
 import com.diluv.confluencia.database.record.ProjectFileRecord;
 
 public interface FileDAO {
 
-    boolean updateFileQueueStatusById (long id) throws SQLException;
+    boolean updateStatusById (long id, FileStatus status) throws SQLException;
 
-    List<ProjectFileRecord> findAllWherePending (int amount);
-
-    List<ProjectFileRecord> getLatestFileQueueRecord (int amount) throws SQLException;
+    List<ProjectFileRecord> findAllWhereStatusAndLimit (FileStatus status, int amount);
 
     Long insertProjectFile (String name, long size, String changelog, String sha512, long projectId, long userId);
 
     ProjectFileRecord findOneProjectFileQueueByFileId (long fileId);
 
-    List<ProjectFileRecord> findAllProjectFilesByGameSlugAndProjectTypeAndProjectSlug (String gameSlug, String projectTypeSlug, String projectSlug);
+    List<ProjectFileRecord> findAllByGameSlugAndProjectTypeAndProjectSlug (String gameSlug, String projectTypeSlug, String projectSlug);
 
-    List<ProjectFileRecord> findAllProjectFilesByGameSlugAndProjectTypeAndProjectSlugAuthorized (String gameSlug, String projectTypeSlug, String projectSlug);
+    List<ProjectFileRecord> findAllByGameSlugAndProjectTypeAndProjectSlugAuthorized (String gameSlug, String projectTypeSlug, String projectSlug);
 
     boolean insertProjectFileAntivirus (long projectId, String malware);
 }
