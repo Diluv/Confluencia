@@ -2,6 +2,7 @@ package com.diluv.confluencia.database.record;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 public class ProjectRecord {
 
@@ -19,6 +20,7 @@ public class ProjectRecord {
     private final boolean review;
     private final long userId;
     private final String username;
+    private final long userCreatedAt;
 
     public ProjectRecord (ResultSet rs) throws SQLException {
 
@@ -36,9 +38,10 @@ public class ProjectRecord {
         this.released = rs.getBoolean("released");
         this.userId = rs.getLong("user_id");
         this.username = rs.getString("username");
+        this.userCreatedAt = rs.getTimestamp("user_created_at").getTime();
     }
 
-    public ProjectRecord (long id, String name, String slug, String summary, String description, long cachedDownloads, long createdAt, long updatedAt, String gameSlug, String projectTypeSlug, boolean released, boolean review, long userId, String username) {
+    public ProjectRecord (long id, String name, String slug, String summary, String description, long cachedDownloads, long createdAt, long updatedAt, String gameSlug, String projectTypeSlug, boolean released, boolean review, long userId, String username, long userCreatedAt) {
 
         this.id = id;
         this.name = name;
@@ -54,6 +57,7 @@ public class ProjectRecord {
         this.review = review;
         this.userId = userId;
         this.username = username;
+        this.userCreatedAt = userCreatedAt;
     }
 
     public long getId () {
@@ -124,5 +128,10 @@ public class ProjectRecord {
     public String getUsername () {
 
         return this.username;
+    }
+
+    public long getUserCreatedAt () {
+
+        return this.userCreatedAt;
     }
 }

@@ -1,5 +1,6 @@
-SELECT pa.user_id,
+SELECT u.id,
        u.username,
+       u.created_at,
        pa.role,
        GROUP_CONCAT(pap.permission SEPARATOR ' ') AS permissions
 FROM project_authors pa

@@ -11,8 +11,9 @@ SELECT p.id,
        p.released,
        p.review,
        p.user_id,
-       u.username
+       u.username,
+       u.created_at AS user_created_at
 FROM projects p
-         JOIN users u on (u.id = p.user_id)
+         JOIN users u ON (u.id = p.user_id)
 WHERE p.id = ?
 LIMIT 1;
