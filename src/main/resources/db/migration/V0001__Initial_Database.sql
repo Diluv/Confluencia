@@ -112,22 +112,25 @@ CREATE TABLE project_author_permissions
 
 CREATE TABLE project_files
 (
-    id            BIGINT UNSIGNED  NOT NULL AUTO_INCREMENT,
+    id                        BIGINT UNSIGNED  NOT NULL AUTO_INCREMENT,
 
-    name          VARCHAR(255)     NOT NULL,
-    size          BIGINT UNSIGNED  NOT NULL,
-    sha512        VARCHAR(128)     NOT NULL,
+    name                      VARCHAR(255)     NOT NULL,
+    size                      BIGINT UNSIGNED  NOT NULL,
+    sha512                    VARCHAR(128)     NOT NULL,
 
-    changelog     TEXT             NOT NULL,
-    created_at    TIMESTAMP        NOT NULL DEFAULT NOW(),
-    updated_at    TIMESTAMP        NOT NULL DEFAULT NOW() ON UPDATE NOW(),
+    changelog                 TEXT             NOT NULL,
+    created_at                TIMESTAMP        NOT NULL DEFAULT NOW(),
+    updated_at                TIMESTAMP        NOT NULL DEFAULT NOW() ON UPDATE NOW(),
 
-    status        TINYINT UNSIGNED NOT NULL DEFAULT 0,
-    status_change TIMESTAMP        NOT NULL DEFAULT NOW(),
-    released      BOOL             NOT NULL DEFAULT FALSE,
+    release_type              VARCHAR(255)     NOT NULL,
+    classifier                VARCHAR(255)     NOT NULL,
 
-    project_id    BIGINT UNSIGNED  NOT NULL,
-    user_id       BIGINT UNSIGNED  NOT NULL,
+    processing_status         TINYINT UNSIGNED NOT NULL DEFAULT 0,
+    processing_status_changed TIMESTAMP        NOT NULL DEFAULT NOW(),
+    released                  BOOL             NOT NULL DEFAULT FALSE,
+
+    project_id                BIGINT UNSIGNED  NOT NULL,
+    user_id                   BIGINT UNSIGNED  NOT NULL,
 
     PRIMARY KEY (id),
     FOREIGN KEY (project_id) REFERENCES projects (id),

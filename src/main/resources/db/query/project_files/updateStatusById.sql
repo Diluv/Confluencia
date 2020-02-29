@@ -1,4 +1,4 @@
 UPDATE project_files
-SET status        = ?,
-    status_change = NOW()
+SET processing_status        = ?,
+    processing_status_changed = NOW()
 WHERE id = ?;

@@ -1,6 +1,6 @@
 package com.diluv.confluencia.database.record;
 
-public enum FileStatus {
+public enum FileProcessingStatus {
     PENDING,
     RUNNING,
     SUCCESS,

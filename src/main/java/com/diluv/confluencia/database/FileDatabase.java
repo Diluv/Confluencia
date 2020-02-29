@@ -9,7 +9,7 @@ import java.util.List;
 
 import com.diluv.confluencia.Confluencia;
 import com.diluv.confluencia.database.dao.FileDAO;
-import com.diluv.confluencia.database.record.FileStatus;
+import com.diluv.confluencia.database.record.FileProcessingStatus;
 import com.diluv.confluencia.database.record.ProjectFileRecord;
 import com.diluv.confluencia.utils.SQLHandler;
 
@@ -25,7 +25,7 @@ public class FileDatabase implements FileDAO {
     private static final String INSERT_PROJECT_FILE_ANTIVIRUS = SQLHandler.readFile("project_files/insertProjectFileAntivirus");
 
     @Override
-    public boolean updateStatusById (long id, FileStatus status) throws SQLException {
+    public boolean updateStatusById (long id, FileProcessingStatus status) throws SQLException {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(UPDATE_STATUS_BY_ID)) {
             stmt.setLong(1, status.ordinal());
@@ -38,7 +38,7 @@ public class FileDatabase implements FileDAO {
     }
 
     @Override
-    public List<ProjectFileRecord> findAllWhereStatusAndLimit (FileStatus status, int amount) {
+    public List<ProjectFileRecord> findAllWhereStatusAndLimit (FileProcessingStatus status, int amount) {
 
         final List<ProjectFileRecord> fileQueueRecord = new ArrayList<>();
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL_WHERE_STATUS_AND_LIMIT)) {
@@ -66,7 +66,7 @@ public class FileDatabase implements FileDAO {
             connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
             connection.setAutoCommit(false);
 
-            fileQueueRecord = this.findAllWhereStatusAndLimit(FileStatus.PENDING, amount);
+            fileQueueRecord = this.findAllWhereStatusAndLimit(FileProcessingStatus.PENDING, amount);
 
             if (fileQueueRecord.isEmpty()) {
                 return fileQueueRecord;
@@ -74,7 +74,7 @@ public class FileDatabase implements FileDAO {
 
             final Long[] idList = fileQueueRecord.stream().map(ProjectFileRecord::getId).toArray(Long[]::new);
             for (final Long id : idList) {
-                if (!this.updateStatusById(id, FileStatus.RUNNING)) {
+                if (!this.updateStatusById(id, FileProcessingStatus.RUNNING)) {
                     // TODO didn't work but didnt throw an exception
                 }
             }
@@ -87,15 +87,17 @@ public class FileDatabase implements FileDAO {
     }
 
     @Override
-    public Long insertProjectFile (String name, long size, String changelog, String sha512, long projectId, long userId) {
+    public Long insertProjectFile (String name, long size, String changelog, String sha512, String releaseType, String classifier, long projectId, long userId) {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(INSERT_PROJECT_FILE, new String[]{"id"})) {
             stmt.setString(1, name);
             stmt.setLong(2, size);
             stmt.setString(3, changelog);
             stmt.setString(4, sha512);
-            stmt.setLong(5, projectId);
-            stmt.setLong(6, userId);
+            stmt.setString(5, releaseType);
+            stmt.setString(6, classifier);
+            stmt.setLong(7, projectId);
+            stmt.setLong(8, userId);
 
             int affectedRows = stmt.executeUpdate();
             if (affectedRows == 0) {

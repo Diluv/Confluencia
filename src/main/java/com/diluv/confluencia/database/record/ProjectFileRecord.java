@@ -45,8 +45,25 @@ public class ProjectFileRecord {
      */
     private final boolean released;
 
-    private final FileStatus status;
-    private final long statusChange;
+    /**
+     * The type of release the file is, Alpha, Beta, Release.
+     */
+    private final String releaseType;
+
+    /**
+     * The classifier on the file. E.g. binary, src, javadocs, deobf.
+     */
+    private final String classifier;
+
+    /**
+     * The file process status.
+     */
+    private final FileProcessingStatus processingStatus;
+
+    /**
+     * The time the file process status last changed.
+     */
+    private final long processingStatusChanged;
 
     /**
      * The id of the project that this file belongs to.
@@ -73,8 +90,10 @@ public class ProjectFileRecord {
         this.createdAt = rs.getTimestamp("created_at").getTime();
         this.updatedAt = rs.getTimestamp("updated_at").getTime();
         this.released = rs.getBoolean("released");
-        this.status = FileStatus.values()[rs.getInt("status")];
-        this.statusChange = rs.getTimestamp("status_change").getTime();
+        this.releaseType = rs.getString("release_type");
+        this.classifier = rs.getString("classifier");
+        this.processingStatus = FileProcessingStatus.values()[rs.getInt("processing_status")];
+        this.processingStatusChanged = rs.getTimestamp("processing_status_changed").getTime();
         this.projectId = rs.getLong("project_id");
         this.userId = rs.getLong("user_id");
         this.username = rs.getString("username");
@@ -120,14 +139,24 @@ public class ProjectFileRecord {
         return this.released;
     }
 
-    public FileStatus getStatus () {
+    public String getReleaseType () {
 
-        return this.status;
+        return this.releaseType;
     }
 
-    public long getStatusChange () {
+    public String getClassifier () {
 
-        return this.statusChange;
+        return this.classifier;
+    }
+
+    public FileProcessingStatus getProcessingStatus () {
+
+        return this.processingStatus;
+    }
+
+    public long getProcessingStatusChanged () {
+
+        return this.processingStatusChanged;
     }
 
     public long getProjectId () {

@@ -6,20 +6,20 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import com.diluv.confluencia.ConfluenciaTest;
-import com.diluv.confluencia.database.record.FileStatus;
+import com.diluv.confluencia.database.record.FileProcessingStatus;
 
 public class TestFileDatabase extends ConfluenciaTest {
 
     @Test
     public void findAllWhereStatusAndLimit () {
 
-        Assertions.assertEquals(1, ConfluenciaTest.FILE.findAllWhereStatusAndLimit(FileStatus.PENDING, 5).size());
+        Assertions.assertEquals(1, ConfluenciaTest.FILE.findAllWhereStatusAndLimit(FileProcessingStatus.PENDING, 5).size());
     }
 
     @Test
     public void updateStatusById () throws SQLException {
 
-        Assertions.assertTrue(ConfluenciaTest.FILE.updateStatusById(1, FileStatus.RUNNING));
+        Assertions.assertTrue(ConfluenciaTest.FILE.updateStatusById(1, FileProcessingStatus.RUNNING));
     }
 
     @Test
@@ -43,7 +43,7 @@ public class TestFileDatabase extends ConfluenciaTest {
     @Test
     public void insertProjectFile () {
 
-        Long id = ConfluenciaTest.FILE.insertProjectFile("test.jar", 10, "", "sha512", 1, 1);
+        Long id = ConfluenciaTest.FILE.insertProjectFile("test.jar", 10, "", "sha512", "release", "binary", 1, 1);
         Assertions.assertNotNull(id);
         Assertions.assertEquals(6L, id.longValue());
     }
@@ -62,10 +62,10 @@ public class TestFileDatabase extends ConfluenciaTest {
     }
 
     @Test
-    public void getLatestFiles(){
+    public void getLatestFiles () {
 
         try {
-            Assertions.assertEquals(1,ConfluenciaTest.FILE.getLatestFiles(1).size());
+            Assertions.assertEquals(1, ConfluenciaTest.FILE.getLatestFiles(1).size());
         }
         catch (SQLException e) {
             e.printStackTrace();
