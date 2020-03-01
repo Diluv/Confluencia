@@ -51,6 +51,8 @@ public abstract class ConfluenciaTest {
             TestSQLHandler.loadData("project");
             TestSQLHandler.loadData("project_author");
             TestSQLHandler.loadData("project_file");
+            TestSQLHandler.loadData("api_token");
+
             init = true;
         }
     }

@@ -1,6 +1,10 @@
 package com.diluv.confluencia.database;
 
 import java.sql.Timestamp;
+import java.util.Collections;
+import java.util.List;
+
+import com.diluv.confluencia.database.dao.APITokenRecord;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -119,5 +123,24 @@ public class TestUserDatabase extends ConfluenciaTest {
         Assertions.assertFalse(ConfluenciaTest.USER.deleteRefreshTokenByUserIdAndCode(1, "invalid"));
         Assertions.assertTrue(ConfluenciaTest.USER.deleteRefreshTokenByUserIdAndCode(1, testCode1));
         Assertions.assertTrue(ConfluenciaTest.USER.deleteRefreshTokenByUserIdAndCode(2, testCode2));
+    }
+
+    @Test
+    public void insertAPITokens () {
+
+        List<String> permission = Collections.singletonList("file.edit");
+        String testCode1 = "5d8a8e30-94b1-4b52-8ddd-e9ce6b899d88";
+        Assertions.assertTrue(ConfluenciaTest.USER.insertAPITokens(1, testCode1, "CI Token"));
+        Assertions.assertTrue(ConfluenciaTest.USER.insertAPITokenPermissions(1, testCode1, permission));
+
+        Assertions.assertFalse(ConfluenciaTest.USER.deleteAPITokenByUserIdAndCode(1, "invalid"));
+        Assertions.assertTrue(ConfluenciaTest.USER.deleteAPITokenByUserIdAndCode(1, testCode1));
+    }
+
+    @Test
+    public void findAPITokenByUserIdAndCode () {
+
+        Assertions.assertNull(ConfluenciaTest.USER.findAPITokenByUserIdAndCode(1, "invalid"));
+        Assertions.assertNotNull(ConfluenciaTest.USER.findAPITokenByUserIdAndCode(1, "5a8666ba-fcf9-4f3f-89b0-5cc9d522fe40"));
     }
 }

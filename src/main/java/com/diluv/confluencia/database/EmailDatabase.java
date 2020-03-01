@@ -28,7 +28,7 @@ public class EmailDatabase implements EmailDAO {
                 stmt.setString(1, domain);
                 stmt.addBatch();
             }
-            stmt.executeLargeBatch();
+            stmt.executeBatch();
             return true;
         }
         catch (SQLException e) {

@@ -64,7 +64,7 @@ public class TestProjectDatabase extends ConfluenciaTest {
     @Test
     public void findAllProjectAuthorsByProjectId () {
 
-        Assertions.assertEquals(1, ConfluenciaTest.PROJECT.findAllProjectAuthorsByProjectId(1).size());
+        Assertions.assertEquals(2, ConfluenciaTest.PROJECT.findAllProjectAuthorsByProjectId(1).size());
     }
 
     @Test

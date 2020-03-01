@@ -3,6 +3,7 @@ package com.diluv.confluencia.database.record;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class ProjectAuthorRecord {
@@ -19,7 +20,8 @@ public class ProjectAuthorRecord {
         this.username = rs.getString("username");
         this.createdAt = rs.getTimestamp("created_at").getTime();
         this.role = rs.getString("role");
-        this.permissions = Arrays.asList(rs.getString("permissions").split(" "));
+        String perm = rs.getString("permissions");
+        this.permissions = perm == null ? Collections.emptyList() : Arrays.asList(perm.split(" "));
     }
 
     public long getUserId () {

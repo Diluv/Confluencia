@@ -1,6 +1,7 @@
 package com.diluv.confluencia.database.dao;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import com.diluv.confluencia.database.record.RefreshTokenRecord;
 import com.diluv.confluencia.database.record.TempUserRecord;
@@ -35,4 +36,12 @@ public interface UserDAO {
     RefreshTokenRecord findRefreshTokenByUserIdAndCode (long userId, String code);
 
     boolean deleteRefreshTokenByUserIdAndCode (long userId, String code);
+
+    boolean insertAPITokens (long userId, String code, String name);
+
+    boolean insertAPITokenPermissions (long userId, String code, List<String> permissions);
+
+    APITokenRecord findAPITokenByUserIdAndCode (long userId, String code);
+
+    boolean deleteAPITokenByUserIdAndCode (long userId, String code);
 }
