@@ -70,6 +70,12 @@ public class ProjectFileRecord {
      */
     private final long projectId;
 
+    //TODO
+    private final String projectTypeSlug;
+
+    //TODO
+    private final String gameSlug;
+
     /**
      * The id of the user who uploaded the file.
      */
@@ -95,6 +101,8 @@ public class ProjectFileRecord {
         this.processingStatus = FileProcessingStatus.values()[rs.getInt("processing_status")];
         this.processingStatusChanged = rs.getTimestamp("processing_status_changed").getTime();
         this.projectId = rs.getLong("project_id");
+        this.projectTypeSlug = rs.getString("project_type_slug");
+        this.gameSlug = rs.getString("game_slug");
         this.userId = rs.getLong("user_id");
         this.username = rs.getString("username");
     }
@@ -162,6 +170,16 @@ public class ProjectFileRecord {
     public long getProjectId () {
 
         return this.projectId;
+    }
+
+    public String getProjectTypeSlug () {
+
+        return this.projectTypeSlug;
+    }
+
+    public String getGameSlug () {
+
+        return this.gameSlug;
     }
 
     public long getUserId () {

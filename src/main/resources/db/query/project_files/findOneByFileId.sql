@@ -11,9 +11,12 @@ SELECT pf.id,
        pf.processing_status,
        pf.processing_status_changed,
        pf.project_id,
+       p.project_type_slug,
+       p.game_slug,
        pf.user_id,
        u.username as username
 FROM project_files pf
          JOIN users u ON (u.id = pf.user_id)
+         JOIN projects p ON (p.id = pf.project_id)
 WHERE pf.id = ?
 LIMIT 1;
