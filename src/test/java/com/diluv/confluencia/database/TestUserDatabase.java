@@ -4,8 +4,6 @@ import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.List;
 
-import com.diluv.confluencia.database.dao.APITokenRecord;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

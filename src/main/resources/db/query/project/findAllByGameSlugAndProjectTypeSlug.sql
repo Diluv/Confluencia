@@ -18,4 +18,5 @@ FROM projects p
 WHERE p.released = TRUE
   AND p.game_slug = ?
   AND p.project_type_slug = ?
-LIMIT 20;
+  AND p.id > ?
+LIMIT ?;

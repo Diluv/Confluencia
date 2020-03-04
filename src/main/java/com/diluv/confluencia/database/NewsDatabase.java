@@ -9,6 +9,7 @@ import java.util.List;
 import com.diluv.confluencia.Confluencia;
 import com.diluv.confluencia.database.dao.NewsDAO;
 import com.diluv.confluencia.database.record.NewsRecord;
+import com.diluv.confluencia.utils.Pagination;
 import com.diluv.confluencia.utils.SQLHandler;
 
 public class NewsDatabase implements NewsDAO {
@@ -16,11 +17,12 @@ public class NewsDatabase implements NewsDAO {
     private static final String FIND_ONE_BY_SLUG = SQLHandler.readFile("news/findAllBySlug");
 
     @Override
-    public List<NewsRecord> findAll () {
+    public List<NewsRecord> findAll (Pagination pagination, int limit) {
 
         List<NewsRecord> news = new ArrayList<>();
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL)) {
-
+            stmt.setLong(1, pagination.offset);
+            stmt.setLong(2, limit);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     news.add(new NewsRecord(rs));

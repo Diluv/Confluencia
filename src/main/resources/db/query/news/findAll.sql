@@ -6,3 +6,4 @@ SELECT slug,
        created_at
 FROM news
 ORDER BY created_at
+LIMIT ?, ?;

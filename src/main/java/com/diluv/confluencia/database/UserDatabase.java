@@ -7,7 +7,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 import com.diluv.confluencia.Confluencia;
-import com.diluv.confluencia.database.dao.APITokenRecord;
+import com.diluv.confluencia.database.record.APITokenRecord;
 import com.diluv.confluencia.database.dao.UserDAO;
 import com.diluv.confluencia.database.record.RefreshTokenRecord;
 import com.diluv.confluencia.database.record.TempUserRecord;

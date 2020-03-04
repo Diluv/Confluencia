@@ -11,6 +11,7 @@ import com.diluv.confluencia.database.dao.ProjectDAO;
 import com.diluv.confluencia.database.record.ProjectAuthorRecord;
 import com.diluv.confluencia.database.record.ProjectRecord;
 import com.diluv.confluencia.database.record.ProjectTypeRecord;
+import com.diluv.confluencia.utils.Pagination;
 import com.diluv.confluencia.utils.SQLHandler;
 
 public class ProjectDatabase implements ProjectDAO {
@@ -84,13 +85,15 @@ public class ProjectDatabase implements ProjectDAO {
         }
         return null;
     }
+
     @Override
-    public List<ProjectRecord> findAllByUsername (String username) {
+    public List<ProjectRecord> findAllByUsername (String username, Pagination cursor, int limit) {
 
         List<ProjectRecord> projects = new ArrayList<>();
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL_BY_USERNAME)) {
             stmt.setString(1, username);
-
+            stmt.setLong(2, cursor.offset);
+            stmt.setLong(3, limit);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     projects.add(new ProjectRecord(rs));
@@ -104,12 +107,13 @@ public class ProjectDatabase implements ProjectDAO {
     }
 
     @Override
-    public List<ProjectRecord> findAllByUsernameWhereAuthorized (String username) {
+    public List<ProjectRecord> findAllByUsernameWhereAuthorized (String username, Pagination cursor, int limit) {
 
         List<ProjectRecord> projects = new ArrayList<>();
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL_BY_USERNAME_AUTHORIZED)) {
             stmt.setString(1, username);
-
+            stmt.setLong(2, cursor.offset);
+            stmt.setLong(3, limit);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     projects.add(new ProjectRecord(rs));
@@ -123,13 +127,14 @@ public class ProjectDatabase implements ProjectDAO {
     }
 
     @Override
-    public List<ProjectRecord> findAllProjectsByGameSlugAndProjectType (String gameSlug, String projectTypeSlug) {
+    public List<ProjectRecord> findAllProjectsByGameSlugAndProjectType (String gameSlug, String projectTypeSlug, Pagination cursor, int limit) {
 
         List<ProjectRecord> projects = new ArrayList<>();
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL_BY_GAMESLUG_AND_PROJECTYPESLUG)) {
             stmt.setString(1, gameSlug);
             stmt.setString(2, projectTypeSlug);
-
+            stmt.setLong(3, cursor.offset);
+            stmt.setLong(4, limit);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     projects.add(new ProjectRecord(rs));
@@ -143,12 +148,32 @@ public class ProjectDatabase implements ProjectDAO {
     }
 
     @Override
-    public List<ProjectTypeRecord> findAllProjectTypesByGameSlug (String gameSlug) {
+    public List<ProjectAuthorRecord> findAllProjectAuthorsByProjectId (long projectId) {
+
+        List<ProjectAuthorRecord> projectAuthors = new ArrayList<>();
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL_BY_PROJECT_ID)) {
+            stmt.setLong(1, projectId);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    projectAuthors.add(new ProjectAuthorRecord(rs));
+                }
+            }
+        }
+        catch (SQLException e) {
+            Confluencia.LOGGER.error("Failed to run findAllByProjectId script for project id {}.", projectId, e);
+        }
+        return projectAuthors;
+    }
+
+    @Override
+    public List<ProjectTypeRecord> findAllProjectTypesByGameSlug (String gameSlug, Pagination cursor, int limit) {
 
         List<ProjectTypeRecord> projects = new ArrayList<>();
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL_PROJECTTYPES_BY_GAMESLUG)) {
             stmt.setString(1, gameSlug);
-
+            stmt.setLong(2, cursor.offset);
+            stmt.setLong(3, limit);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     projects.add(new ProjectTypeRecord(rs));
@@ -178,25 +203,5 @@ public class ProjectDatabase implements ProjectDAO {
             Confluencia.LOGGER.error("Failed to run findOneProjectTypeByGameSlugAndProjectTypeSlug script for game {} and type {}.", gameSlug, projectTypeSlug, e);
         }
         return null;
-    }
-
-
-    @Override
-    public List<ProjectAuthorRecord> findAllProjectAuthorsByProjectId (long projectId) {
-
-        List<ProjectAuthorRecord> projectAuthors = new ArrayList<>();
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL_BY_PROJECT_ID)) {
-            stmt.setLong(1, projectId);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    projectAuthors.add(new ProjectAuthorRecord(rs));
-                }
-            }
-        }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to run findAllByProjectId script for project id {}.", projectId, e);
-        }
-        return projectAuthors;
     }
 }

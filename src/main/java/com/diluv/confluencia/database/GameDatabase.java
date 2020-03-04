@@ -9,6 +9,7 @@ import java.util.List;
 import com.diluv.confluencia.Confluencia;
 import com.diluv.confluencia.database.dao.GameDAO;
 import com.diluv.confluencia.database.record.GameRecord;
+import com.diluv.confluencia.utils.Pagination;
 import com.diluv.confluencia.utils.SQLHandler;
 
 public class GameDatabase implements GameDAO {
@@ -16,11 +17,12 @@ public class GameDatabase implements GameDAO {
     private static final String FIND_ONE_BY_SLUG = SQLHandler.readFile("game/findOneBySlug");
 
     @Override
-    public List<GameRecord> findAll () {
+    public List<GameRecord> findAll (Pagination cursor, int limit) {
 
         List<GameRecord> gameRecords = new ArrayList<>();
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL)) {
-
+            stmt.setLong(1, cursor.offset);
+            stmt.setLong(2, limit);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     gameRecords.add(new GameRecord(rs));

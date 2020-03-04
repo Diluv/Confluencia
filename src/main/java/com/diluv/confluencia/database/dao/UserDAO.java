@@ -3,6 +3,7 @@ package com.diluv.confluencia.database.dao;
 import java.sql.Timestamp;
 import java.util.List;
 
+import com.diluv.confluencia.database.record.APITokenRecord;
 import com.diluv.confluencia.database.record.RefreshTokenRecord;
 import com.diluv.confluencia.database.record.TempUserRecord;
 import com.diluv.confluencia.database.record.UserRecord;
