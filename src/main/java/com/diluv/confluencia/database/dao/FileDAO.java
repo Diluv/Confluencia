@@ -22,5 +22,5 @@ public interface FileDAO {
 
     List<ProjectFileRecord> findAllByGameSlugAndProjectTypeAndProjectSlugAuthorized (String gameSlug, String projectTypeSlug, String projectSlug);
 
-    boolean insertProjectFileAntivirus (long projectId, String malware);
+    boolean insertProjectFileAntivirus (long projectFileId, String malware);
 }

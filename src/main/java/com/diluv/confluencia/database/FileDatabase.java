@@ -180,10 +180,10 @@ public class FileDatabase implements FileDAO {
     }
 
     @Override
-    public boolean insertProjectFileAntivirus (long projectId, String malware) {
+    public boolean insertProjectFileAntivirus (long projectFileId, String malware) {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(INSERT_PROJECT_FILE_ANTIVIRUS)) {
-            stmt.setLong(1, projectId);
+            stmt.setLong(1, projectFileId);
             stmt.setString(2, malware);
             if (stmt.executeUpdate() == 1) {
                 return true;
