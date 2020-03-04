@@ -41,10 +41,10 @@ CREATE TABLE refresh_tokens
 
 CREATE TABLE api_tokens
 (
-    user_id    BIGINT UNSIGNED NOT NULL,
-    code       CHAR(36)        NOT NULL,
+    user_id BIGINT UNSIGNED NOT NULL,
+    code    CHAR(36)        NOT NULL,
 
-    name       VARCHAR(20)     NOT NULL,
+    name    VARCHAR(20)     NOT NULL,
 
     PRIMARY KEY (user_id, code)
 );
@@ -62,10 +62,12 @@ CREATE TABLE api_token_permissions
 
 CREATE TABLE games
 (
-    slug VARCHAR(200) NOT NULL,
+    slug       VARCHAR(200) NOT NULL,
 
-    name VARCHAR(255) NOT NULL,
-    url  VARCHAR(255) NOT NULL,
+    name       VARCHAR(255) NOT NULL,
+    url        VARCHAR(255) NOT NULL,
+
+    banner_url VARCHAR(255) NOT NULL,
 
     PRIMARY KEY (slug)
 );
@@ -183,8 +185,8 @@ CREATE TABLE news
 );
 
 # Insert default data
-INSERT IGNORE INTO games(slug, name, url)
-VALUES ('minecraft', 'Minecraft', 'https://minecraft.net/');
+INSERT IGNORE INTO games(slug, name, url, banner_url)
+VALUES ('minecraft', 'Minecraft', 'https://minecraft.net/', 'https://images.placeholders.dev/?width=1200&height=150');
 
 INSERT IGNORE INTO project_types(game_slug, slug, name, max_size)
 VALUES ('minecraft', 'mods', 'Mods', 25000000);
