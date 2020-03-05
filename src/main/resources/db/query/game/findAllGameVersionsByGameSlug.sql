@@ -3,5 +3,4 @@ SELECT id,
        version,
        changelog_url
 FROM game_versions
-WHERE game_slug = ?
-LIMIT ?, ?;
+WHERE game_slug = ?;
