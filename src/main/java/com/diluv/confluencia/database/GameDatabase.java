@@ -57,13 +57,11 @@ public class GameDatabase implements GameDAO {
     }
 
     @Override
-    public List<GameVersionRecord> findAllGameVersionsByGameSlug (String gameSlug, Pagination cursor, int limit) {
+    public List<GameVersionRecord> findAllGameVersionsByGameSlug (String gameSlug) {
 
         List<GameVersionRecord> gameVersions = new ArrayList<>();
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL_GAME_VERSIONS_BY_GAMESLUG)) {
             stmt.setString(1, gameSlug);
-            stmt.setLong(2, cursor.offset);
-            stmt.setLong(3, limit);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     gameVersions.add(new GameVersionRecord(rs));
@@ -71,7 +69,7 @@ public class GameDatabase implements GameDAO {
             }
         }
         catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to run findAll games database script.", e);
+            Confluencia.LOGGER.error("Failed to run findAllGameVersionsByGameSlug games database script.", e);
         }
         return gameVersions;
     }

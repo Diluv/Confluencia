@@ -13,5 +13,5 @@ public interface GameDAO {
 
     List<GameRecord> findAll (Pagination cursor, int limit);
 
-    List<GameVersionRecord> findAllGameVersionsByGameSlug (String gameSlug, Pagination cursor, int limit);
+    List<GameVersionRecord> findAllGameVersionsByGameSlug (String gameSlug);
 }

@@ -233,20 +233,20 @@ public class ProjectDatabase implements ProjectDAO {
     @Override
     public List<ModLoaderRecord> findAllModLoadersByGameSlugAndProjectTypeSlug (String gameSlug, String projectTypeSlug) {
 
-        List<ModLoaderRecord> modLoader = new ArrayList<>();
+        List<ModLoaderRecord> modloaders = new ArrayList<>();
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL_MODLOADERS_BY_GAMESLUG_AND_PROJECTYPESLUG)) {
             stmt.setString(1, gameSlug);
             stmt.setString(2, projectTypeSlug);
 
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    modLoader.add(new ModLoaderRecord(rs));
+                    modloaders.add(new ModLoaderRecord(rs));
                 }
             }
         }
         catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to run findAllCategoriesByGameSlugAndProjectTypeSlug database script for game slug {}.", gameSlug, e);
+            Confluencia.LOGGER.error("Failed to run findAllModLoadersByGameSlugAndProjectTypeSlug database script for game slug {}.", gameSlug, e);
         }
-        return modLoader;
+        return modloaders;
     }
 }

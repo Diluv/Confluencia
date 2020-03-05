@@ -77,18 +77,18 @@ public class TestProjectDatabase extends ConfluenciaTest {
     @Test
     public void findAllCategoriesByGameSlugAndProjectTypeSlug () {
 
-        Assertions.assertEquals(0, ConfluenciaTest.PROJECT.findAllCategoriesByGameSlugAndProjectTypeSlug("invalid", "invalid", new Pagination(0), 10).size());
-        Assertions.assertEquals(0, ConfluenciaTest.PROJECT.findAllCategoriesByGameSlugAndProjectTypeSlug("minecraft", "invalid", new Pagination(0), 10).size());
-        Assertions.assertEquals(1, ConfluenciaTest.PROJECT.findAllCategoriesByGameSlugAndProjectTypeSlug("minecraft", "mods", new Pagination(0), 10).size());
+        Assertions.assertEquals(0, ConfluenciaTest.PROJECT.findAllCategoriesByGameSlugAndProjectTypeSlug("invalid", "invalid").size());
+        Assertions.assertEquals(0, ConfluenciaTest.PROJECT.findAllCategoriesByGameSlugAndProjectTypeSlug("minecraft", "invalid").size());
+        Assertions.assertEquals(1, ConfluenciaTest.PROJECT.findAllCategoriesByGameSlugAndProjectTypeSlug("minecraft", "mods").size());
     }
 
 
     @Test
     public void findAllModLoadersByGameSlugAndProjectTypeSlug () {
 
-        Assertions.assertEquals(0, ConfluenciaTest.PROJECT.findAllModLoadersByGameSlugAndProjectTypeSlug("invalid", "invalid", new Pagination(0), 10).size());
-        Assertions.assertEquals(0, ConfluenciaTest.PROJECT.findAllModLoadersByGameSlugAndProjectTypeSlug("minecraft", "invalid", new Pagination(0), 10).size());
-        Assertions.assertEquals(1, ConfluenciaTest.PROJECT.findAllModLoadersByGameSlugAndProjectTypeSlug("minecraft", "mods", new Pagination(0), 10).size());
+        Assertions.assertEquals(0, ConfluenciaTest.PROJECT.findAllModLoadersByGameSlugAndProjectTypeSlug("invalid", "invalid").size());
+        Assertions.assertEquals(0, ConfluenciaTest.PROJECT.findAllModLoadersByGameSlugAndProjectTypeSlug("minecraft", "invalid").size());
+        Assertions.assertEquals(1, ConfluenciaTest.PROJECT.findAllModLoadersByGameSlugAndProjectTypeSlug("minecraft", "mods").size());
     }
 
 }

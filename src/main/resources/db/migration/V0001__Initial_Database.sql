@@ -231,3 +231,6 @@ VALUES ('minecraft', 'Minecraft', 'https://minecraft.net/', 'https://images.plac
 
 INSERT IGNORE INTO project_types(game_slug, slug, name, max_size)
 VALUES ('minecraft', 'mods', 'Mods', 25000000);
+
+INSERT INTO modloaders(game_slug, project_type_slug, name)
+VALUES ('minecraft', 'mods', 'Fabric');
