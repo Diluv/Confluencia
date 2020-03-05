@@ -20,7 +20,13 @@ public class TestFileDatabase extends ConfluenciaTest {
     @Test
     public void updateStatusById () throws SQLException {
 
-        Assertions.assertTrue(ConfluenciaTest.FILE.updateStatusById(1, FileProcessingStatus.RUNNING));
+        Assertions.assertTrue(ConfluenciaTest.FILE.updateStatusById(FileProcessingStatus.RUNNING, 1));
+    }
+
+    @Test
+    public void updateStatusByStatus () throws SQLException {
+
+        Assertions.assertTrue(ConfluenciaTest.FILE.updateStatusByStatus(FileProcessingStatus.PENDING, FileProcessingStatus.RUNNING));
     }
 
     @Test

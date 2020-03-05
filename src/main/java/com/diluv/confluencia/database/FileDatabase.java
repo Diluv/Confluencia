@@ -18,6 +18,7 @@ public class FileDatabase implements FileDAO {
 
     private static final String INSERT_PROJECT_FILE = SQLHandler.readFile("project_files/insertProjectFile");
     private static final String UPDATE_STATUS_BY_ID = SQLHandler.readFile("project_files/updateStatusById");
+    private static final String UPDATE_STATUS_BY_STATUS = SQLHandler.readFile("project_files/updateStatusByStatus");
     private static final String FIND_ALL_WHERE_STATUS_AND_LIMIT = SQLHandler.readFile("project_files/findAllWhereStatusAndLimit");
     private static final String FIND_ONE_PROJECT_FILE_QUEUE_BY_FILE_ID = SQLHandler.readFile("project_files/findOneByFileId");
     private static final String FIND_ALL_BY_GAMESLUG_AND_PROJECTYPESLUG_AND_PROJECTSLUG = SQLHandler.readFile("project_files/findAllByGameSlugAndProjectTypeAndProjectSlug");
@@ -26,11 +27,24 @@ public class FileDatabase implements FileDAO {
     private static final String INSERT_PROJECT_FILE_ANTIVIRUS = SQLHandler.readFile("project_files/insertProjectFileAntivirus");
 
     @Override
-    public boolean updateStatusById (long id, FileProcessingStatus status) throws SQLException {
+    public boolean updateStatusById (FileProcessingStatus status, long id) throws SQLException {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(UPDATE_STATUS_BY_ID)) {
             stmt.setLong(1, status.ordinal());
             stmt.setLong(2, id);
+            if (stmt.executeUpdate() == 1) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean updateStatusByStatus (FileProcessingStatus set, FileProcessingStatus where) throws SQLException {
+
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(UPDATE_STATUS_BY_ID)) {
+            stmt.setLong(1, set.ordinal());
+            stmt.setLong(2, where.ordinal());
             if (stmt.executeUpdate() == 1) {
                 return true;
             }
@@ -75,7 +89,7 @@ public class FileDatabase implements FileDAO {
 
             final Long[] idList = fileQueueRecord.stream().map(ProjectFileRecord::getId).toArray(Long[]::new);
             for (final Long id : idList) {
-                if (!this.updateStatusById(id, FileProcessingStatus.RUNNING)) {
+                if (!this.updateStatusById(FileProcessingStatus.RUNNING, id)) {
                     // TODO didn't work but didnt throw an exception
                 }
             }
