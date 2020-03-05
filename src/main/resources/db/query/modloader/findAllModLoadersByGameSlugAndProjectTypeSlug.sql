@@ -1,9 +1,7 @@
 SELECT id,
        name,
-       slug,
-       icon_url,
        project_type_slug,
        game_slug
-FROM categories
+FROM modloaders
 WHERE game_slug = ?
   AND project_type_slug = ?;

@@ -17,19 +17,6 @@ CREATE TABLE user_mfa_recoveries
     FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
-CREATE TABLE game_modloaders
-(
-    id        BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-
-    game_slug VARCHAR(200)    NOT NULL,
-    name      VARCHAR(255)    NOT NULL,
-
-    url       VARCHAR(255)    NOT NULL,
-
-    PRIMARY KEY (id),
-    FOREIGN KEY (game_slug) REFERENCES games (slug)
-);
-
 CREATE TABLE project_links
 (
     project_id BIGINT UNSIGNED NOT NULL,
@@ -57,5 +44,5 @@ CREATE TABLE project_file_modloaders
 
     PRIMARY KEY (project_file_id, modloader_id),
     FOREIGN KEY (project_file_id) REFERENCES project_files (id),
-    FOREIGN KEY (modloader_id) REFERENCES game_modloaders (id)
+    FOREIGN KEY (modloader_id) REFERENCES modloaders (id)
 );

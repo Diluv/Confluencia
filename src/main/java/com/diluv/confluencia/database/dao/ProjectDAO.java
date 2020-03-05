@@ -3,6 +3,7 @@ package com.diluv.confluencia.database.dao;
 import java.util.List;
 
 import com.diluv.confluencia.database.record.CategoryRecord;
+import com.diluv.confluencia.database.record.ModLoaderRecord;
 import com.diluv.confluencia.database.record.ProjectAuthorRecord;
 import com.diluv.confluencia.database.record.ProjectRecord;
 import com.diluv.confluencia.database.record.ProjectTypeRecord;
@@ -28,5 +29,7 @@ public interface ProjectDAO {
 
     ProjectTypeRecord findOneProjectTypeByGameSlugAndProjectTypeSlug (String gameSlug, String projectTypeSlug);
 
-    List<CategoryRecord> findAllCategoriesByGameSlugAndProjectTypeSlug (String gameSlug, String projectTypeSlug, Pagination cursor, int limit);
+    List<CategoryRecord> findAllCategoriesByGameSlugAndProjectTypeSlug (String gameSlug, String projectTypeSlug);
+
+    List<ModLoaderRecord> findAllModLoadersByGameSlugAndProjectTypeSlug (String gameSlug, String projectTypeSlug);
 }

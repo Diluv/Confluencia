@@ -98,6 +98,18 @@ CREATE TABLE project_types
     FOREIGN KEY (game_slug) REFERENCES games (slug)
 );
 
+CREATE TABLE modloaders
+(
+    id                BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+
+    game_slug         VARCHAR(200)    NOT NULL,
+    project_type_slug VARCHAR(200)    NOT NULL,
+    name              VARCHAR(255)    NOT NULL,
+
+    PRIMARY KEY (id),
+    FOREIGN KEY (game_slug, project_type_slug) REFERENCES project_types (game_slug, slug)
+);
+
 CREATE TABLE categories
 (
     id                BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
