@@ -30,19 +30,6 @@ CREATE TABLE game_modloaders
     FOREIGN KEY (game_slug) REFERENCES games (slug)
 );
 
-CREATE TABLE game_versions
-(
-    id        BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-
-    game_slug VARCHAR(200)    NOT NULL,
-    version   VARCHAR(255)    NOT NULL,
-
-    url       VARCHAR(255)    NOT NULL,
-
-    PRIMARY KEY (id),
-    FOREIGN KEY (game_slug) REFERENCES games (slug)
-);
-
 CREATE TABLE project_links
 (
     project_id BIGINT UNSIGNED NOT NULL,

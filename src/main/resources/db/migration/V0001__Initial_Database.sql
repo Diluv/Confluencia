@@ -72,6 +72,19 @@ CREATE TABLE games
     PRIMARY KEY (slug)
 );
 
+CREATE TABLE game_versions
+(
+    id            BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+
+    game_slug     VARCHAR(200)    NOT NULL,
+    version       VARCHAR(255)    NOT NULL,
+
+    changelog_url VARCHAR(255),
+
+    PRIMARY KEY (id),
+    FOREIGN KEY (game_slug) REFERENCES games (slug)
+);
+
 CREATE TABLE project_types
 (
     game_slug VARCHAR(200)    NOT NULL,
@@ -87,14 +100,16 @@ CREATE TABLE project_types
 
 CREATE TABLE categories
 (
-    game_slug         VARCHAR(200) NOT NULL,
-    project_type_slug VARCHAR(200) NOT NULL,
-    slug              VARCHAR(200) NOT NULL,
+    id                BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
 
-    name              VARCHAR(200) NOT NULL,
-    icon_url          VARCHAR(255) NOT NULL,
+    game_slug         VARCHAR(200)    NOT NULL,
+    project_type_slug VARCHAR(200)    NOT NULL,
+    slug              VARCHAR(200)    NOT NULL,
 
-    PRIMARY KEY (game_slug, project_type_slug, slug),
+    name              VARCHAR(200)    NOT NULL,
+    icon_url          VARCHAR(255)    NOT NULL,
+
+    PRIMARY KEY (id),
     FOREIGN KEY (game_slug) REFERENCES games (slug),
     FOREIGN KEY (game_slug, project_type_slug) REFERENCES project_types (game_slug, slug)
 );

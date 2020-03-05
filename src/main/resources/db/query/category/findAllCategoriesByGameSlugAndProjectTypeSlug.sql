@@ -1,4 +1,5 @@
-SELECT name,
+SELECT id,
+       name,
        slug,
        icon_url,
        project_type_slug,

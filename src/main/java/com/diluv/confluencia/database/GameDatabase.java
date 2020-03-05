@@ -9,12 +9,33 @@ import java.util.List;
 import com.diluv.confluencia.Confluencia;
 import com.diluv.confluencia.database.dao.GameDAO;
 import com.diluv.confluencia.database.record.GameRecord;
+import com.diluv.confluencia.database.record.GameVersionRecord;
 import com.diluv.confluencia.utils.Pagination;
 import com.diluv.confluencia.utils.SQLHandler;
 
 public class GameDatabase implements GameDAO {
+
     private static final String FIND_ALL = SQLHandler.readFile("game/findAll");
     private static final String FIND_ONE_BY_SLUG = SQLHandler.readFile("game/findOneBySlug");
+    private static final String FIND_ALL_GAME_VERSIONS_BY_GAMESLUG = SQLHandler.readFile("game/findAllGameVersionsByGameSlug");
+
+    @Override
+    public GameRecord findOneBySlug (String name) {
+
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ONE_BY_SLUG)) {
+            stmt.setString(1, name);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return new GameRecord(rs);
+                }
+            }
+        }
+        catch (SQLException e) {
+            Confluencia.LOGGER.error("Failed to run findOneBySlug game database script with game {}.", name, e);
+        }
+        return null;
+    }
 
     @Override
     public List<GameRecord> findAll (Pagination cursor, int limit) {
@@ -36,20 +57,22 @@ public class GameDatabase implements GameDAO {
     }
 
     @Override
-    public GameRecord findOneBySlug (String name) {
+    public List<GameVersionRecord> findAllGameVersionsByGameSlug (String gameSlug, Pagination cursor, int limit) {
 
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ONE_BY_SLUG)) {
-            stmt.setString(1, name);
-
+        List<GameVersionRecord> gameVersions = new ArrayList<>();
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL_GAME_VERSIONS_BY_GAMESLUG)) {
+            stmt.setString(1, gameSlug);
+            stmt.setLong(2, cursor.offset);
+            stmt.setLong(3, limit);
             try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return new GameRecord(rs);
+                while (rs.next()) {
+                    gameVersions.add(new GameVersionRecord(rs));
                 }
             }
         }
         catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to run findOneBySlug game database script with game {}.", name, e);
+            Confluencia.LOGGER.error("Failed to run findAll games database script.", e);
         }
-        return null;
+        return gameVersions;
     }
 }

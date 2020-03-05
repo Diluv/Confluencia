@@ -9,12 +9,6 @@ import com.diluv.confluencia.utils.Pagination;
 public class TestGameDatabase extends ConfluenciaTest {
 
     @Test
-    public void findAll () {
-
-        Assertions.assertFalse(ConfluenciaTest.GAME.findAll(new Pagination(0), 1).isEmpty());
-    }
-
-    @Test
     public void findOneBySlug () {
 
         // Allowed
@@ -22,5 +16,18 @@ public class TestGameDatabase extends ConfluenciaTest {
 
         // Not found
         Assertions.assertNull(ConfluenciaTest.GAME.findOneBySlug("notfound"));
+    }
+
+    @Test
+    public void findAll () {
+
+        Assertions.assertEquals(1, ConfluenciaTest.GAME.findAll(new Pagination(0), 10).size());
+    }
+
+    @Test
+    public void findAllGameVersionsByGameSlug () {
+
+        Assertions.assertEquals(0, ConfluenciaTest.GAME.findAllGameVersionsByGameSlug("invalid", new Pagination(0), 10).size());
+        Assertions.assertEquals(1, ConfluenciaTest.GAME.findAllGameVersionsByGameSlug("minecraft", new Pagination(0), 10).size());
     }
 }
