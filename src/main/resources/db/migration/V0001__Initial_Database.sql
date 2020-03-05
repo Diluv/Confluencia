@@ -85,6 +85,20 @@ CREATE TABLE project_types
     FOREIGN KEY (game_slug) REFERENCES games (slug)
 );
 
+CREATE TABLE categories
+(
+    game_slug         VARCHAR(200) NOT NULL,
+    project_type_slug VARCHAR(200) NOT NULL,
+    slug              VARCHAR(200) NOT NULL,
+
+    name              VARCHAR(200) NOT NULL,
+    icon_url          VARCHAR(255) NOT NULL,
+
+    PRIMARY KEY (game_slug, project_type_slug, slug),
+    FOREIGN KEY (game_slug) REFERENCES games (slug),
+    FOREIGN KEY (game_slug, project_type_slug) REFERENCES project_types (game_slug, slug)
+);
+
 # Project
 CREATE TABLE projects
 (

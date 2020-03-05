@@ -73,4 +73,12 @@ public class TestProjectDatabase extends ConfluenciaTest {
 
         Assertions.assertTrue(ConfluenciaTest.PROJECT.insertProject("project_insert", "Insert", "Insert Summary", "Insert Description", 3, "minecraft", "mods"));
     }
+
+    @Test
+    public void findAllCategoriesByGameSlugAndProjectTypeSlug () {
+
+        Assertions.assertEquals(0, ConfluenciaTest.PROJECT.findAllCategoriesByGameSlugAndProjectTypeSlug("invalid", "invalid", new Pagination(0), 10).size());
+        Assertions.assertEquals(0, ConfluenciaTest.PROJECT.findAllCategoriesByGameSlugAndProjectTypeSlug("minecraft", "invalid", new Pagination(0), 10).size());
+        Assertions.assertEquals(1, ConfluenciaTest.PROJECT.findAllCategoriesByGameSlugAndProjectTypeSlug("minecraft", "mods", new Pagination(0), 10).size());
+    }
 }

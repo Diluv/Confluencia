@@ -7,7 +7,7 @@ import com.diluv.confluencia.utils.Pagination;
 
 public interface NewsDAO {
 
-    List<NewsRecord> findAll (Pagination pagination, int limit);
+    List<NewsRecord> findAll (Pagination cursor, int limit);
 
     NewsRecord findOneByNewsSlug (String slug);
 }

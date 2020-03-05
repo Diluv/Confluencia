@@ -17,11 +17,11 @@ public class NewsDatabase implements NewsDAO {
     private static final String FIND_ONE_BY_SLUG = SQLHandler.readFile("news/findAllBySlug");
 
     @Override
-    public List<NewsRecord> findAll (Pagination pagination, int limit) {
+    public List<NewsRecord> findAll (Pagination cursor, int limit) {
 
         List<NewsRecord> news = new ArrayList<>();
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL)) {
-            stmt.setLong(1, pagination.offset);
+            stmt.setLong(1, cursor.offset);
             stmt.setLong(2, limit);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
