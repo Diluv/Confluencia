@@ -43,7 +43,6 @@ public abstract class ConfluenciaTest {
         if (!init) {
             Confluencia.init(ConfluenciaTest.CONTAINER.getJdbcUrl(), ConfluenciaTest.CONTAINER.getUsername(), ConfluenciaTest.CONTAINER.getPassword(), true);
 
-            TestSQLHandler.loadData("game_versions");
             TestSQLHandler.loadData("news");
             TestSQLHandler.loadData("email");
             TestSQLHandler.loadData("user");

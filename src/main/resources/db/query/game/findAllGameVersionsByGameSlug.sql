@@ -1,6 +1,8 @@
 SELECT id,
        game_slug,
        version,
-       changelog_url
+       type,
+       released
 FROM game_versions
-WHERE game_slug = ?;
+WHERE game_slug = ?
+ORDER BY released DESC;

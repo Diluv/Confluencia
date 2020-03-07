@@ -18,16 +18,16 @@ public class TestProjectDatabase extends ConfluenciaTest {
     public void findAllByUsername () {
 
         Assertions.assertEquals(0, ConfluenciaTest.PROJECT.findAllByUsername("invalid", new Pagination(0), 10).size());
-        Assertions.assertEquals(1, ConfluenciaTest.PROJECT.findAllByUsername("test", new Pagination(0), 10).size());
-        Assertions.assertEquals(0, ConfluenciaTest.PROJECT.findAllByUsername("test2", new Pagination(0), 10).size());
+        Assertions.assertEquals(10, ConfluenciaTest.PROJECT.findAllByUsername("test", new Pagination(0), 10).size());
+        Assertions.assertEquals(10, ConfluenciaTest.PROJECT.findAllByUsername("test2", new Pagination(0), 10).size());
     }
 
     @Test
     public void findAllByUsernameWhereAuthorized () {
 
         Assertions.assertEquals(0, ConfluenciaTest.PROJECT.findAllByUsernameWhereAuthorized("invalid", new Pagination(0), 10).size());
-        Assertions.assertEquals(2, ConfluenciaTest.PROJECT.findAllByUsernameWhereAuthorized("test", new Pagination(0), 10).size());
-        Assertions.assertEquals(0, ConfluenciaTest.PROJECT.findAllByUsernameWhereAuthorized("test2", new Pagination(0), 10).size());
+        Assertions.assertEquals(10, ConfluenciaTest.PROJECT.findAllByUsernameWhereAuthorized("test", new Pagination(0), 10).size());
+        Assertions.assertEquals(10, ConfluenciaTest.PROJECT.findAllByUsernameWhereAuthorized("test2", new Pagination(0), 10).size());
     }
 
     @Test
@@ -50,7 +50,7 @@ public class TestProjectDatabase extends ConfluenciaTest {
 
         Assertions.assertEquals(0, ConfluenciaTest.PROJECT.findAllProjectsByGameSlugAndProjectType("invalid", "invalid", new Pagination(0), 10).size());
         Assertions.assertEquals(0, ConfluenciaTest.PROJECT.findAllProjectsByGameSlugAndProjectType("minecraft", "invalid", new Pagination(0), 10).size());
-        Assertions.assertEquals(1, ConfluenciaTest.PROJECT.findAllProjectsByGameSlugAndProjectType("minecraft", "mods", new Pagination(0), 10).size());
+        Assertions.assertEquals(10, ConfluenciaTest.PROJECT.findAllProjectsByGameSlugAndProjectType("minecraft", "mods", new Pagination(0), 10).size());
     }
 
     @Test
@@ -59,7 +59,7 @@ public class TestProjectDatabase extends ConfluenciaTest {
         Assertions.assertNull(ConfluenciaTest.PROJECT.findOneProjectByGameSlugAndProjectTypeSlugAndProjectSlug("invalid", "invalid", "invalid"));
         Assertions.assertNull(ConfluenciaTest.PROJECT.findOneProjectByGameSlugAndProjectTypeSlugAndProjectSlug("minecraft", "invalid", "invalid"));
         Assertions.assertNull(ConfluenciaTest.PROJECT.findOneProjectByGameSlugAndProjectTypeSlugAndProjectSlug("minecraft", "mods", "invalid"));
-        Assertions.assertNotNull(ConfluenciaTest.PROJECT.findOneProjectByGameSlugAndProjectTypeSlugAndProjectSlug("minecraft", "mods", "project_1"));
+        Assertions.assertNotNull(ConfluenciaTest.PROJECT.findOneProjectByGameSlugAndProjectTypeSlugAndProjectSlug("minecraft", "mods", "bookshelf"));
     }
 
     @Test

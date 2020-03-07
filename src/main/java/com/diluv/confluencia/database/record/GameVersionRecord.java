@@ -7,14 +7,16 @@ public class GameVersionRecord {
     private final long id;
     private final String gameSlug;
     private final String version;
-    private final String changelogURL;
+    private final String type;
+    private final long released;
 
     public GameVersionRecord (ResultSet rs) throws SQLException {
 
         this.id = rs.getLong("id");
         this.gameSlug = rs.getString("game_slug");
         this.version = rs.getString("version");
-        this.changelogURL = rs.getString("changelog_url");
+        this.type = rs.getString("type");
+        this.released = rs.getTimestamp("released").getTime();
     }
 
     public long getId () {
@@ -32,9 +34,14 @@ public class GameVersionRecord {
         return this.version;
     }
 
-    public String getChangelogURL () {
+    public String getType () {
 
-        return this.changelogURL;
+        return this.type;
+    }
+
+    public long getReleased () {
+
+        return this.released;
     }
 }
 

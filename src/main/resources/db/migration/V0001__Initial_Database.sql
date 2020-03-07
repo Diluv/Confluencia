@@ -74,12 +74,13 @@ CREATE TABLE games
 
 CREATE TABLE game_versions
 (
-    id            BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    id        BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
 
-    game_slug     VARCHAR(200)    NOT NULL,
-    version       VARCHAR(255)    NOT NULL,
+    game_slug VARCHAR(200)    NOT NULL,
+    version   VARCHAR(255)    NOT NULL,
 
-    changelog_url VARCHAR(255),
+    type      VARCHAR(200)    NOT NULL,
+    released  DATETIME        NOT NULL DEFAULT NOW(),
 
     PRIMARY KEY (id),
     FOREIGN KEY (game_slug) REFERENCES games (slug)
@@ -224,13 +225,3 @@ CREATE TABLE news
     created_at  TIMESTAMP    NOT NULL DEFAULT NOW(),
     PRIMARY KEY (slug)
 );
-
-# Insert default data
-INSERT IGNORE INTO games(slug, name, url, banner_url)
-VALUES ('minecraft', 'Minecraft', 'https://minecraft.net/', 'https://images.placeholders.dev/?width=1200&height=150');
-
-INSERT IGNORE INTO project_types(game_slug, slug, name, max_size)
-VALUES ('minecraft', 'mods', 'Mods', 25000000);
-
-INSERT INTO modloaders(game_slug, project_type_slug, name)
-VALUES ('minecraft', 'mods', 'Fabric');

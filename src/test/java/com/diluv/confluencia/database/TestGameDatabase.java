@@ -28,6 +28,6 @@ public class TestGameDatabase extends ConfluenciaTest {
     public void findAllGameVersionsByGameSlug () {
 
         Assertions.assertEquals(0, ConfluenciaTest.GAME.findAllGameVersionsByGameSlug("invalid").size());
-        Assertions.assertEquals(1, ConfluenciaTest.GAME.findAllGameVersionsByGameSlug("minecraft").size());
+        Assertions.assertFalse(ConfluenciaTest.GAME.findAllGameVersionsByGameSlug("minecraft").isEmpty());
     }
 }
