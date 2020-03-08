@@ -34,7 +34,7 @@ public class TestProjectDatabase extends ConfluenciaTest {
     public void findAllProjectTypesByGameSlug () {
 
         Assertions.assertEquals(0, ConfluenciaTest.PROJECT.findAllProjectTypesByGameSlug("invalid", new Pagination(0), 10).size());
-        Assertions.assertEquals(1, ConfluenciaTest.PROJECT.findAllProjectTypesByGameSlug("minecraft", new Pagination(0), 10).size());
+        Assertions.assertEquals(2, ConfluenciaTest.PROJECT.findAllProjectTypesByGameSlug("minecraft", new Pagination(0), 10).size());
     }
 
     @Test
@@ -42,7 +42,7 @@ public class TestProjectDatabase extends ConfluenciaTest {
 
         Assertions.assertNull(ConfluenciaTest.PROJECT.findOneProjectTypeByGameSlugAndProjectTypeSlug("invalid", "invalid"));
         Assertions.assertNull(ConfluenciaTest.PROJECT.findOneProjectTypeByGameSlugAndProjectTypeSlug("minecraft", "invalid"));
-        Assertions.assertNotNull(ConfluenciaTest.PROJECT.findOneProjectTypeByGameSlugAndProjectTypeSlug("minecraft", "mods"));
+        Assertions.assertNotNull(ConfluenciaTest.PROJECT.findOneProjectTypeByGameSlugAndProjectTypeSlug("minecraft", "forge-mods"));
     }
 
     @Test
@@ -50,7 +50,7 @@ public class TestProjectDatabase extends ConfluenciaTest {
 
         Assertions.assertEquals(0, ConfluenciaTest.PROJECT.findAllProjectsByGameSlugAndProjectType("invalid", "invalid", new Pagination(0), 10).size());
         Assertions.assertEquals(0, ConfluenciaTest.PROJECT.findAllProjectsByGameSlugAndProjectType("minecraft", "invalid", new Pagination(0), 10).size());
-        Assertions.assertEquals(10, ConfluenciaTest.PROJECT.findAllProjectsByGameSlugAndProjectType("minecraft", "mods", new Pagination(0), 10).size());
+        Assertions.assertEquals(10, ConfluenciaTest.PROJECT.findAllProjectsByGameSlugAndProjectType("minecraft", "forge-mods", new Pagination(0), 10).size());
     }
 
     @Test
@@ -58,8 +58,8 @@ public class TestProjectDatabase extends ConfluenciaTest {
 
         Assertions.assertNull(ConfluenciaTest.PROJECT.findOneProjectByGameSlugAndProjectTypeSlugAndProjectSlug("invalid", "invalid", "invalid"));
         Assertions.assertNull(ConfluenciaTest.PROJECT.findOneProjectByGameSlugAndProjectTypeSlugAndProjectSlug("minecraft", "invalid", "invalid"));
-        Assertions.assertNull(ConfluenciaTest.PROJECT.findOneProjectByGameSlugAndProjectTypeSlugAndProjectSlug("minecraft", "mods", "invalid"));
-        Assertions.assertNotNull(ConfluenciaTest.PROJECT.findOneProjectByGameSlugAndProjectTypeSlugAndProjectSlug("minecraft", "mods", "bookshelf"));
+        Assertions.assertNull(ConfluenciaTest.PROJECT.findOneProjectByGameSlugAndProjectTypeSlugAndProjectSlug("minecraft", "forge-mods", "invalid"));
+        Assertions.assertNotNull(ConfluenciaTest.PROJECT.findOneProjectByGameSlugAndProjectTypeSlugAndProjectSlug("minecraft", "forge-mods", "bookshelf"));
     }
 
     @Test
@@ -71,7 +71,7 @@ public class TestProjectDatabase extends ConfluenciaTest {
     @Test
     public void insertProject () {
 
-        Assertions.assertTrue(ConfluenciaTest.PROJECT.insertProject("project_insert", "Insert", "Insert Summary", "Insert Description", 3, "minecraft", "mods"));
+        Assertions.assertTrue(ConfluenciaTest.PROJECT.insertProject("project_insert", "Insert", "Insert Summary", "Insert Description", 3, "minecraft", "forge-mods"));
     }
 
     @Test
@@ -79,16 +79,6 @@ public class TestProjectDatabase extends ConfluenciaTest {
 
         Assertions.assertEquals(0, ConfluenciaTest.PROJECT.findAllCategoriesByGameSlugAndProjectTypeSlug("invalid", "invalid").size());
         Assertions.assertEquals(0, ConfluenciaTest.PROJECT.findAllCategoriesByGameSlugAndProjectTypeSlug("minecraft", "invalid").size());
-        Assertions.assertEquals(1, ConfluenciaTest.PROJECT.findAllCategoriesByGameSlugAndProjectTypeSlug("minecraft", "mods").size());
+        Assertions.assertEquals(1, ConfluenciaTest.PROJECT.findAllCategoriesByGameSlugAndProjectTypeSlug("minecraft", "forge-mods").size());
     }
-
-
-    @Test
-    public void findAllModLoadersByGameSlugAndProjectTypeSlug () {
-
-        Assertions.assertEquals(0, ConfluenciaTest.PROJECT.findAllModLoadersByGameSlugAndProjectTypeSlug("invalid", "invalid").size());
-        Assertions.assertEquals(0, ConfluenciaTest.PROJECT.findAllModLoadersByGameSlugAndProjectTypeSlug("minecraft", "invalid").size());
-        Assertions.assertEquals(1, ConfluenciaTest.PROJECT.findAllModLoadersByGameSlugAndProjectTypeSlug("minecraft", "mods").size());
-    }
-
 }

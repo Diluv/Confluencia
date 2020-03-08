@@ -36,13 +36,3 @@ CREATE TABLE project_file_versions
     FOREIGN KEY (project_file_id) REFERENCES project_files (id),
     FOREIGN KEY (game_version_id) REFERENCES game_versions (id)
 );
-
-CREATE TABLE project_file_modloaders
-(
-    project_file_id BIGINT UNSIGNED NOT NULL,
-    modloader_id    BIGINT UNSIGNED NOT NULL,
-
-    PRIMARY KEY (project_file_id, modloader_id),
-    FOREIGN KEY (project_file_id) REFERENCES project_files (id),
-    FOREIGN KEY (modloader_id) REFERENCES modloaders (id)
-);

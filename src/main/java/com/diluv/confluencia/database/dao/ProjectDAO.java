@@ -30,6 +30,4 @@ public interface ProjectDAO {
     ProjectTypeRecord findOneProjectTypeByGameSlugAndProjectTypeSlug (String gameSlug, String projectTypeSlug);
 
     List<CategoryRecord> findAllCategoriesByGameSlugAndProjectTypeSlug (String gameSlug, String projectTypeSlug);
-
-    List<ModLoaderRecord> findAllModLoadersByGameSlugAndProjectTypeSlug (String gameSlug, String projectTypeSlug);
 }
