@@ -26,13 +26,3 @@ CREATE TABLE project_links
     PRIMARY KEY (project_id, type),
     FOREIGN KEY (project_id) REFERENCES projects (id)
 );
-
-CREATE TABLE project_file_versions
-(
-    project_file_id BIGINT UNSIGNED NOT NULL,
-    game_version_id BIGINT UNSIGNED NOT NULL,
-
-    PRIMARY KEY (project_file_id, game_version_id),
-    FOREIGN KEY (project_file_id) REFERENCES project_files (id),
-    FOREIGN KEY (game_version_id) REFERENCES game_versions (id)
-);

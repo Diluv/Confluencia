@@ -81,4 +81,9 @@ public class TestProjectDatabase extends ConfluenciaTest {
         Assertions.assertEquals(0, ConfluenciaTest.PROJECT.findAllCategoriesByGameSlugAndProjectTypeSlug("minecraft", "invalid").size());
         Assertions.assertEquals(1, ConfluenciaTest.PROJECT.findAllCategoriesByGameSlugAndProjectTypeSlug("minecraft", "forge-mods").size());
     }
+
+    @Test
+    public void findAllCategoriesByProjectId () {
+        Assertions.assertEquals(1, ConfluenciaTest.PROJECT.findAllCategoriesByProjectId(1).size());
+    }
 }

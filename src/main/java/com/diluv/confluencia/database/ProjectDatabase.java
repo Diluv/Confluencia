@@ -9,7 +9,6 @@ import java.util.List;
 import com.diluv.confluencia.Confluencia;
 import com.diluv.confluencia.database.dao.ProjectDAO;
 import com.diluv.confluencia.database.record.CategoryRecord;
-import com.diluv.confluencia.database.record.ModLoaderRecord;
 import com.diluv.confluencia.database.record.ProjectAuthorRecord;
 import com.diluv.confluencia.database.record.ProjectRecord;
 import com.diluv.confluencia.database.record.ProjectTypeRecord;
@@ -25,12 +24,13 @@ public class ProjectDatabase implements ProjectDAO {
     private static final String FIND_ONE_BY_GAMESLUG_AND_PROJECTYPESLUG_AND_PROJECTSLUG = SQLHandler.readFile("project/findOneByGameSlugAndProjectTypeSlugAndProjectSlug");
     private static final String FIND_ONE_BY_PROJECTID = SQLHandler.readFile("project/findOneByProjectId");
 
-    private static final String FIND_ALL_BY_PROJECT_ID = SQLHandler.readFile("project_author/findAllByProjectId");
+    private static final String FIND_ALL_PROJECT_AUTHORS_BY_PROJECT_ID = SQLHandler.readFile("project_author/findAllByProjectId");
 
     private static final String FIND_ALL_PROJECTTYPES_BY_GAMESLUG = SQLHandler.readFile("project_types/findAllByGameSlug");
     private static final String FIND_ONE_PROJECTTYPES_BY_GAMESLUG_AND_PROJECTYPESLUG = SQLHandler.readFile("project_types/findOneByGameSlugAndProjectTypeSlug");
 
     private static final String FIND_ALL_CATEGORIES_BY_GAMESLUG_AND_PROJECTYPESLUG = SQLHandler.readFile("category/findAllCategoriesByGameSlugAndProjectTypeSlug");
+    private static final String FIND_ALL_CATEGORIES_BY_PROJECT_ID = SQLHandler.readFile("category/findAllCategoriesByProjectId");
 
     @Override
     public boolean insertProject (String slug, String name, String summary, String description, long userId, String gameSlug, String projectTypeSlug) {
@@ -155,7 +155,7 @@ public class ProjectDatabase implements ProjectDAO {
     public List<ProjectAuthorRecord> findAllProjectAuthorsByProjectId (long projectId) {
 
         List<ProjectAuthorRecord> projectAuthors = new ArrayList<>();
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL_BY_PROJECT_ID)) {
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL_PROJECT_AUTHORS_BY_PROJECT_ID)) {
             stmt.setLong(1, projectId);
 
             try (ResultSet rs = stmt.executeQuery()) {
@@ -225,6 +225,25 @@ public class ProjectDatabase implements ProjectDAO {
         }
         catch (SQLException e) {
             Confluencia.LOGGER.error("Failed to run findAllCategoriesByGameSlugAndProjectTypeSlug database script for game slug {}.", gameSlug, e);
+        }
+        return categories;
+    }
+
+    @Override
+    public List<CategoryRecord> findAllCategoriesByProjectId (long projectId) {
+
+        List<CategoryRecord> categories = new ArrayList<>();
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL_CATEGORIES_BY_PROJECT_ID)) {
+            stmt.setLong(1, projectId);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    categories.add(new CategoryRecord(rs));
+                }
+            }
+        }
+        catch (SQLException e) {
+            Confluencia.LOGGER.error("Failed to run findAllCategoriesByProjectId database script for project id {}.", projectId, e);
         }
         return categories;
     }

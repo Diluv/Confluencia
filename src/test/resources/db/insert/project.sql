@@ -427,4 +427,5 @@ VALUES ('Bookshelf', 'bookshelf', 'An open source library for other mods!', 'An 
         FROM_UNIXTIME(1481492202), 2,
         'minecraft', 'forge-mods');
 
-
+INSERT INTO project_categories(project_id, categories_id)
+VALUES (1, 1)

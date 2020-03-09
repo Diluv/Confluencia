@@ -10,6 +10,7 @@ import java.util.List;
 import com.diluv.confluencia.Confluencia;
 import com.diluv.confluencia.database.dao.FileDAO;
 import com.diluv.confluencia.database.record.FileProcessingStatus;
+import com.diluv.confluencia.database.record.GameVersionRecord;
 import com.diluv.confluencia.database.record.ProjectFileRecord;
 import com.diluv.confluencia.utils.Pagination;
 import com.diluv.confluencia.utils.SQLHandler;
@@ -25,6 +26,8 @@ public class FileDatabase implements FileDAO {
     private static final String FIND_ALL_BY_GAMESLUG_AND_PROJECTYPESLUG_AND_PROJECTSLUG_AUTHORIZED = SQLHandler.readFile("project_files/findAllByGameSlugAndProjectTypeAndProjectSlugWhereAuthorized");
 
     private static final String INSERT_PROJECT_FILE_ANTIVIRUS = SQLHandler.readFile("project_files/insertProjectFileAntivirus");
+
+    private static final String FIND_ALL_GAME_VERSIONS_BY_FILE_ID = SQLHandler.readFile("project_files/findAllGameVersionsByFileId");
 
     @Override
     public boolean updateStatusById (FileProcessingStatus status, long id) throws SQLException {
@@ -45,10 +48,13 @@ public class FileDatabase implements FileDAO {
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(UPDATE_STATUS_BY_STATUS)) {
             stmt.setLong(1, set.ordinal());
             stmt.setLong(2, where.ordinal());
-            if (stmt.executeUpdate() == 1) {
-                return true;
-            }
+            stmt.executeUpdate();
+            return true;
         }
+        catch (final SQLException e) {
+            e.printStackTrace();
+        }
+
         return false;
     }
 
@@ -212,5 +218,24 @@ public class FileDatabase implements FileDAO {
             e.printStackTrace();
         }
         return false;
+    }
+
+    @Override
+    public List<GameVersionRecord> findAllGameVersionsByProjectFile (long projectFileId) {
+
+        List<GameVersionRecord> gameVersions = new ArrayList<>();
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL_GAME_VERSIONS_BY_FILE_ID)) {
+            stmt.setLong(1, projectFileId);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    gameVersions.add(new GameVersionRecord(rs));
+                }
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return gameVersions;
     }
 }

@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import com.diluv.confluencia.database.record.FileProcessingStatus;
+import com.diluv.confluencia.database.record.GameVersionRecord;
 import com.diluv.confluencia.database.record.ProjectFileRecord;
 import com.diluv.confluencia.utils.Pagination;
 
@@ -26,4 +27,6 @@ public interface FileDAO {
     List<ProjectFileRecord> findAllByGameSlugAndProjectTypeAndProjectSlugAuthorized (String gameSlug, String projectTypeSlug, String projectSlug, Pagination cursor, int limit);
 
     boolean insertProjectFileAntivirus (long projectFileId, String malware);
+
+    List<GameVersionRecord> findAllGameVersionsByProjectFile (long projectFileId);
 }
