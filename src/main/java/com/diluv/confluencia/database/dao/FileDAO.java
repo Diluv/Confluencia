@@ -12,7 +12,7 @@ public interface FileDAO {
 
     boolean updateStatusById (FileProcessingStatus status, long id) throws SQLException;
 
-    boolean updateStatusByStatus (FileProcessingStatus set, FileProcessingStatus where) throws SQLException;
+    boolean updateStatusByStatus (FileProcessingStatus set, FileProcessingStatus where);
 
     List<ProjectFileRecord> findAllWhereStatusAndLimit (FileProcessingStatus status, int amount);
 
