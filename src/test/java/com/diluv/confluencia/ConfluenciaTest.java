@@ -48,7 +48,6 @@ public abstract class ConfluenciaTest {
             TestSQLHandler.loadData("user");
             TestSQLHandler.loadData("temp_user");
             TestSQLHandler.loadData("refresh_token");
-            TestSQLHandler.loadData("category");
             TestSQLHandler.loadData("project");
             TestSQLHandler.loadData("project_author");
             TestSQLHandler.loadData("project_file");
