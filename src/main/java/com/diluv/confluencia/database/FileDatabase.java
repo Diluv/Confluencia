@@ -42,7 +42,7 @@ public class FileDatabase implements FileDAO {
     @Override
     public boolean updateStatusByStatus (FileProcessingStatus set, FileProcessingStatus where) throws SQLException {
 
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(UPDATE_STATUS_BY_ID)) {
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(UPDATE_STATUS_BY_STATUS)) {
             stmt.setLong(1, set.ordinal());
             stmt.setLong(2, where.ordinal());
             if (stmt.executeUpdate() == 1) {
