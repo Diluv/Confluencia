@@ -24,7 +24,7 @@ public class TestFileDatabase extends ConfluenciaTest {
     }
 
     @Test
-    public void updateStatusByStatus () throws SQLException {
+    public void updateStatusByStatus () {
 
         Assertions.assertTrue(ConfluenciaTest.FILE.updateStatusByStatus(FileProcessingStatus.PENDING, FileProcessingStatus.RUNNING));
         Assertions.assertTrue(ConfluenciaTest.FILE.updateStatusByStatus(FileProcessingStatus.PENDING, FileProcessingStatus.RUNNING));
@@ -82,6 +82,7 @@ public class TestFileDatabase extends ConfluenciaTest {
 
     @Test
     public void findAllGameVersionsByProjectFile () {
+
         Assertions.assertEquals(1, ConfluenciaTest.FILE.findAllGameVersionsByProjectFile(1).size());
     }
 }
