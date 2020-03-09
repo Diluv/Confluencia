@@ -3,7 +3,7 @@ VALUES ('minecraft', 'Minecraft', 'https://www.minecraft.net',
         'https://images.placeholders.dev/?width=1200&height=150');
 
 INSERT INTO project_types(game_slug, slug, name, max_size)
-VALUES ('minecraft', 'mods', 'Forge Mods', 25000000);
+VALUES ('minecraft', 'mods', 'Mods', 25000000);
 
 INSERT INTO categories(game_slug, project_type_slug, slug, name, icon_url)
 VALUES ('minecraft', 'mods', 'tech', 'Tech', 'https://images.placeholders.dev/?width=1200&height=150');
