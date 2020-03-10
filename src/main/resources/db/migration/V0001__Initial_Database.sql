@@ -88,12 +88,13 @@ CREATE TABLE game_versions
 
 CREATE TABLE project_types
 (
-    game_slug VARCHAR(200)    NOT NULL,
-    slug      VARCHAR(200)    NOT NULL,
+    game_slug     VARCHAR(200)    NOT NULL,
+    slug          VARCHAR(200)    NOT NULL,
 
-    name      VARCHAR(200)    NOT NULL,
+    name          VARCHAR(200)    NOT NULL,
 
-    max_size  BIGINT UNSIGNED NOT NULL DEFAULT 5000000,
+    max_file_size BIGINT UNSIGNED NOT NULL DEFAULT 5000000,
+    project_count BIGINT UNSIGNED NOT NULL DEFAULT 0,
 
     PRIMARY KEY (game_slug, slug),
     FOREIGN KEY (game_slug) REFERENCES games (slug)
@@ -134,6 +135,7 @@ CREATE TABLE projects
     user_id           BIGINT UNSIGNED NOT NULL,
     game_slug         VARCHAR(200)    NOT NULL,
     project_type_slug VARCHAR(200)    NOT NULL,
+
     PRIMARY KEY (id),
     FOREIGN KEY (user_id) REFERENCES users (id),
     FOREIGN KEY (game_slug, project_type_slug) REFERENCES project_types (game_slug, slug),
@@ -233,3 +235,14 @@ CREATE TABLE news
     created_at  TIMESTAMP    NOT NULL DEFAULT NOW(),
     PRIMARY KEY (slug)
 );
+
+CREATE TRIGGER after_members_insert
+    AFTER INSERT
+    ON projects
+    FOR EACH ROW
+BEGIN
+    UPDATE project_types pt
+    SET project_count=project_count + 1
+    WHERE pt.slug = NEW.project_type_slug
+      AND pt.game_slug = NEW.game_slug;
+END;

@@ -7,14 +7,16 @@ public class ProjectTypeRecord {
     private final String slug;
     private final String name;
     private final String gameSlug;
-    private final long maxSize;
+    private final long maxFileSize;
+    private final long projectCount;
 
     public ProjectTypeRecord (ResultSet rs) throws SQLException {
 
         this.slug = rs.getString("slug");
         this.name = rs.getString("name");
         this.gameSlug = rs.getString("game_slug");
-        this.maxSize = rs.getLong("max_size");
+        this.maxFileSize = rs.getLong("max_file_size");
+        this.projectCount = rs.getLong("project_count");
     }
 
     public String getSlug () {
@@ -32,8 +34,13 @@ public class ProjectTypeRecord {
         return this.gameSlug;
     }
 
-    public long getMaxSize () {
+    public long getMaxFileSize () {
 
-        return this.maxSize;
+        return this.maxFileSize;
+    }
+
+    public long getProjectCount () {
+
+        return this.projectCount;
     }
 }

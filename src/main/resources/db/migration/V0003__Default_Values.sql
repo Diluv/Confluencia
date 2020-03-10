@@ -2,7 +2,7 @@ INSERT INTO games(slug, name, url, banner_url)
 VALUES ('minecraft', 'Minecraft', 'https://www.minecraft.net',
         'https://images.placeholders.dev/?width=1200&height=150');
 
-INSERT INTO project_types(game_slug, slug, name, max_size)
+INSERT INTO project_types(game_slug, slug, name, max_file_size)
 VALUES ('minecraft', 'mods', 'Mods', 25000000);
 
 INSERT INTO categories(game_slug, project_type_slug, slug, name, icon_url)
