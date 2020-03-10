@@ -20,6 +20,23 @@ public class GameDatabase implements GameDAO {
     private static final String FIND_ALL_GAME_VERSIONS_BY_GAMESLUG = SQLHandler.readFile("game/findAllGameVersionsByGameSlug");
 
     @Override
+    public List<GameRecord> findAll () {
+
+        List<GameRecord> gameRecords = new ArrayList<>();
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL)) {
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    gameRecords.add(new GameRecord(rs));
+                }
+            }
+        }
+        catch (SQLException e) {
+            Confluencia.LOGGER.error("Failed to run findAll games database script.", e);
+        }
+        return gameRecords;
+    }
+
+    @Override
     public GameRecord findOneBySlug (String name) {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ONE_BY_SLUG)) {
@@ -35,25 +52,6 @@ public class GameDatabase implements GameDAO {
             Confluencia.LOGGER.error("Failed to run findOneBySlug game database script with game {}.", name, e);
         }
         return null;
-    }
-
-    @Override
-    public List<GameRecord> findAll (Pagination cursor, int limit) {
-
-        List<GameRecord> gameRecords = new ArrayList<>();
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL)) {
-            stmt.setLong(1, cursor.offset);
-            stmt.setLong(2, limit);
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    gameRecords.add(new GameRecord(rs));
-                }
-            }
-        }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to run findAll games database script.", e);
-        }
-        return gameRecords;
     }
 
     @Override
