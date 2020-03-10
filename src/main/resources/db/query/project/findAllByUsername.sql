@@ -22,5 +22,4 @@ WHERE u.username = ?
         FROM project_authors
         WHERE p.user_id = u.id
     ))
-  AND p.id > ?
-LIMIT ?;
+LIMIT ?, ?;
