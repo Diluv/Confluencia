@@ -8,7 +8,6 @@ CREATE TABLE users
     password      CHAR(60)        NOT NULL,
     password_type VARCHAR(30)     NOT NULL,
 
-
     mfa           BOOL                     DEFAULT FALSE,
     mfa_secret    VARCHAR(16),
 
@@ -69,6 +68,7 @@ CREATE TABLE games
     name       VARCHAR(255) NOT NULL,
     url        VARCHAR(255) NOT NULL,
 
+    image_url  VARCHAR(255) NOT NULL,
     banner_url VARCHAR(255) NOT NULL,
 
     PRIMARY KEY (slug)

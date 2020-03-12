@@ -10,7 +10,6 @@ import com.diluv.confluencia.Confluencia;
 import com.diluv.confluencia.database.dao.GameDAO;
 import com.diluv.confluencia.database.record.GameRecord;
 import com.diluv.confluencia.database.record.GameVersionRecord;
-import com.diluv.confluencia.utils.Pagination;
 import com.diluv.confluencia.utils.SQLHandler;
 
 public class GameDatabase implements GameDAO {
