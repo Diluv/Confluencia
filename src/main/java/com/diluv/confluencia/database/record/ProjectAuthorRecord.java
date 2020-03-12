@@ -10,6 +10,7 @@ public class ProjectAuthorRecord {
 
     private final long userId;
     private final String username;
+    private final String displayName;
     private final long createdAt;
     private final String role;
     private final List<String> permissions;
@@ -18,6 +19,7 @@ public class ProjectAuthorRecord {
 
         this.userId = rs.getLong("id");
         this.username = rs.getString("username");
+        this.displayName = rs.getString("display_name");
         this.createdAt = rs.getTimestamp("created_at").getTime();
         this.role = rs.getString("role");
         String perm = rs.getString("permissions");
@@ -32,6 +34,11 @@ public class ProjectAuthorRecord {
     public String getUsername () {
 
         return this.username;
+    }
+
+    public String getDisplayName () {
+
+        return this.displayName;
     }
 
     public long getCreatedAt () {

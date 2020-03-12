@@ -1,5 +1,6 @@
 SELECT id,
        username,
+       display_name,
        email,
        password,
        password_type,

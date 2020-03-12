@@ -2,10 +2,12 @@
 CREATE TABLE users
 (
     id            BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    username      VARCHAR(30)     NOT NULL UNIQUE,
     email         VARCHAR(255)    NOT NULL UNIQUE,
+    username      VARCHAR(30)     NOT NULL UNIQUE,
+    display_name  VARCHAR(30)     NOT NULL,
     password      CHAR(60)        NOT NULL,
     password_type VARCHAR(30)     NOT NULL,
+
 
     mfa           BOOL                     DEFAULT FALSE,
     mfa_secret    VARCHAR(16),

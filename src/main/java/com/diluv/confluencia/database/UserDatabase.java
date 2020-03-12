@@ -7,8 +7,8 @@ import java.sql.Timestamp;
 import java.util.List;
 
 import com.diluv.confluencia.Confluencia;
-import com.diluv.confluencia.database.record.APITokenRecord;
 import com.diluv.confluencia.database.dao.UserDAO;
+import com.diluv.confluencia.database.record.APITokenRecord;
 import com.diluv.confluencia.database.record.RefreshTokenRecord;
 import com.diluv.confluencia.database.record.TempUserRecord;
 import com.diluv.confluencia.database.record.UserRecord;
@@ -89,14 +89,15 @@ public class UserDatabase implements UserDAO {
     }
 
     @Override
-    public boolean insertUser (String email, String username, String password, String passwordType, Timestamp createdAt) {
+    public boolean insertUser (String email, String username, String displayName, String password, String passwordType, Timestamp createdAt) {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(INSERT_USER)) {
             stmt.setString(1, email);
             stmt.setString(2, username);
-            stmt.setString(3, password);
-            stmt.setString(4, passwordType);
-            stmt.setTimestamp(5, createdAt);
+            stmt.setString(3,displayName);
+            stmt.setString(4, password);
+            stmt.setString(5, passwordType);
+            stmt.setTimestamp(6, createdAt);
 
             return stmt.executeUpdate() == 1;
         }

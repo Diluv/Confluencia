@@ -12,6 +12,7 @@ SELECT p.id,
        p.review,
        p.user_id,
        u.username,
+       u.display_name,
        u.created_at AS user_created_at
 FROM projects p
          JOIN users u on (u.id = p.user_id)
