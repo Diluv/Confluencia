@@ -4,5 +4,4 @@ SELECT pt.name,
        pt.max_file_size,
        pt.project_count
 FROM project_types pt
-WHERE pt.game_slug = ?
-LIMIT ?, ?;
+WHERE pt.game_slug = ?;

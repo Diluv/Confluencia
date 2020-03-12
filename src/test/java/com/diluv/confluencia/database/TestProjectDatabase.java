@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import com.diluv.confluencia.ConfluenciaTest;
-import com.diluv.confluencia.utils.Pagination;
 
 public class TestProjectDatabase extends ConfluenciaTest {
 
@@ -26,24 +25,24 @@ public class TestProjectDatabase extends ConfluenciaTest {
     @Test
     public void findAllByUsername () {
 
-        Assertions.assertEquals(0, ConfluenciaTest.PROJECT.findAllByUsername("invalid", new Pagination(0), 10).size());
-        Assertions.assertEquals(10, ConfluenciaTest.PROJECT.findAllByUsername("test", new Pagination(0), 10).size());
-        Assertions.assertEquals(10, ConfluenciaTest.PROJECT.findAllByUsername("test2", new Pagination(0), 10).size());
+        Assertions.assertEquals(0, ConfluenciaTest.PROJECT.findAllByUsername("invalid", 1, 10).size());
+        Assertions.assertEquals(10, ConfluenciaTest.PROJECT.findAllByUsername("test", 1, 10).size());
+        Assertions.assertEquals(10, ConfluenciaTest.PROJECT.findAllByUsername("test2", 1, 10).size());
     }
 
     @Test
     public void findAllByUsernameWhereAuthorized () {
 
-        Assertions.assertEquals(0, ConfluenciaTest.PROJECT.findAllByUsernameWhereAuthorized("invalid", new Pagination(0), 10).size());
-        Assertions.assertEquals(10, ConfluenciaTest.PROJECT.findAllByUsernameWhereAuthorized("test", new Pagination(0), 10).size());
-        Assertions.assertEquals(10, ConfluenciaTest.PROJECT.findAllByUsernameWhereAuthorized("test2", new Pagination(0), 10).size());
+        Assertions.assertEquals(0, ConfluenciaTest.PROJECT.findAllByUsernameWhereAuthorized("invalid", 1, 10).size());
+        Assertions.assertEquals(10, ConfluenciaTest.PROJECT.findAllByUsernameWhereAuthorized("test", 1, 10).size());
+        Assertions.assertEquals(10, ConfluenciaTest.PROJECT.findAllByUsernameWhereAuthorized("test2", 1, 10).size());
     }
 
     @Test
     public void findAllProjectTypesByGameSlug () {
 
-        Assertions.assertEquals(0, ConfluenciaTest.PROJECT.findAllProjectTypesByGameSlug("invalid", new Pagination(0), 10).size());
-        Assertions.assertEquals(1, ConfluenciaTest.PROJECT.findAllProjectTypesByGameSlug("minecraft", new Pagination(0), 10).size());
+        Assertions.assertEquals(0, ConfluenciaTest.PROJECT.findAllProjectTypesByGameSlug("invalid").size());
+        Assertions.assertEquals(1, ConfluenciaTest.PROJECT.findAllProjectTypesByGameSlug("minecraft").size());
     }
 
     @Test
@@ -57,9 +56,9 @@ public class TestProjectDatabase extends ConfluenciaTest {
     @Test
     public void findAllProjectsByGameSlugAndProjectType () {
 
-        Assertions.assertEquals(0, ConfluenciaTest.PROJECT.findAllProjectsByGameSlugAndProjectType("invalid", "invalid", new Pagination(0), 10).size());
-        Assertions.assertEquals(0, ConfluenciaTest.PROJECT.findAllProjectsByGameSlugAndProjectType("minecraft", "invalid", new Pagination(0), 10).size());
-        Assertions.assertEquals(10, ConfluenciaTest.PROJECT.findAllProjectsByGameSlugAndProjectType("minecraft", "mods", new Pagination(0), 10).size());
+        Assertions.assertEquals(0, ConfluenciaTest.PROJECT.findAllProjectsByGameSlugAndProjectType("invalid", "invalid", 1, 10).size());
+        Assertions.assertEquals(0, ConfluenciaTest.PROJECT.findAllProjectsByGameSlugAndProjectType("minecraft", "invalid", 1, 10).size());
+        Assertions.assertEquals(10, ConfluenciaTest.PROJECT.findAllProjectsByGameSlugAndProjectType("minecraft", "mods", 1, 10).size());
     }
 
     @Test

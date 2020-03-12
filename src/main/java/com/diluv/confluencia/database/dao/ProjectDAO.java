@@ -6,7 +6,6 @@ import com.diluv.confluencia.database.record.CategoryRecord;
 import com.diluv.confluencia.database.record.ProjectAuthorRecord;
 import com.diluv.confluencia.database.record.ProjectRecord;
 import com.diluv.confluencia.database.record.ProjectTypeRecord;
-import com.diluv.confluencia.utils.Pagination;
 
 public interface ProjectDAO {
 
@@ -16,17 +15,17 @@ public interface ProjectDAO {
 
     ProjectRecord findOneProjectByGameSlugAndProjectTypeSlugAndProjectSlug (String gameSlug, String projectTypeSlug, String projectSlug);
 
-    List<ProjectRecord> findAllByUsername (String username, Pagination cursor, int limit);
+    List<ProjectRecord> findAllByUsername (String username, long page, int limit);
 
-    List<ProjectRecord> findAllByUsernameWhereAuthorized (String username, Pagination cursor, int limit);
+    List<ProjectRecord> findAllByUsernameWhereAuthorized (String username, long page, int limit);
 
-    List<ProjectRecord> findAllProjectsByGameSlugAndProjectType (String gameSlug, String projectTypeSlug, Pagination cursor, int limit);
+    List<ProjectRecord> findAllProjectsByGameSlugAndProjectType (String gameSlug, String projectTypeSlug, long page, int limit);
 
     List<ProjectRecord> findFeaturedProjects ();
 
     List<ProjectAuthorRecord> findAllProjectAuthorsByProjectId (long projectId);
 
-    List<ProjectTypeRecord> findAllProjectTypesByGameSlug (String gameSlug, Pagination cursor, int limit);
+    List<ProjectTypeRecord> findAllProjectTypesByGameSlug (String gameSlug);
 
     ProjectTypeRecord findOneProjectTypeByGameSlugAndProjectTypeSlug (String gameSlug, String projectTypeSlug);
 

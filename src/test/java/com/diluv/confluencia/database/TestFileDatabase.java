@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 
 import com.diluv.confluencia.ConfluenciaTest;
 import com.diluv.confluencia.database.record.FileProcessingStatus;
-import com.diluv.confluencia.utils.Pagination;
 
 public class TestFileDatabase extends ConfluenciaTest {
 
@@ -33,19 +32,19 @@ public class TestFileDatabase extends ConfluenciaTest {
     @Test
     public void findAllByGameSlugAndProjectTypeAndProjectSlug () {
 
-        Assertions.assertEquals(0, ConfluenciaTest.FILE.findAllByGameSlugAndProjectTypeAndProjectSlug("invalid", "invalid", "invalid", new Pagination(0), 1).size());
-        Assertions.assertEquals(0, ConfluenciaTest.FILE.findAllByGameSlugAndProjectTypeAndProjectSlug("minecraft", "invalid", "invalid", new Pagination(0), 1).size());
-        Assertions.assertEquals(0, ConfluenciaTest.FILE.findAllByGameSlugAndProjectTypeAndProjectSlug("minecraft", "mods", "invalid", new Pagination(0), 1).size());
-        Assertions.assertEquals(1, ConfluenciaTest.FILE.findAllByGameSlugAndProjectTypeAndProjectSlug("minecraft", "mods", "bookshelf", new Pagination(0), 1).size());
+        Assertions.assertEquals(0, ConfluenciaTest.FILE.findAllByGameSlugAndProjectTypeAndProjectSlug("invalid", "invalid", "invalid", 1, 1).size());
+        Assertions.assertEquals(0, ConfluenciaTest.FILE.findAllByGameSlugAndProjectTypeAndProjectSlug("minecraft", "invalid", "invalid", 1, 1).size());
+        Assertions.assertEquals(0, ConfluenciaTest.FILE.findAllByGameSlugAndProjectTypeAndProjectSlug("minecraft", "mods", "invalid", 1, 1).size());
+        Assertions.assertEquals(1, ConfluenciaTest.FILE.findAllByGameSlugAndProjectTypeAndProjectSlug("minecraft", "mods", "bookshelf", 1, 1).size());
     }
 
     @Test
     public void findAllProjectFilesByGameSlugAndProjectTypeAndProjectSlugAuthorized () {
 
-        Assertions.assertEquals(0, ConfluenciaTest.FILE.findAllByGameSlugAndProjectTypeAndProjectSlugAuthorized("invalid", "invalid", "invalid", new Pagination(0), 1).size());
-        Assertions.assertEquals(0, ConfluenciaTest.FILE.findAllByGameSlugAndProjectTypeAndProjectSlugAuthorized("minecraft", "invalid", "invalid", new Pagination(0), 1).size());
-        Assertions.assertEquals(0, ConfluenciaTest.FILE.findAllByGameSlugAndProjectTypeAndProjectSlugAuthorized("minecraft", "mods", "invalid", new Pagination(0), 1).size());
-        Assertions.assertEquals(5, ConfluenciaTest.FILE.findAllByGameSlugAndProjectTypeAndProjectSlugAuthorized("minecraft", "mods", "bookshelf", new Pagination(0), 5).size());
+        Assertions.assertEquals(0, ConfluenciaTest.FILE.findAllByGameSlugAndProjectTypeAndProjectSlugAuthorized("invalid", "invalid", "invalid", 1, 1).size());
+        Assertions.assertEquals(0, ConfluenciaTest.FILE.findAllByGameSlugAndProjectTypeAndProjectSlugAuthorized("minecraft", "invalid", "invalid", 1, 1).size());
+        Assertions.assertEquals(0, ConfluenciaTest.FILE.findAllByGameSlugAndProjectTypeAndProjectSlugAuthorized("minecraft", "mods", "invalid", 1, 1).size());
+        Assertions.assertEquals(5, ConfluenciaTest.FILE.findAllByGameSlugAndProjectTypeAndProjectSlugAuthorized("minecraft", "mods", "bookshelf", 1, 5).size());
     }
 
     @Test
