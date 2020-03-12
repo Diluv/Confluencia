@@ -237,6 +237,24 @@ CREATE TABLE news
     FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
+CREATE TABLE featured_games
+(
+    id   TINYINT UNSIGNED AUTO_INCREMENT,
+    slug VARCHAR(200) NOT NULL,
+
+    PRIMARY KEY (id),
+    FOREIGN KEY (slug) REFERENCES games (slug)
+);
+
+CREATE TABLE featured_projects
+(
+    id         TINYINT UNSIGNED AUTO_INCREMENT,
+    project_id BIGINT UNSIGNED NOT NULL,
+
+    PRIMARY KEY (id),
+    FOREIGN KEY (project_id) REFERENCES projects (id)
+);
+
 CREATE TRIGGER after_members_insert
     AFTER INSERT
     ON projects

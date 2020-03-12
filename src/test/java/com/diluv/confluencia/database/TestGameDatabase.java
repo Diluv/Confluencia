@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import com.diluv.confluencia.ConfluenciaTest;
-import com.diluv.confluencia.utils.Pagination;
 
 public class TestGameDatabase extends ConfluenciaTest {
 
@@ -22,6 +21,12 @@ public class TestGameDatabase extends ConfluenciaTest {
     public void findAll () {
 
         Assertions.assertEquals(1, ConfluenciaTest.GAME.findAll().size());
+    }
+
+    @Test
+    public void findFeaturedGames () {
+
+        Assertions.assertEquals(1, ConfluenciaTest.GAME.findFeaturedGames().size());
     }
 
     @Test

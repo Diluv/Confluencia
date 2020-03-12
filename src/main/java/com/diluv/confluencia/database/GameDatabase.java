@@ -16,6 +16,9 @@ public class GameDatabase implements GameDAO {
 
     private static final String FIND_ALL = SQLHandler.readFile("game/findAll");
     private static final String FIND_ONE_BY_SLUG = SQLHandler.readFile("game/findOneBySlug");
+
+    private static final String FIND_FEATURED_GAMES = SQLHandler.readFile("game/findFeaturedGames");
+
     private static final String FIND_ALL_GAME_VERSIONS_BY_GAMESLUG = SQLHandler.readFile("game/findAllGameVersionsByGameSlug");
 
     @Override
@@ -51,6 +54,23 @@ public class GameDatabase implements GameDAO {
             Confluencia.LOGGER.error("Failed to run findOneBySlug game database script with game {}.", name, e);
         }
         return null;
+    }
+
+    @Override
+    public List<GameRecord> findFeaturedGames () {
+
+        List<GameRecord> gameRecords = new ArrayList<>();
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_FEATURED_GAMES)) {
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    gameRecords.add(new GameRecord(rs));
+                }
+            }
+        }
+        catch (SQLException e) {
+            Confluencia.LOGGER.error("Failed to run findAll games database script.", e);
+        }
+        return gameRecords;
     }
 
     @Override
