@@ -21,7 +21,7 @@ public class TestGameDatabase extends ConfluenciaTest {
     @Test
     public void findAll () {
 
-        Assertions.assertEquals(1, ConfluenciaTest.GAME.findAll(new Pagination(0), 10).size());
+        Assertions.assertEquals(1, ConfluenciaTest.GAME.findAll().size());
     }
 
     @Test
