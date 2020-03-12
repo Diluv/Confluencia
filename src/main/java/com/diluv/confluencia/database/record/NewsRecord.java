@@ -8,7 +8,9 @@ public class NewsRecord {
     private final String title;
     private final String summary;
     private final String description;
+    private final long userId;
     private final String username;
+    private final String displayName;
     private final long createdAt;
 
     public NewsRecord (ResultSet rs) throws SQLException {
@@ -17,7 +19,9 @@ public class NewsRecord {
         this.title = rs.getString("title");
         this.summary = rs.getString("summary");
         this.description = rs.getString("description");
+        this.userId = rs.getLong("user_id");
         this.username = rs.getString("username");
+        this.displayName = rs.getString("display_name");
         this.createdAt = rs.getTimestamp("created_at").getTime();
     }
 
@@ -41,9 +45,19 @@ public class NewsRecord {
         return this.description;
     }
 
+    public long getUserId () {
+
+        return this.userId;
+    }
+
     public String getUsername () {
 
         return this.username;
+    }
+
+    public String getDisplayName () {
+
+        return this.displayName;
     }
 
     public long getCreatedAt () {

@@ -225,17 +225,16 @@ CREATE TABLE project_file_antivirus
 
 CREATE TABLE news
 (
-    slug        VARCHAR(50)  NOT NULL,
+    slug        VARCHAR(50)     NOT NULL,
 
-    title       VARCHAR(255) NOT NULL,
-    summary     VARCHAR(255) NOT NULL,
+    title       VARCHAR(255)    NOT NULL,
+    summary     VARCHAR(255)    NOT NULL,
+    description TEXT            NOT NULL,
+    user_id     BIGINT UNSIGNED NOT NULL,
 
-    description TEXT         NOT NULL,
-
-    username    VARCHAR(255) NOT NULL,
-
-    created_at  TIMESTAMP    NOT NULL DEFAULT NOW(),
-    PRIMARY KEY (slug)
+    created_at  TIMESTAMP       NOT NULL DEFAULT NOW(),
+    PRIMARY KEY (slug),
+    FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
 CREATE TRIGGER after_members_insert

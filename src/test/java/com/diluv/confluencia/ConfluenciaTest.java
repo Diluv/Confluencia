@@ -43,7 +43,6 @@ public abstract class ConfluenciaTest {
         if (!init) {
             Confluencia.init(ConfluenciaTest.CONTAINER.getJdbcUrl(), ConfluenciaTest.CONTAINER.getUsername(), ConfluenciaTest.CONTAINER.getPassword(), true);
 
-            TestSQLHandler.loadData("news");
             TestSQLHandler.loadData("email");
             TestSQLHandler.loadData("user");
             TestSQLHandler.loadData("temp_user");
@@ -52,6 +51,7 @@ public abstract class ConfluenciaTest {
             TestSQLHandler.loadData("project_author");
             TestSQLHandler.loadData("project_file");
             TestSQLHandler.loadData("api_token");
+            TestSQLHandler.loadData("news");
 
             init = true;
         }
