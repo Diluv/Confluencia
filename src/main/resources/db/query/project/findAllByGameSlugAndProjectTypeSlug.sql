@@ -19,5 +19,5 @@ FROM projects p
 WHERE p.released = TRUE
   AND p.game_slug = ?
   AND p.project_type_slug = ?
-ORDER BY '%filter%' '%order%'
+ORDER BY '%sort%' '%order%'
 LIMIT ?, ?;

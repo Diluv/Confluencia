@@ -8,5 +8,5 @@ SELECT n.slug,
        n.created_at
 FROM news n
          JOIN users u ON (n.user_id = u.id)
-ORDER BY '%filter%' '%order%'
+ORDER BY '%sort%' '%order%'
 LIMIT ?, ?;

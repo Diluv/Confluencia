@@ -3,7 +3,7 @@ package com.diluv.confluencia.database.dao;
 import java.sql.SQLException;
 import java.util.List;
 
-import com.diluv.confluencia.database.filter.ProjectFileFilter;
+import com.diluv.confluencia.database.sort.ProjectFileSort;
 import com.diluv.confluencia.database.record.FileProcessingStatus;
 import com.diluv.confluencia.database.record.GameVersionRecord;
 import com.diluv.confluencia.database.record.ProjectFileRecord;
@@ -22,9 +22,9 @@ public interface FileDAO {
 
     ProjectFileRecord findOneProjectFileQueueByFileId (long fileId);
 
-    List<ProjectFileRecord> findAllByGameSlugAndProjectTypeAndProjectSlug (String gameSlug, String projectTypeSlug, String projectSlug, long page, int limit, ProjectFileFilter filter);
+    List<ProjectFileRecord> findAllByGameSlugAndProjectTypeAndProjectSlug (String gameSlug, String projectTypeSlug, String projectSlug, long page, int limit, ProjectFileSort sort);
 
-    List<ProjectFileRecord> findAllByGameSlugAndProjectTypeAndProjectSlugAuthorized (String gameSlug, String projectTypeSlug, String projectSlug, long page, int limit, ProjectFileFilter filter);
+    List<ProjectFileRecord> findAllByGameSlugAndProjectTypeAndProjectSlugAuthorized (String gameSlug, String projectTypeSlug, String projectSlug, long page, int limit, ProjectFileSort sort);
 
     boolean insertProjectFileAntivirus (long projectFileId, String malware);
 

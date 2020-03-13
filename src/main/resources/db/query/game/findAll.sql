@@ -4,4 +4,4 @@ SELECT slug,
        image_url,
        banner_url
 FROM games
-ORDER BY '%filter%' '%order%';
+ORDER BY '%sort%' '%order%';

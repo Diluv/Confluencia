@@ -4,14 +4,14 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import com.diluv.confluencia.ConfluenciaTest;
-import com.diluv.confluencia.database.filter.NewsFilter;
+import com.diluv.confluencia.database.sort.NewsSort;
 
 public class TestNewsDatabase extends ConfluenciaTest {
 
     @Test
     public void findAll () {
 
-        Assertions.assertEquals(1, ConfluenciaTest.NEWS.findAll(1, 1, NewsFilter.NEW).size());
+        Assertions.assertEquals(1, ConfluenciaTest.NEWS.findAll(1, 1, NewsSort.NEW).size());
     }
 
     @Test

@@ -8,7 +8,7 @@ import java.util.List;
 
 import com.diluv.confluencia.Confluencia;
 import com.diluv.confluencia.database.dao.NewsDAO;
-import com.diluv.confluencia.database.filter.NewsFilter;
+import com.diluv.confluencia.database.sort.NewsSort;
 import com.diluv.confluencia.database.record.NewsRecord;
 import com.diluv.confluencia.utils.SQLHandler;
 
@@ -17,11 +17,11 @@ public class NewsDatabase implements NewsDAO {
     private static final String FIND_ONE_BY_SLUG = SQLHandler.readFile("news/findAllBySlug");
 
     @Override
-    public List<NewsRecord> findAll (long page, int limit, NewsFilter filter) {
+    public List<NewsRecord> findAll (long page, int limit, NewsSort sort) {
 
         List<NewsRecord> news = new ArrayList<>();
 
-        try (PreparedStatement stmt = filter.getFilteredQuery(FIND_ALL)) {
+        try (PreparedStatement stmt = sort.getQuery(FIND_ALL)) {
             stmt.setLong(1, (page - 1) * limit);
             stmt.setLong(2, limit);
             try (ResultSet rs = stmt.executeQuery()) {

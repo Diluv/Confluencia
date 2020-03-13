@@ -1,6 +1,6 @@
 package com.diluv.confluencia.database;
 
-import com.diluv.confluencia.database.filter.GameFilter;
+import com.diluv.confluencia.database.sort.GameSort;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -22,7 +22,7 @@ public class TestGameDatabase extends ConfluenciaTest {
     @Test
     public void findAll () {
 
-        Assertions.assertEquals(1, ConfluenciaTest.GAME.findAll(GameFilter.NEW).size());
+        Assertions.assertEquals(1, ConfluenciaTest.GAME.findAll(GameSort.NEW).size());
     }
 
     @Test

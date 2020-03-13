@@ -1,4 +1,4 @@
-package com.diluv.confluencia.database.filter;
+package com.diluv.confluencia.database.sort;
 
 public enum Order {
 

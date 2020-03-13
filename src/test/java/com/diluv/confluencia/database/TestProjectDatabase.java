@@ -1,6 +1,6 @@
 package com.diluv.confluencia.database;
 
-import com.diluv.confluencia.database.filter.ProjectFilter;
+import com.diluv.confluencia.database.sort.ProjectSort;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -27,17 +27,17 @@ public class TestProjectDatabase extends ConfluenciaTest {
     @Test
     public void findAllByUsername () {
 
-        Assertions.assertEquals(0, ConfluenciaTest.PROJECT.findAllByUsername("invalid", 1, 10, ProjectFilter.NEW).size());
-        Assertions.assertEquals(10, ConfluenciaTest.PROJECT.findAllByUsername("test", 1, 10, ProjectFilter.NEW).size());
-        Assertions.assertEquals(10, ConfluenciaTest.PROJECT.findAllByUsername("test2", 1, 10, ProjectFilter.NEW).size());
+        Assertions.assertEquals(0, ConfluenciaTest.PROJECT.findAllByUsername("invalid", 1, 10, ProjectSort.NEW).size());
+        Assertions.assertEquals(10, ConfluenciaTest.PROJECT.findAllByUsername("test", 1, 10, ProjectSort.NEW).size());
+        Assertions.assertEquals(10, ConfluenciaTest.PROJECT.findAllByUsername("test2", 1, 10, ProjectSort.NEW).size());
     }
 
     @Test
     public void findAllByUsernameWhereAuthorized () {
 
-        Assertions.assertEquals(0, ConfluenciaTest.PROJECT.findAllByUsernameWhereAuthorized("invalid", 1, 10, ProjectFilter.NEW).size());
-        Assertions.assertEquals(10, ConfluenciaTest.PROJECT.findAllByUsernameWhereAuthorized("test", 1, 10, ProjectFilter.NEW).size());
-        Assertions.assertEquals(10, ConfluenciaTest.PROJECT.findAllByUsernameWhereAuthorized("test2", 1, 10, ProjectFilter.NEW).size());
+        Assertions.assertEquals(0, ConfluenciaTest.PROJECT.findAllByUsernameWhereAuthorized("invalid", 1, 10, ProjectSort.NEW).size());
+        Assertions.assertEquals(10, ConfluenciaTest.PROJECT.findAllByUsernameWhereAuthorized("test", 1, 10, ProjectSort.NEW).size());
+        Assertions.assertEquals(10, ConfluenciaTest.PROJECT.findAllByUsernameWhereAuthorized("test2", 1, 10, ProjectSort.NEW).size());
     }
 
     @Test
@@ -58,9 +58,9 @@ public class TestProjectDatabase extends ConfluenciaTest {
     @Test
     public void findAllProjectsByGameSlugAndProjectType () {
 
-        Assertions.assertEquals(0, ConfluenciaTest.PROJECT.findAllProjectsByGameSlugAndProjectType("invalid", "invalid", 1, 10, ProjectFilter.NEW).size());
-        Assertions.assertEquals(0, ConfluenciaTest.PROJECT.findAllProjectsByGameSlugAndProjectType("minecraft", "invalid", 1, 10, ProjectFilter.NEW).size());
-        Assertions.assertEquals(10, ConfluenciaTest.PROJECT.findAllProjectsByGameSlugAndProjectType("minecraft", "mods", 1, 10, ProjectFilter.NEW).size());
+        Assertions.assertEquals(0, ConfluenciaTest.PROJECT.findAllProjectsByGameSlugAndProjectType("invalid", "invalid", 1, 10, ProjectSort.NEW).size());
+        Assertions.assertEquals(0, ConfluenciaTest.PROJECT.findAllProjectsByGameSlugAndProjectType("minecraft", "invalid", 1, 10, ProjectSort.NEW).size());
+        Assertions.assertEquals(10, ConfluenciaTest.PROJECT.findAllProjectsByGameSlugAndProjectType("minecraft", "mods", 1, 10, ProjectSort.NEW).size());
     }
 
     @Test
