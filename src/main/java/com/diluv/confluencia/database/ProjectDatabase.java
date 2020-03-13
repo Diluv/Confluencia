@@ -8,18 +8,17 @@ import java.util.List;
 
 import com.diluv.confluencia.Confluencia;
 import com.diluv.confluencia.database.dao.ProjectDAO;
-import com.diluv.confluencia.database.sort.ProjectSort;
 import com.diluv.confluencia.database.record.CategoryRecord;
 import com.diluv.confluencia.database.record.ProjectAuthorRecord;
 import com.diluv.confluencia.database.record.ProjectRecord;
 import com.diluv.confluencia.database.record.ProjectTypeRecord;
+import com.diluv.confluencia.database.sort.ProjectSort;
 import com.diluv.confluencia.utils.SQLHandler;
 
 public class ProjectDatabase implements ProjectDAO {
 
     private static final String INSERT_PROJECT = SQLHandler.readFile("project/insertProject");
     private static final String FIND_ALL_BY_USERNAME = SQLHandler.readFile("project/findAllByUsername");
-    private static final String FIND_ALL_BY_USERNAME_AUTHORIZED = SQLHandler.readFile("project/findAllByUsernameAuthorized");
     private static final String FIND_ALL_BY_GAMESLUG_AND_PROJECTYPESLUG = SQLHandler.readFile("project/findAllByGameSlugAndProjectTypeSlug");
     private static final String FIND_ONE_BY_GAMESLUG_AND_PROJECTYPESLUG_AND_PROJECTSLUG = SQLHandler.readFile("project/findOneByGameSlugAndProjectTypeSlugAndProjectSlug");
     private static final String FIND_ONE_BY_PROJECTID = SQLHandler.readFile("project/findOneByProjectId");
@@ -92,13 +91,14 @@ public class ProjectDatabase implements ProjectDAO {
     }
 
     @Override
-    public List<ProjectRecord> findAllByUsername (String username, long page, int limit, ProjectSort sort) {
+    public List<ProjectRecord> findAllByUsername (String username, boolean authorized, long page, int limit, ProjectSort sort) {
 
         List<ProjectRecord> projects = new ArrayList<>();
         try (PreparedStatement stmt = sort.getQuery(FIND_ALL_BY_USERNAME)) {
             stmt.setString(1, username);
-            stmt.setLong(2, (page - 1) * limit);
-            stmt.setLong(3, limit);
+            stmt.setBoolean(2, authorized);
+            stmt.setLong(3, (page - 1) * limit);
+            stmt.setLong(4, limit);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     projects.add(new ProjectRecord(rs));
@@ -107,27 +107,6 @@ public class ProjectDatabase implements ProjectDAO {
         }
         catch (SQLException e) {
             Confluencia.LOGGER.error("Failed to run findAllByUsername database script for user {}.", username, e);
-        }
-        return projects;
-    }
-
-    @Override
-    public List<ProjectRecord> findAllByUsernameWhereAuthorized (String username, long page, int limit, ProjectSort sort) {
-
-        List<ProjectRecord> projects = new ArrayList<>();
-
-        try (PreparedStatement stmt = sort.getQuery(FIND_ALL_BY_USERNAME_AUTHORIZED)) {
-            stmt.setString(1, username);
-            stmt.setLong(2, (page - 1) * limit);
-            stmt.setLong(3, limit);
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    projects.add(new ProjectRecord(rs));
-                }
-            }
-        }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to run findAllByUsernameWhereAuthorized database script for user {}.", username, e);
         }
         return projects;
     }

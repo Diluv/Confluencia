@@ -17,7 +17,7 @@ INSERT INTO project_files(id, name, size, changelog, sha512, release_type, class
                           user_id)
 VALUES (3, 'ProjectFile.jar', 1000, 'Changing',
         '5E96A9A98839D073C298BBD0AC73A510E1F13A64151E2C4895440ECDBCD6D483EDA994D2CD5E69C5C00A96783280F7BC1E933667B4A25C53CE3918007D5C77E3',
-        'release', 'binary', 0, 0, 1, 1);
+        'release', 'binary', 0, 0, 2, 1);
 
 INSERT INTO project_files(id, name, size, changelog, sha512, release_type, classifier, processing_status, released,
                           project_id,

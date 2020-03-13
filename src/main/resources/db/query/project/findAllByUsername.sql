@@ -17,7 +17,7 @@ SELECT p.id,
 FROM projects p,
      users u
 WHERE u.username = ?
-  AND p.released = TRUE
+  AND (p.released = TRUE OR ?)
   AND (p.user_id = u.id OR EXISTS(
         SELECT *
         FROM project_authors
