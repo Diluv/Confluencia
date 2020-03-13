@@ -21,4 +21,5 @@ FROM project_files pf
 WHERE p.game_slug = ?
   AND p.project_type_slug = ?
   AND p.slug = ?
+ORDER BY '%filter%' '%order%'
 LIMIT ?, ?;

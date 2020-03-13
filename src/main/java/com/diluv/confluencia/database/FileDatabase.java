@@ -9,6 +9,7 @@ import java.util.List;
 
 import com.diluv.confluencia.Confluencia;
 import com.diluv.confluencia.database.dao.FileDAO;
+import com.diluv.confluencia.database.filter.ProjectFileFilter;
 import com.diluv.confluencia.database.record.FileProcessingStatus;
 import com.diluv.confluencia.database.record.GameVersionRecord;
 import com.diluv.confluencia.database.record.ProjectFileRecord;
@@ -158,10 +159,11 @@ public class FileDatabase implements FileDAO {
     }
 
     @Override
-    public List<ProjectFileRecord> findAllByGameSlugAndProjectTypeAndProjectSlug (String gameSlug, String projectTypeSlug, String projectSlug, long page, int limit) {
+    public List<ProjectFileRecord> findAllByGameSlugAndProjectTypeAndProjectSlug (String gameSlug, String projectTypeSlug, String projectSlug, long page, int limit, ProjectFileFilter filter) {
 
         List<ProjectFileRecord> projects = new ArrayList<>();
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL_BY_GAMESLUG_AND_PROJECTYPESLUG_AND_PROJECTSLUG)) {
+
+        try (PreparedStatement stmt = filter.getFilteredQuery(FIND_ALL_BY_GAMESLUG_AND_PROJECTYPESLUG_AND_PROJECTSLUG)) {
             stmt.setString(1, gameSlug);
             stmt.setString(2, projectTypeSlug);
             stmt.setString(3, projectSlug);
@@ -181,10 +183,10 @@ public class FileDatabase implements FileDAO {
     }
 
     @Override
-    public List<ProjectFileRecord> findAllByGameSlugAndProjectTypeAndProjectSlugAuthorized (String gameSlug, String projectTypeSlug, String projectSlug, long page, int limit) {
+    public List<ProjectFileRecord> findAllByGameSlugAndProjectTypeAndProjectSlugAuthorized (String gameSlug, String projectTypeSlug, String projectSlug, long page, int limit, ProjectFileFilter filter) {
 
         List<ProjectFileRecord> projects = new ArrayList<>();
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL_BY_GAMESLUG_AND_PROJECTYPESLUG_AND_PROJECTSLUG_AUTHORIZED)) {
+        try (PreparedStatement stmt = filter.getFilteredQuery(FIND_ALL_BY_GAMESLUG_AND_PROJECTYPESLUG_AND_PROJECTSLUG_AUTHORIZED)) {
             stmt.setString(1, gameSlug);
             stmt.setString(2, projectTypeSlug);
             stmt.setString(3, projectSlug);

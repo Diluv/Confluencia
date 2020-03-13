@@ -19,4 +19,5 @@ FROM projects p
 WHERE p.released = TRUE
   AND p.game_slug = ?
   AND p.project_type_slug = ?
+ORDER BY '%filter%' '%order%'
 LIMIT ?, ?;

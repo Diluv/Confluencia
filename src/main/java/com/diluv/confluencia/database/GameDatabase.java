@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.diluv.confluencia.Confluencia;
 import com.diluv.confluencia.database.dao.GameDAO;
+import com.diluv.confluencia.database.filter.GameFilter;
 import com.diluv.confluencia.database.record.GameRecord;
 import com.diluv.confluencia.database.record.GameVersionRecord;
 import com.diluv.confluencia.utils.SQLHandler;
@@ -22,10 +23,10 @@ public class GameDatabase implements GameDAO {
     private static final String FIND_ALL_GAME_VERSIONS_BY_GAMESLUG = SQLHandler.readFile("game/findAllGameVersionsByGameSlug");
 
     @Override
-    public List<GameRecord> findAll () {
+    public List<GameRecord> findAll (GameFilter filter) {
 
         List<GameRecord> gameRecords = new ArrayList<>();
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL)) {
+        try (PreparedStatement stmt = filter.getFilteredQuery(FIND_ALL)) {
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     gameRecords.add(new GameRecord(rs));

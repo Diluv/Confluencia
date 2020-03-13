@@ -22,4 +22,5 @@ WHERE pf.released = TRUE
   AND p.game_slug = ?
   AND p.project_type_slug = ?
   AND p.slug = ?
+ORDER BY '%filter%' '%order%'
 LIMIT ?, ?;

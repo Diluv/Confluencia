@@ -2,6 +2,7 @@ package com.diluv.confluencia.database.dao;
 
 import java.util.List;
 
+import com.diluv.confluencia.database.filter.ProjectFilter;
 import com.diluv.confluencia.database.record.CategoryRecord;
 import com.diluv.confluencia.database.record.ProjectAuthorRecord;
 import com.diluv.confluencia.database.record.ProjectRecord;
@@ -15,11 +16,11 @@ public interface ProjectDAO {
 
     ProjectRecord findOneProjectByGameSlugAndProjectTypeSlugAndProjectSlug (String gameSlug, String projectTypeSlug, String projectSlug);
 
-    List<ProjectRecord> findAllByUsername (String username, long page, int limit);
+    List<ProjectRecord> findAllByUsername (String username, long page, int limit, ProjectFilter filter);
 
-    List<ProjectRecord> findAllByUsernameWhereAuthorized (String username, long page, int limit);
+    List<ProjectRecord> findAllByUsernameWhereAuthorized (String username, long page, int limit, ProjectFilter filter);
 
-    List<ProjectRecord> findAllProjectsByGameSlugAndProjectType (String gameSlug, String projectTypeSlug, long page, int limit);
+    List<ProjectRecord> findAllProjectsByGameSlugAndProjectType (String gameSlug, String projectTypeSlug, long page, int limit, ProjectFilter filter);
 
     List<ProjectRecord> findFeaturedProjects ();
 

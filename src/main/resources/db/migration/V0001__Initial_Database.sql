@@ -71,6 +71,8 @@ CREATE TABLE games
     image_url  VARCHAR(255) NOT NULL,
     banner_url VARCHAR(255) NOT NULL,
 
+    created_at TIMESTAMP    NOT NULL DEFAULT NOW(),
+
     PRIMARY KEY (slug)
 );
 

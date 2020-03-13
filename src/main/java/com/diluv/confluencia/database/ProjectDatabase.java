@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.diluv.confluencia.Confluencia;
 import com.diluv.confluencia.database.dao.ProjectDAO;
+import com.diluv.confluencia.database.filter.ProjectFilter;
 import com.diluv.confluencia.database.record.CategoryRecord;
 import com.diluv.confluencia.database.record.ProjectAuthorRecord;
 import com.diluv.confluencia.database.record.ProjectRecord;
@@ -91,10 +92,10 @@ public class ProjectDatabase implements ProjectDAO {
     }
 
     @Override
-    public List<ProjectRecord> findAllByUsername (String username, long page, int limit) {
+    public List<ProjectRecord> findAllByUsername (String username, long page, int limit, ProjectFilter filter) {
 
         List<ProjectRecord> projects = new ArrayList<>();
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL_BY_USERNAME)) {
+        try (PreparedStatement stmt = filter.getFilteredQuery(FIND_ALL_BY_USERNAME)) {
             stmt.setString(1, username);
             stmt.setLong(2, (page - 1) * limit);
             stmt.setLong(3, limit);
@@ -111,10 +112,11 @@ public class ProjectDatabase implements ProjectDAO {
     }
 
     @Override
-    public List<ProjectRecord> findAllByUsernameWhereAuthorized (String username, long page, int limit) {
+    public List<ProjectRecord> findAllByUsernameWhereAuthorized (String username, long page, int limit, ProjectFilter filter) {
 
         List<ProjectRecord> projects = new ArrayList<>();
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL_BY_USERNAME_AUTHORIZED)) {
+
+        try (PreparedStatement stmt = filter.getFilteredQuery(FIND_ALL_BY_USERNAME_AUTHORIZED)) {
             stmt.setString(1, username);
             stmt.setLong(2, (page - 1) * limit);
             stmt.setLong(3, limit);
@@ -131,10 +133,11 @@ public class ProjectDatabase implements ProjectDAO {
     }
 
     @Override
-    public List<ProjectRecord> findAllProjectsByGameSlugAndProjectType (String gameSlug, String projectTypeSlug, long page, int limit) {
+    public List<ProjectRecord> findAllProjectsByGameSlugAndProjectType (String gameSlug, String projectTypeSlug, long page, int limit, ProjectFilter filter) {
 
         List<ProjectRecord> projects = new ArrayList<>();
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL_BY_GAMESLUG_AND_PROJECTYPESLUG)) {
+
+        try (PreparedStatement stmt = filter.getFilteredQuery(FIND_ALL_BY_GAMESLUG_AND_PROJECTYPESLUG)) {
             stmt.setString(1, gameSlug);
             stmt.setString(2, projectTypeSlug);
             stmt.setLong(3, (page - 1) * limit);
