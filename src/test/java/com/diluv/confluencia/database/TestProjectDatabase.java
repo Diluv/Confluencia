@@ -58,6 +58,12 @@ public class TestProjectDatabase extends ConfluenciaTest {
     }
 
     @Test
+    public void findAllProjectsByGameSlugAndProjectTypeAndVersion () {
+
+        Assertions.assertEquals(1, ConfluenciaTest.PROJECT.findAllProjectsByGameSlugAndProjectTypeAndVersion("minecraft", "mods", 1, 10, ProjectSort.NEW, "1.15.2").size());
+    }
+
+    @Test
     public void findFeaturedProjects () {
 
         Assertions.assertEquals(3, ConfluenciaTest.PROJECT.findFeaturedProjects().size());

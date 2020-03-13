@@ -20,6 +20,8 @@ public interface ProjectDAO {
 
     List<ProjectRecord> findAllProjectsByGameSlugAndProjectType (String gameSlug, String projectTypeSlug, long page, int limit, ProjectSort sort);
 
+    List<ProjectRecord> findAllProjectsByGameSlugAndProjectTypeAndVersion (String gameSlug, String projectTypeSlug, long page, int limit, ProjectSort sort, String version);
+
     List<ProjectRecord> findFeaturedProjects ();
 
     List<ProjectAuthorRecord> findAllProjectAuthorsByProjectId (long projectId);

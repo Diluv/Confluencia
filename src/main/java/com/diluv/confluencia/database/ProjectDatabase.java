@@ -20,6 +20,7 @@ public class ProjectDatabase implements ProjectDAO {
     private static final String INSERT_PROJECT = SQLHandler.readFile("project/insertProject");
     private static final String FIND_ALL_BY_USERNAME = SQLHandler.readFile("project/findAllByUsername");
     private static final String FIND_ALL_BY_GAMESLUG_AND_PROJECTYPESLUG = SQLHandler.readFile("project/findAllByGameSlugAndProjectTypeSlug");
+    private static final String FIND_ALL_BY_GAMESLUG_AND_PROJECTYPESLUG_AND_VERSION = SQLHandler.readFile("project/findAllByGameSlugAndProjectTypeSlugAndVersion");
     private static final String FIND_ONE_BY_GAMESLUG_AND_PROJECTYPESLUG_AND_PROJECTSLUG = SQLHandler.readFile("project/findOneByGameSlugAndProjectTypeSlugAndProjectSlug");
     private static final String FIND_ONE_BY_PROJECTID = SQLHandler.readFile("project/findOneByProjectId");
     private static final String FIND_FEATURED_PROJECTS = SQLHandler.readFile("project/findFeaturedProjects");
@@ -129,6 +130,29 @@ public class ProjectDatabase implements ProjectDAO {
         }
         catch (SQLException e) {
             Confluencia.LOGGER.error("Failed to run findAllProjectsByGameSlugAndProjectType script for game {} and type {}.", gameSlug, projectTypeSlug, e);
+        }
+        return projects;
+    }
+
+    @Override
+    public List<ProjectRecord> findAllProjectsByGameSlugAndProjectTypeAndVersion (String gameSlug, String projectTypeSlug, long page, int limit, ProjectSort sort, String version) {
+
+        List<ProjectRecord> projects = new ArrayList<>();
+
+        try (PreparedStatement stmt = sort.getQuery(FIND_ALL_BY_GAMESLUG_AND_PROJECTYPESLUG_AND_VERSION)) {
+            stmt.setString(1, gameSlug);
+            stmt.setString(2, projectTypeSlug);
+            stmt.setString(3, version);
+            stmt.setLong(4, (page - 1) * limit);
+            stmt.setLong(5, limit);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    projects.add(new ProjectRecord(rs));
+                }
+            }
+        }
+        catch (SQLException e) {
+            Confluencia.LOGGER.error("Failed to run findAllProjectsByGameSlugAndProjectTypeAndVersion script for game {} and type {}.", gameSlug, projectTypeSlug, e);
         }
         return projects;
     }

@@ -23,6 +23,8 @@ public class FileDatabase implements FileDAO {
     private static final String FIND_ALL_WHERE_STATUS_AND_LIMIT = SQLHandler.readFile("project_files/findAllWhereStatusAndLimit");
     private static final String FIND_ONE_PROJECT_FILE_QUEUE_BY_FILE_ID = SQLHandler.readFile("project_files/findOneByFileId");
     private static final String FIND_ALL_BY_GAMESLUG_AND_PROJECTYPESLUG_AND_PROJECTSLUG = SQLHandler.readFile("project_files/findAllByGameSlugAndProjectTypeAndProjectSlug");
+    private static final String FIND_ALL_BY_GAMESLUG_AND_PROJECTYPESLUG_AND_PROJECTSLUG_AND_VERSION = SQLHandler.readFile("project_files/findAllByGameSlugAndProjectTypeAndProjectSlugAndVersion");
+
 
     private static final String INSERT_PROJECT_FILE_ANTIVIRUS = SQLHandler.readFile("project_files/insertProjectFileAntivirus");
 
@@ -169,6 +171,32 @@ public class FileDatabase implements FileDAO {
             stmt.setBoolean(4, authorized);
             stmt.setLong(5, (page - 1) * limit);
             stmt.setLong(6, limit);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    projects.add(new ProjectFileRecord(rs));
+                }
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return projects;
+    }
+
+    @Override
+    public List<ProjectFileRecord> findAllByGameSlugAndProjectTypeAndProjectSlugWhereVersion (String gameSlug, String projectTypeSlug, String projectSlug, boolean authorized, long page, int limit, ProjectFileSort sort, String version) {
+
+        List<ProjectFileRecord> projects = new ArrayList<>();
+
+        try (PreparedStatement stmt = sort.getQuery(FIND_ALL_BY_GAMESLUG_AND_PROJECTYPESLUG_AND_PROJECTSLUG_AND_VERSION)) {
+            stmt.setString(1, gameSlug);
+            stmt.setString(2, projectTypeSlug);
+            stmt.setString(3, projectSlug);
+            stmt.setBoolean(4, authorized);
+            stmt.setString(5, version);
+            stmt.setLong(6, (page - 1) * limit);
+            stmt.setLong(7, limit);
 
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {

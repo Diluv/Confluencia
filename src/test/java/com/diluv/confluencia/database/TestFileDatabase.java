@@ -43,6 +43,11 @@ public class TestFileDatabase extends ConfluenciaTest {
     }
 
     @Test
+    public void findAllByGameSlugAndProjectTypeAndProjectSlugWhereVersion () {
+        Assertions.assertEquals(1, ConfluenciaTest.FILE.findAllByGameSlugAndProjectTypeAndProjectSlugWhereVersion("minecraft", "mods", "bookshelf", false, 1, 1, ProjectFileSort.NEW, "1.15.2").size());
+    }
+
+    @Test
     public void insertProjectFile () {
 
         Long id = ConfluenciaTest.FILE.insertProjectFile("test.jar", 10, "", "sha512", "release", "binary", 1, 1);

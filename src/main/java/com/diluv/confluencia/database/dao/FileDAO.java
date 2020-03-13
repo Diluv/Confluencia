@@ -24,6 +24,8 @@ public interface FileDAO {
 
     List<ProjectFileRecord> findAllByGameSlugAndProjectTypeAndProjectSlug (String gameSlug, String projectTypeSlug, String projectSlug, boolean authorized, long page, int limit, ProjectFileSort sort);
 
+    List<ProjectFileRecord> findAllByGameSlugAndProjectTypeAndProjectSlugWhereVersion (String gameSlug, String projectTypeSlug, String projectSlug, boolean authorized, long page, int limit, ProjectFileSort sort, String version);
+
     boolean insertProjectFileAntivirus (long projectFileId, String malware);
 
     List<GameVersionRecord> findAllGameVersionsByProjectFile (long projectFileId);
