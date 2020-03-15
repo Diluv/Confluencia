@@ -20,6 +20,7 @@ public enum NewsSort {
     }
 
     public PreparedStatement getQuery (String query) throws SQLException {
+
         return Confluencia.connection().prepareStatement(query.replace("'%sort%'", this.sort).replace("'%order%'", this.order));
     }
 

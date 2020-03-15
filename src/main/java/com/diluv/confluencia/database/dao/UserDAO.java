@@ -7,6 +7,7 @@ import com.diluv.confluencia.database.record.APITokenRecord;
 import com.diluv.confluencia.database.record.RefreshTokenRecord;
 import com.diluv.confluencia.database.record.TempUserRecord;
 import com.diluv.confluencia.database.record.UserRecord;
+import com.diluv.confluencia.database.record.UserRoleRecord;
 
 public interface UserDAO {
 
@@ -45,4 +46,6 @@ public interface UserDAO {
     APITokenRecord findAPITokenByUserIdAndCode (long userId, String code);
 
     boolean deleteAPITokenByUserIdAndCode (long userId, String code);
+
+    List<UserRoleRecord> findAllUserRolesByUserId (long userId);
 }

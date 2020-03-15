@@ -8,9 +8,9 @@ CREATE TABLE user_compromised_passwords
 
 CREATE TABLE user_mfa_recoveries
 (
-    user_id  BIGINT UNSIGNED NOT NULL,
+    user_id  BIGINT  NOT NULL,
 
-    2fa_code CHAR(8)         NOT NULL,
+    2fa_code CHAR(8) NOT NULL,
     valid    BOOL DEFAULT TRUE,
 
     PRIMARY KEY (user_id, 2fa_code),
@@ -19,9 +19,9 @@ CREATE TABLE user_mfa_recoveries
 
 CREATE TABLE project_links
 (
-    project_id BIGINT UNSIGNED NOT NULL,
-    type       VARCHAR(255)    NOT NULL,
-    url        VARCHAR(255)    NOT NULL,
+    project_id BIGINT       NOT NULL,
+    type       VARCHAR(255) NOT NULL,
+    url        VARCHAR(255) NOT NULL,
 
     PRIMARY KEY (project_id, type),
     FOREIGN KEY (project_id) REFERENCES projects (id)

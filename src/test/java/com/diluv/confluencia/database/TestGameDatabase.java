@@ -1,11 +1,10 @@
 package com.diluv.confluencia.database;
 
-import com.diluv.confluencia.database.sort.GameSort;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import com.diluv.confluencia.ConfluenciaTest;
+import com.diluv.confluencia.database.sort.GameSort;
 
 public class TestGameDatabase extends ConfluenciaTest {
 

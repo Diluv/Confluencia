@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.diluv.confluencia.Confluencia;
@@ -12,6 +13,7 @@ import com.diluv.confluencia.database.record.APITokenRecord;
 import com.diluv.confluencia.database.record.RefreshTokenRecord;
 import com.diluv.confluencia.database.record.TempUserRecord;
 import com.diluv.confluencia.database.record.UserRecord;
+import com.diluv.confluencia.database.record.UserRoleRecord;
 import com.diluv.confluencia.utils.SQLHandler;
 
 public class UserDatabase implements UserDAO {
@@ -37,6 +39,8 @@ public class UserDatabase implements UserDAO {
     private static final String INSERT_API_TOKEN_PERMISSIONS = SQLHandler.readFile("api_token/insertAPITokenPermission");
     private static final String FIND_API_TOKEN_BY_USERID_AND_CODE = SQLHandler.readFile("api_token/findAPITokenByUserIdAndCode");
     private static final String DELETE_API_TOKEN_BY_USERID_AND_CODE = SQLHandler.readFile("api_token/deleteAPITokenByUserIdAndCode");
+
+    private static final String FIND_ALL_USER_ROLES_BY_USER_ID = SQLHandler.readFile("user_roles/findAllUserRolesByUserId");
 
     @Override
     public boolean existsUserByEmail (String email) {
@@ -94,7 +98,7 @@ public class UserDatabase implements UserDAO {
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(INSERT_USER)) {
             stmt.setString(1, email);
             stmt.setString(2, username);
-            stmt.setString(3,displayName);
+            stmt.setString(3, displayName);
             stmt.setString(4, password);
             stmt.setString(5, passwordType);
             stmt.setTimestamp(6, createdAt);
@@ -344,5 +348,24 @@ public class UserDatabase implements UserDAO {
             Confluencia.LOGGER.error("Failed to deleteAPITokenByUserIdAndCode for user {}", userId, e);
         }
         return false;
+    }
+
+    @Override
+    public List<UserRoleRecord> findAllUserRolesByUserId (long userId) {
+
+        List<UserRoleRecord> userRoles = new ArrayList<>();
+
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL_USER_ROLES_BY_USER_ID)) {
+            stmt.setLong(1, userId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    userRoles.add(new UserRoleRecord(rs));
+                }
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return userRoles;
     }
 }

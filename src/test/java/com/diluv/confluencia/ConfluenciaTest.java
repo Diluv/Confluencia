@@ -54,6 +54,7 @@ public abstract class ConfluenciaTest {
             TestSQLHandler.loadData("news");
             TestSQLHandler.loadData("featured_games");
             TestSQLHandler.loadData("featured_projects");
+            TestSQLHandler.loadData("user_roles");
 
             init = true;
         }

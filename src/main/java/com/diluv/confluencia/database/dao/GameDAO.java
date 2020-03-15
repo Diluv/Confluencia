@@ -2,9 +2,9 @@ package com.diluv.confluencia.database.dao;
 
 import java.util.List;
 
-import com.diluv.confluencia.database.sort.GameSort;
 import com.diluv.confluencia.database.record.GameRecord;
 import com.diluv.confluencia.database.record.GameVersionRecord;
+import com.diluv.confluencia.database.sort.GameSort;
 
 public interface GameDAO {
 

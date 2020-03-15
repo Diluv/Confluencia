@@ -516,3 +516,9 @@ VALUES ('minecraft', '20w10a', 'snapshot', STR_TO_DATE('2020-03-04T16:21:41', '%
        ('minecraft', 'rd-20090515', 'old_alpha', STR_TO_DATE('2009-05-14T22:00:00', '%Y-%m-%dT%H:%i:%s')),
        ('minecraft', 'rd-132328', 'old_alpha', STR_TO_DATE('2009-05-13T21:28:00', '%Y-%m-%dT%H:%i:%s')),
        ('minecraft', 'rd-132211', 'old_alpha', STR_TO_DATE('2009-05-13T20:11:00', '%Y-%m-%dT%H:%i:%s'));
+
+INSERT INTO roles(name)
+VALUES ('admin');
+
+INSERT INTO role_permissions(role_id, permission)
+VALUES (1, 'view_admin');

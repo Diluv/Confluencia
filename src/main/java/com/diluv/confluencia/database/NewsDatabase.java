@@ -8,8 +8,8 @@ import java.util.List;
 
 import com.diluv.confluencia.Confluencia;
 import com.diluv.confluencia.database.dao.NewsDAO;
-import com.diluv.confluencia.database.sort.NewsSort;
 import com.diluv.confluencia.database.record.NewsRecord;
+import com.diluv.confluencia.database.sort.NewsSort;
 import com.diluv.confluencia.utils.SQLHandler;
 
 public class NewsDatabase implements NewsDAO {

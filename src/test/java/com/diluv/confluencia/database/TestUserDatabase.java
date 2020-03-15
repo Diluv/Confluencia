@@ -141,4 +141,11 @@ public class TestUserDatabase extends ConfluenciaTest {
         Assertions.assertNull(ConfluenciaTest.USER.findAPITokenByUserIdAndCode(1, "invalid"));
         Assertions.assertNotNull(ConfluenciaTest.USER.findAPITokenByUserIdAndCode(1, "5a8666ba-fcf9-4f3f-89b0-5cc9d522fe40"));
     }
+
+    @Test
+    public void findAllUserRolesByUserId () {
+
+        Assertions.assertEquals(0, ConfluenciaTest.USER.findAllUserRolesByUserId(1).size());
+        Assertions.assertEquals(1, ConfluenciaTest.USER.findAllUserRolesByUserId(2).size());
+    }
 }
