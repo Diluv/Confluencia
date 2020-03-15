@@ -94,4 +94,10 @@ public class TestProjectDatabase extends ConfluenciaTest {
 
         Assertions.assertEquals(1, ConfluenciaTest.PROJECT.findAllCategoriesByProjectId(1).size());
     }
+
+    @Test
+    public void findAllLinksByProjectId () {
+
+        Assertions.assertEquals(1, ConfluenciaTest.PROJECT.findAllLinksByProjectId(1).size());
+    }
 }

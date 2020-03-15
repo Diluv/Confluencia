@@ -10,6 +10,7 @@ import com.diluv.confluencia.Confluencia;
 import com.diluv.confluencia.database.dao.ProjectDAO;
 import com.diluv.confluencia.database.record.CategoryRecord;
 import com.diluv.confluencia.database.record.ProjectAuthorRecord;
+import com.diluv.confluencia.database.record.ProjectLinkRecord;
 import com.diluv.confluencia.database.record.ProjectRecord;
 import com.diluv.confluencia.database.record.ProjectTypeRecord;
 import com.diluv.confluencia.database.sort.ProjectSort;
@@ -23,6 +24,8 @@ public class ProjectDatabase implements ProjectDAO {
     private static final String FIND_ALL_BY_GAMESLUG_AND_PROJECTYPESLUG_AND_VERSION = SQLHandler.readFile("project/findAllByGameSlugAndProjectTypeSlugAndVersion");
     private static final String FIND_ONE_BY_GAMESLUG_AND_PROJECTYPESLUG_AND_PROJECTSLUG = SQLHandler.readFile("project/findOneByGameSlugAndProjectTypeSlugAndProjectSlug");
     private static final String FIND_ONE_BY_PROJECTID = SQLHandler.readFile("project/findOneByProjectId");
+    private static final String FIND_ALL_LINKS_BY_PROJECTID = SQLHandler.readFile("project/findAllLinksByProjectId");
+
     private static final String FIND_FEATURED_PROJECTS = SQLHandler.readFile("project/findFeaturedProjects");
 
     private static final String FIND_ALL_PROJECT_AUTHORS_BY_PROJECT_ID = SQLHandler.readFile("project_author/findAllByProjectId");
@@ -267,5 +270,23 @@ public class ProjectDatabase implements ProjectDAO {
             Confluencia.LOGGER.error("Failed to run findAllCategoriesByProjectId database script for project id {}.", projectId, e);
         }
         return categories;
+    }
+
+    @Override
+    public List<ProjectLinkRecord> findAllLinksByProjectId (long id) {
+
+        List<ProjectLinkRecord> projectLinks = new ArrayList<>();
+        try (PreparedStatement stmt =  Confluencia.connection().prepareStatement(FIND_ALL_LINKS_BY_PROJECTID)) {
+            stmt.setLong(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    projectLinks.add(new ProjectLinkRecord(rs));
+                }
+            }
+        }
+        catch (SQLException e) {
+            Confluencia.LOGGER.error("Failed to run findAllLinksByProjectId database script for projectId {}.", id, e);
+        }
+        return projectLinks;
     }
 }

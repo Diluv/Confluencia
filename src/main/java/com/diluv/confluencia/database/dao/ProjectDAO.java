@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.diluv.confluencia.database.record.CategoryRecord;
 import com.diluv.confluencia.database.record.ProjectAuthorRecord;
+import com.diluv.confluencia.database.record.ProjectLinkRecord;
 import com.diluv.confluencia.database.record.ProjectRecord;
 import com.diluv.confluencia.database.record.ProjectTypeRecord;
 import com.diluv.confluencia.database.sort.ProjectSort;
@@ -33,4 +34,6 @@ public interface ProjectDAO {
     List<CategoryRecord> findAllCategoriesByGameSlugAndProjectTypeSlug (String gameSlug, String projectTypeSlug);
 
     List<CategoryRecord> findAllCategoriesByProjectId (long projectId);
+
+    List<ProjectLinkRecord> findAllLinksByProjectId(long id);
 }

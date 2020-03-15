@@ -146,6 +146,16 @@ CREATE TABLE projects
     FOREIGN KEY (game_slug) REFERENCES games (slug)
 );
 
+CREATE TABLE project_links
+(
+    project_id BIGINT       NOT NULL,
+    type       VARCHAR(255) NOT NULL,
+    url        VARCHAR(255) NOT NULL,
+
+    PRIMARY KEY (project_id, type),
+    FOREIGN KEY (project_id) REFERENCES projects (id)
+);
+
 CREATE TABLE project_authors
 (
     id         BIGINT       NOT NULL AUTO_INCREMENT,

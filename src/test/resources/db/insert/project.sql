@@ -428,4 +428,7 @@ VALUES ('Bookshelf', 'bookshelf', 'An open source library for other mods!', 'An 
         'minecraft', 'mods');
 
 INSERT INTO project_categories(project_id, categories_id)
-VALUES (1, 1)
+VALUES (1, 1);
+
+INSERT INTO project_links(project_id, type, url)
+VALUES (1, 'Patreon', 'https://www.patreon.com/diluv')
