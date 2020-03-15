@@ -67,9 +67,9 @@ public class TestSecurityDatabase extends ConfluenciaTest {
 
 
     @Test
-    public void findOneByHash () {
+    public void findOnePasswordByHash () {
 
-        Assertions.assertNotNull(ConfluenciaTest.SECURITY.findOneByHash("025160DEE13179BC80BB05102CE5B3CD3FE"));
-        Assertions.assertNull(ConfluenciaTest.SECURITY.findOneByHash("1078A18A6C6D0C99ED7375A90D6B995D350"));
+        Assertions.assertNotNull(ConfluenciaTest.SECURITY.findOnePasswordByHash("025160DEE13179BC80BB05102CE5B3CD3FE"));
+        Assertions.assertNull(ConfluenciaTest.SECURITY.findOnePasswordByHash("1078A18A6C6D0C99ED7375A90D6B995D350"));
     }
 }

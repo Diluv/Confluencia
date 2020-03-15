@@ -22,5 +22,5 @@ public interface SecurityDAO {
 
     boolean insertPassword (Map<String, Long> hashOccurrences);
 
-    CompromisedPasswordRecord findOneByHash (String hash);
+    CompromisedPasswordRecord findOnePasswordByHash (String hash);
 }

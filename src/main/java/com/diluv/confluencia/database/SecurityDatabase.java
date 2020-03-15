@@ -151,7 +151,7 @@ public class SecurityDatabase implements SecurityDAO {
     }
 
     @Override
-    public CompromisedPasswordRecord findOneByHash (String hash) {
+    public CompromisedPasswordRecord findOnePasswordByHash (String hash) {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_PASSWORD_BY_HASH)) {
             stmt.setString(1, hash);
