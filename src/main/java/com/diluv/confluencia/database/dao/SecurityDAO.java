@@ -1,10 +1,12 @@
 package com.diluv.confluencia.database.dao;
 
 import java.util.List;
+import java.util.Map;
 
+import com.diluv.confluencia.database.record.CompromisedPasswordRecord;
 import com.diluv.confluencia.database.record.EmailSendRecord;
 
-public interface EmailDAO {
+public interface SecurityDAO {
 
     boolean insertDomainBlacklist (String[] domains);
 
@@ -17,4 +19,8 @@ public interface EmailDAO {
     EmailSendRecord findEmailSentByEmailAndType (String email, String type);
 
     List<EmailSendRecord> findEmailSentByEmail (String email);
+
+    boolean insertPassword (Map<String, Long> hashOccurrences);
+
+    CompromisedPasswordRecord findOneByHash (String hash);
 }

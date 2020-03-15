@@ -4,13 +4,13 @@ import org.junit.jupiter.api.BeforeAll;
 import org.testcontainers.containers.MariaDBContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import com.diluv.confluencia.database.EmailDatabase;
+import com.diluv.confluencia.database.SecurityDatabase;
 import com.diluv.confluencia.database.FileDatabase;
 import com.diluv.confluencia.database.GameDatabase;
 import com.diluv.confluencia.database.NewsDatabase;
 import com.diluv.confluencia.database.ProjectDatabase;
 import com.diluv.confluencia.database.UserDatabase;
-import com.diluv.confluencia.database.dao.EmailDAO;
+import com.diluv.confluencia.database.dao.SecurityDAO;
 import com.diluv.confluencia.database.dao.FileDAO;
 import com.diluv.confluencia.database.dao.GameDAO;
 import com.diluv.confluencia.database.dao.NewsDAO;
@@ -28,7 +28,7 @@ public abstract class ConfluenciaTest {
         CONTAINER.start();
     }
 
-    public static final EmailDAO EMAIL = new EmailDatabase();
+    public static final SecurityDAO SECURITY = new SecurityDatabase();
     public static final FileDAO FILE = new FileDatabase();
     public static final GameDAO GAME = new GameDatabase();
     public static final ProjectDAO PROJECT = new ProjectDatabase();
@@ -55,7 +55,7 @@ public abstract class ConfluenciaTest {
             TestSQLHandler.loadData("featured_games");
             TestSQLHandler.loadData("featured_projects");
             TestSQLHandler.loadData("user_roles");
-
+            TestSQLHandler.loadData("passwords");
             init = true;
         }
     }

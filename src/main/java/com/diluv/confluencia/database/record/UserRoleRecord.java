@@ -7,9 +7,9 @@ import java.util.Collections;
 import java.util.List;
 
 public class UserRoleRecord {
-    private final List<String> permissions;
     private final long id;
     private final String name;
+    private final List<String> permissions;
 
     public UserRoleRecord (ResultSet rs) throws SQLException {
 
