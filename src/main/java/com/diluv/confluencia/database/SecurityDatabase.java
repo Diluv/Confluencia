@@ -139,9 +139,10 @@ public class SecurityDatabase implements SecurityDAO {
             for (String hash : hashOccurrences.keySet()) {
                 stmt.setString(1, hash);
                 stmt.setLong(2, hashOccurrences.get(hash));
+                stmt.setLong(3, hashOccurrences.get(hash));
                 stmt.addBatch();
             }
-            stmt.executeBatch();
+            int[] s = stmt.executeBatch();
             return true;
         }
         catch (SQLException e) {
