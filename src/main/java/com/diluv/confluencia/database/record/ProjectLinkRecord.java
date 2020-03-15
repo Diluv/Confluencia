@@ -11,7 +11,7 @@ public class ProjectLinkRecord {
 
     public ProjectLinkRecord (ResultSet rs) throws SQLException {
 
-        this.projectId = rs.getLong("projectId");
+        this.projectId = rs.getLong("project_id");
         this.type = rs.getString("type");
         this.url = rs.getString("url");
     }
