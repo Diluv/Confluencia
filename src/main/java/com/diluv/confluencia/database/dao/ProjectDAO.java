@@ -35,5 +35,5 @@ public interface ProjectDAO {
 
     List<CategoryRecord> findAllCategoriesByProjectId (long projectId);
 
-    List<ProjectLinkRecord> findAllLinksByProjectId(long id);
+    List<ProjectLinkRecord> findAllLinksByProjectId (long id);
 }

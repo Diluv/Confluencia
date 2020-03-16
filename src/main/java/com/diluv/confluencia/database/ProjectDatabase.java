@@ -276,7 +276,7 @@ public class ProjectDatabase implements ProjectDAO {
     public List<ProjectLinkRecord> findAllLinksByProjectId (long id) {
 
         List<ProjectLinkRecord> projectLinks = new ArrayList<>();
-        try (PreparedStatement stmt =  Confluencia.connection().prepareStatement(FIND_ALL_LINKS_BY_PROJECTID)) {
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL_LINKS_BY_PROJECTID)) {
             stmt.setLong(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {

@@ -1,17 +1,17 @@
 package com.diluv.confluencia.database;
 
+import com.diluv.confluencia.Confluencia;
+import com.diluv.confluencia.database.dao.SecurityDAO;
+import com.diluv.confluencia.database.record.CompromisedPasswordRecord;
+import com.diluv.confluencia.database.record.EmailSendRecord;
+import com.diluv.confluencia.utils.SQLHandler;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import com.diluv.confluencia.Confluencia;
-import com.diluv.confluencia.database.dao.SecurityDAO;
-import com.diluv.confluencia.database.record.CompromisedPasswordRecord;
-import com.diluv.confluencia.database.record.EmailSendRecord;
-import com.diluv.confluencia.utils.SQLHandler;
 
 public class SecurityDatabase implements SecurityDAO {
     private static final String INSERT_DOMAIN_BLACKLIST = SQLHandler.readFile("email/insertDomainBlacklist");
