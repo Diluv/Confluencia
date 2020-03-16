@@ -6,3 +6,12 @@ VALUES (1, 'de4602e9-3b81-412f-aaa5-95092b080266', NOW() + INTERVAL 1 DAY);
 
 INSERT INTO refresh_tokens(user_id, code, expired_at)
 VALUES (2, '592d3885-2fa1-4987-8626-e22c1e92e479', NOW() + INTERVAL 1 DAY);
+
+INSERT INTO refresh_tokens(user_id, code, expired_at)
+VALUES (3, '592d3885-2fa1-4987-8626-e22c1e92e479', NOW() + INTERVAL 1 DAY);
+
+INSERT INTO refresh_tokens(user_id, code, expired_at)
+VALUES (3, '592d3285-2fa1-4987-8626-e22c1e92e479', NOW() + INTERVAL 1 DAY);
+
+INSERT INTO refresh_tokens(user_id, code, expired_at)
+VALUES (3, '52236885-2fa1-4987-8626-e22c1e92e479', NOW() + INTERVAL 1 DAY);

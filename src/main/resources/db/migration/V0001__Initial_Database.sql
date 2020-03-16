@@ -61,6 +61,17 @@ CREATE TABLE api_token_permissions
     FOREIGN KEY (user_id, code) REFERENCES api_tokens (user_id, code) ON DELETE CASCADE
 );
 
+CREATE TABLE password_reset
+(
+    user_id    BIGINT   NOT NULL,
+    code       CHAR(36) NOT NULL,
+
+    created_at DATETIME NOT NULL DEFAULT NOW(),
+
+    PRIMARY KEY (user_id, code),
+    FOREIGN KEY (user_id) REFERENCES users (id)
+);
+
 CREATE TABLE games
 (
     slug       VARCHAR(200) NOT NULL,

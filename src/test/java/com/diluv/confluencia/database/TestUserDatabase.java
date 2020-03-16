@@ -49,6 +49,12 @@ public class TestUserDatabase extends ConfluenciaTest {
     }
 
     @Test
+    public void updateUserPasswordByUserId () {
+
+        Assertions.assertTrue(ConfluenciaTest.USER.updateUserPasswordByUserId(3, "password"));
+    }
+
+    @Test
     public void existsTempUserByEmail () {
 
         Assertions.assertFalse(ConfluenciaTest.USER.existsTempUserByEmail("invalid@example.com"));
@@ -111,6 +117,12 @@ public class TestUserDatabase extends ConfluenciaTest {
     }
 
     @Test
+    public void deleteAllRefreshTokensByUserId () {
+
+        Assertions.assertTrue(ConfluenciaTest.USER.deleteAllRefreshTokensByUserId(3));
+    }
+
+    @Test
     public void insertAndDeleteRefreshTokenByUserIdAndCode () {
 
         String testCode1 = "5d8a8e30-94b1-4b52-8ddd-e9ce6b899d88";
@@ -147,5 +159,24 @@ public class TestUserDatabase extends ConfluenciaTest {
 
         Assertions.assertEquals(0, ConfluenciaTest.USER.findAllUserRolesByUserId(1).size());
         Assertions.assertEquals(1, ConfluenciaTest.USER.findAllUserRolesByUserId(2).size());
+    }
+
+    @Test
+    public void insertPasswordReset () {
+
+        Assertions.assertTrue(ConfluenciaTest.USER.insertPasswordReset(1, "code"));
+        Assertions.assertFalse(ConfluenciaTest.USER.insertPasswordReset(1, "code"));
+
+        Assertions.assertTrue(ConfluenciaTest.USER.deletePasswordReset(1, "code"));
+        Assertions.assertFalse(ConfluenciaTest.USER.deletePasswordReset(1, "invalid"));
+    }
+
+    @Test
+    public void findOnePasswordResetByEmailAndCode () {
+
+        Assertions.assertTrue(ConfluenciaTest.USER.insertPasswordReset(1, "testing"));
+        Assertions.assertNotNull(ConfluenciaTest.USER.findOnePasswordResetByEmailAndCode("test@example.com", "testing"));
+
+        Assertions.assertNull(ConfluenciaTest.USER.findOnePasswordResetByEmailAndCode("test@example.com", "invalid"));
     }
 }

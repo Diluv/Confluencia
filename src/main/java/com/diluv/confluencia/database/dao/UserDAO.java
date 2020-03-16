@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 import com.diluv.confluencia.database.record.APITokenRecord;
+import com.diluv.confluencia.database.record.PasswordResetRecord;
 import com.diluv.confluencia.database.record.RefreshTokenRecord;
 import com.diluv.confluencia.database.record.TempUserRecord;
 import com.diluv.confluencia.database.record.UserRecord;
@@ -18,6 +19,8 @@ public interface UserDAO {
     UserRecord findOneByUsername (String username);
 
     boolean insertUser (String email, String username, String displayName, String password, String passwordType, Timestamp createdAt);
+
+    boolean updateUserPasswordByUserId (long userId, String password);
 
     boolean existsTempUserByEmail (String email);
 
@@ -37,6 +40,8 @@ public interface UserDAO {
 
     RefreshTokenRecord findRefreshTokenByUserIdAndCode (long userId, String code);
 
+    boolean deleteAllRefreshTokensByUserId (long userId);
+
     boolean deleteRefreshTokenByUserIdAndCode (long userId, String code);
 
     boolean insertAPITokens (long userId, String code, String name);
@@ -48,4 +53,10 @@ public interface UserDAO {
     boolean deleteAPITokenByUserIdAndCode (long userId, String code);
 
     List<UserRoleRecord> findAllUserRolesByUserId (long userId);
+
+    boolean insertPasswordReset (long userId, String code);
+
+    boolean deletePasswordReset (long userId, String code);
+
+    PasswordResetRecord findOnePasswordResetByEmailAndCode (String email, String code);
 }

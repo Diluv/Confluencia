@@ -10,6 +10,7 @@ import java.util.List;
 import com.diluv.confluencia.Confluencia;
 import com.diluv.confluencia.database.dao.UserDAO;
 import com.diluv.confluencia.database.record.APITokenRecord;
+import com.diluv.confluencia.database.record.PasswordResetRecord;
 import com.diluv.confluencia.database.record.RefreshTokenRecord;
 import com.diluv.confluencia.database.record.TempUserRecord;
 import com.diluv.confluencia.database.record.UserRecord;
@@ -22,6 +23,7 @@ public class UserDatabase implements UserDAO {
     private static final String EXISTS_USER_BY_USERNAME = SQLHandler.readFile("user/existsUserByUsername");
     private static final String FIND_USER_BY_USERNAME = SQLHandler.readFile("user/findUserByUsername");
     private static final String INSERT_USER = SQLHandler.readFile("user/insertUser");
+    private static final String UPDATE_PASSWORD_BY_USERID = SQLHandler.readFile("user/updatePasswordByUserId");
 
     private static final String EXISTS_TEMPUSER_BY_EMAIL = SQLHandler.readFile("temp_user/existsTempUserByEmail");
     private static final String EXISTS_TEMPUSER_BY_USERNAME = SQLHandler.readFile("temp_user/existsTempUserByUsername");
@@ -33,6 +35,7 @@ public class UserDatabase implements UserDAO {
 
     private static final String INSERT_REFRESH_TOKEN = SQLHandler.readFile("refresh_token/insertRefreshToken");
     private static final String FIND_REFRESH_TOKEN_BY_USERID_AND_CODE = SQLHandler.readFile("refresh_token/findRefreshTokenByUserIdAndCode");
+    private static final String DELETE_ALL_REFRESH_TOKENS_BY_USERID = SQLHandler.readFile("refresh_token/deleteRefreshTokenByUserId");
     private static final String DELETE_REFRESH_TOKEN_BY_USERID_AND_CODE = SQLHandler.readFile("refresh_token/deleteRefreshTokenByUserIdAndCode");
 
     private static final String INSERT_API_TOKEN = SQLHandler.readFile("api_token/insertAPIToken");
@@ -41,6 +44,10 @@ public class UserDatabase implements UserDAO {
     private static final String DELETE_API_TOKEN_BY_USERID_AND_CODE = SQLHandler.readFile("api_token/deleteAPITokenByUserIdAndCode");
 
     private static final String FIND_ALL_USER_ROLES_BY_USER_ID = SQLHandler.readFile("user_roles/findAllUserRolesByUserId");
+
+    private static final String INSERT_PASSWORD_RESET = SQLHandler.readFile("user_reset/insertPasswordReset");
+    private static final String DELETE_PASSWORD_RESET = SQLHandler.readFile("user_reset/deletePasswordReset");
+    private static final String FIND_ONE_PASSWORD_RESET_BY_EMAIL_AND_CODE = SQLHandler.readFile("user_reset/findOnePasswordResetByEmailAndCode");
 
     @Override
     public boolean existsUserByEmail (String email) {
@@ -107,6 +114,21 @@ public class UserDatabase implements UserDAO {
         }
         catch (SQLException e) {
             Confluencia.LOGGER.error("Failed to insert user.", e);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean updateUserPasswordByUserId (long userId, String password) {
+
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(UPDATE_PASSWORD_BY_USERID)) {
+            stmt.setString(1, password);
+            stmt.setLong(2, userId);
+
+            return stmt.executeUpdate() == 1;
+        }
+        catch (SQLException e) {
+            Confluencia.LOGGER.error("Failed to updateUserPassword.", e);
         }
         return false;
     }
@@ -266,6 +288,21 @@ public class UserDatabase implements UserDAO {
     }
 
     @Override
+    public boolean deleteAllRefreshTokensByUserId (long userId) {
+
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(DELETE_ALL_REFRESH_TOKENS_BY_USERID)) {
+            stmt.setLong(1, userId);
+
+            return stmt.executeUpdate() >= 0;
+
+        }
+        catch (SQLException e) {
+            Confluencia.LOGGER.error("Failed to deleteAllRefreshTokensByUserId.", e);
+        }
+        return false;
+    }
+
+    @Override
     public boolean deleteRefreshTokenByUserIdAndCode (long userId, String code) {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(DELETE_REFRESH_TOKEN_BY_USERID_AND_CODE)) {
@@ -367,5 +404,56 @@ public class UserDatabase implements UserDAO {
             e.printStackTrace();
         }
         return userRoles;
+    }
+
+    @Override
+    public boolean insertPasswordReset (long userId, String code) {
+
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(INSERT_PASSWORD_RESET)) {
+
+            stmt.setLong(1, userId);
+            stmt.setString(2, code);
+
+            return stmt.executeUpdate() == 1;
+        }
+        catch (SQLException e) {
+            Confluencia.LOGGER.error("Failed to insertPasswordReset.", e);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean deletePasswordReset (long userId, String code) {
+
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(DELETE_PASSWORD_RESET)) {
+
+            stmt.setLong(1, userId);
+            stmt.setString(2, code);
+
+            return stmt.executeUpdate() == 1;
+        }
+        catch (SQLException e) {
+            Confluencia.LOGGER.error("Failed to deletePasswordReset.", e);
+        }
+        return false;
+    }
+
+    @Override
+    public PasswordResetRecord findOnePasswordResetByEmailAndCode (String email, String code) {
+
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ONE_PASSWORD_RESET_BY_EMAIL_AND_CODE)) {
+            stmt.setString(1, email);
+            stmt.setString(2, code);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return new PasswordResetRecord(rs);
+                }
+            }
+        }
+        catch (SQLException e) {
+            Confluencia.LOGGER.error("Failed to findOnePasswordResetByEmailAndCode.", e);
+        }
+        return null;
     }
 }
