@@ -19,7 +19,7 @@ public class Confluencia {
     public static void init (String url, String username, String password, boolean clean) {
 
         ds = new HikariDataSource();
-        ds.setJdbcUrl(url);
+        ds.setJdbcUrl(url + "?useLegacyDatetimeCode=false&serverTimezone=UTC");
         ds.setUsername(username);
         ds.setPassword(password);
         ds.addDataSourceProperty("rewriteBatchedStatements", "true");

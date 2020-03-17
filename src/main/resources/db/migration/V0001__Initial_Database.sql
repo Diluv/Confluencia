@@ -63,10 +63,10 @@ CREATE TABLE api_token_permissions
 
 CREATE TABLE password_reset
 (
-    user_id    BIGINT   NOT NULL,
-    code       CHAR(36) NOT NULL,
+    user_id    BIGINT    NOT NULL,
+    code       CHAR(36)  NOT NULL,
 
-    created_at DATETIME NOT NULL DEFAULT NOW(),
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
 
     PRIMARY KEY (user_id, code),
     FOREIGN KEY (user_id) REFERENCES users (id)
@@ -95,7 +95,7 @@ CREATE TABLE game_versions
     version   VARCHAR(255) NOT NULL,
 
     type      VARCHAR(200) NOT NULL,
-    released  DATETIME     NOT NULL DEFAULT NOW(),
+    released  TIMESTAMP    NOT NULL DEFAULT NOW(),
 
     PRIMARY KEY (id),
     FOREIGN KEY (game_slug) REFERENCES games (slug)

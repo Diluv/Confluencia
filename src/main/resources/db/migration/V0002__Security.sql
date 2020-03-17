@@ -35,9 +35,9 @@ CREATE TABLE email_domain_blacklist
 
 CREATE TABLE user_compromised_passwords
 (
-    password_hash CHAR(40) NOT NULL,
-    occurrences   BIGINT   NOT NULL,
-    last_updated  DATETIME NOT NULL DEFAULT NOW(),
+    password_hash CHAR(40)  NOT NULL,
+    occurrences   BIGINT    NOT NULL,
+    last_updated  TIMESTAMP NOT NULL DEFAULT NOW(),
 
     PRIMARY KEY (password_hash)
 );
