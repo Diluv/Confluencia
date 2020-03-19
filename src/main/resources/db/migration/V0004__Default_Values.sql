@@ -521,4 +521,4 @@ INSERT INTO roles(name)
 VALUES ('admin');
 
 INSERT INTO role_permissions(role_id, permission)
-VALUES (1, 'view_admin');
+VALUES (1, 'admin.view');
