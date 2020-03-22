@@ -14,7 +14,7 @@ public class TestFileDatabase extends ConfluenciaTest {
     @Test
     public void findAllWhereStatusAndLimit () {
 
-        Assertions.assertEquals(1, ConfluenciaTest.FILE.findAllWhereStatusAndLimit(FileProcessingStatus.PENDING, 5).size());
+        Assertions.assertEquals(3, ConfluenciaTest.FILE.findAllWhereStatusAndLimit(FileProcessingStatus.PENDING, 5).size());
     }
 
     @Test
@@ -39,7 +39,7 @@ public class TestFileDatabase extends ConfluenciaTest {
         Assertions.assertEquals(1, ConfluenciaTest.FILE.findAllByGameSlugAndProjectTypeAndProjectSlug("minecraft", "mods", "bookshelf", false, 1, 1, ProjectFileSort.NEW).size());
 
         Assertions.assertEquals(0, ConfluenciaTest.FILE.findAllByGameSlugAndProjectTypeAndProjectSlug("minecraft", "mods", "upgrade-modifiers", false, 1, 1, ProjectFileSort.NEW).size());
-        Assertions.assertEquals(1, ConfluenciaTest.FILE.findAllByGameSlugAndProjectTypeAndProjectSlug("minecraft", "mods", "upgrade-modifiers", true, 1, 1, ProjectFileSort.NEW).size());
+        Assertions.assertEquals(0, ConfluenciaTest.FILE.findAllByGameSlugAndProjectTypeAndProjectSlug("minecraft", "mods", "upgrade-modifiers", true, 1, 1, ProjectFileSort.NEW).size());
     }
 
     @Test

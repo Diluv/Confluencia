@@ -19,6 +19,5 @@ FROM project_files pf
          JOIN projects p ON (p.id = pf.project_id)
          JOIN users u ON (u.id = pf.user_id)
 WHERE pf.processing_status = ?
-  AND pf.released = FALSE
 ORDER BY created_at
 LIMIT ?;
