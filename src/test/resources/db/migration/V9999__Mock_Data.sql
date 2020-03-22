@@ -10,9 +10,9 @@ INSERT INTO user_roles(user_id, role_id)
 VALUES (2, 1);
 
 INSERT INTO temp_users(id, username, email, password, password_type, created_at, verificationCode)
-VALUES (1, 'tempuser', 'tempuser@example.com', '', '', NOW(), 'c1632ff7-367e-485f-91dd-92ab75903fa4'),
-       (2, 'tempuser2', 'tempuser2@example.com', '', '', NOW(), '14964974-663a-4005-9cf2-d1f390c3b2cc'),
-       (3, 'tempuser3', 'tempuser3@example.com', '', '', NOW(), '14164974-663a-4005-9cf2-d1f390c3b2cc');
+VALUES (1, 'tempuser', 'tempuser@diluv.com', '', '', NOW(), 'c1632ff7-367e-485f-91dd-92ab75903fa4'),
+       (2, 'tempuser2', 'tempuser2@diluv.com', '', '', NOW(), '14964974-663a-4005-9cf2-d1f390c3b2cc'),
+       (3, 'tempuser3', 'tempuser3@diluv.com', '', '', NOW(), '14164974-663a-4005-9cf2-d1f390c3b2cc');
 
 INSERT INTO api_tokens(user_id, code, name)
 VALUES (1, '4b3b85e3-f7ac-4c7b-b71a-df972909b213', 'testing token');
@@ -500,15 +500,14 @@ INSERT INTO user_compromised_passwords(password_hash, occurrences)
 VALUES ('025160DEE13179BC80BB05102CE5B3CD3FE', 11);
 
 INSERT INTO email_domain_blacklist(domain)
-VALUES ('diluv.com'),
-       ('banned.com'),
+VALUES ('banned.com'),
        ('banned2.com');
 
 INSERT INTO email_blacklist (email)
-VALUES ('blacklisted@example.com');
+VALUES ('blacklisted@diluv.com');
 
 INSERT INTO email_sent(message_id, email, type, sent_at)
-VALUES ('e4a291f7-740a-4b88-bc32-63e97e2d0812', 'test@example.com', 'test', NOW());
+VALUES ('e4a291f7-740a-4b88-bc32-63e97e2d0812', 'test@diluv.com', 'test', NOW());
 
 INSERT INTO project_files(id, name, size, changelog, sha512, release_type, classifier, processing_status, released,
                           project_id,

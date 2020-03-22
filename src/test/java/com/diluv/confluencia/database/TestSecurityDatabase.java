@@ -20,13 +20,13 @@ public class TestSecurityDatabase extends ConfluenciaTest {
     public void existsBlacklist () {
 
         // Allowed
-        Assertions.assertFalse(ConfluenciaTest.SECURITY.existsBlacklist("test@example.com", "example.com"));
+        Assertions.assertFalse(ConfluenciaTest.SECURITY.existsBlacklist("test@diluv.com", "diluv.com"));
 
         // Blacklisted email
-        Assertions.assertTrue(ConfluenciaTest.SECURITY.existsBlacklist("blacklisted@example.com", "example.com"));
+        Assertions.assertTrue(ConfluenciaTest.SECURITY.existsBlacklist("blacklisted@diluv.com", "diluv.com"));
 
         // Blacklisted domain
-        Assertions.assertTrue(ConfluenciaTest.SECURITY.existsBlacklist("test@diluv.com", "diluv.com"));
+        Assertions.assertTrue(ConfluenciaTest.SECURITY.existsBlacklist("test@banned.com", "banned.com"));
     }
 
     @Test
@@ -46,8 +46,8 @@ public class TestSecurityDatabase extends ConfluenciaTest {
     @Test
     public void findEmailSentByEmailAndType () {
 
-        Assertions.assertNotNull(ConfluenciaTest.SECURITY.findEmailSentByEmailAndType("test@example.com", "test"));
-        Assertions.assertNull(ConfluenciaTest.SECURITY.findEmailSentByEmailAndType("test@example.com", "invalid"));
+        Assertions.assertNotNull(ConfluenciaTest.SECURITY.findEmailSentByEmailAndType("test@diluv.com", "test"));
+        Assertions.assertNull(ConfluenciaTest.SECURITY.findEmailSentByEmailAndType("test@diluv.com", "invalid"));
     }
 
     @Test

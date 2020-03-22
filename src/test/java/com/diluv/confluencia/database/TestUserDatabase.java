@@ -56,9 +56,9 @@ public class TestUserDatabase extends ConfluenciaTest {
     @Test
     public void existsTempUserByEmail () {
 
-        Assertions.assertFalse(ConfluenciaTest.USER.existsTempUserByEmail("invalid@example.com"));
-        Assertions.assertTrue(ConfluenciaTest.USER.existsTempUserByEmail("tempuser@example.com"));
-        Assertions.assertTrue(ConfluenciaTest.USER.existsTempUserByEmail("tempuser2@example.com"));
+        Assertions.assertFalse(ConfluenciaTest.USER.existsTempUserByEmail("invalid@diluv.com"));
+        Assertions.assertTrue(ConfluenciaTest.USER.existsTempUserByEmail("tempuser@diluv.com"));
+        Assertions.assertTrue(ConfluenciaTest.USER.existsTempUserByEmail("tempuser2@diluv.com"));
     }
 
     @Test
@@ -72,19 +72,19 @@ public class TestUserDatabase extends ConfluenciaTest {
     @Test
     public void findTempUserByEmailAndUsername () {
 
-        Assertions.assertNull(ConfluenciaTest.USER.findTempUserByEmailAndUsername("invalid@example.com", "invalid"));
-        Assertions.assertNull(ConfluenciaTest.USER.findTempUserByEmailAndUsername("tempuser@example.com", "invalid"));
-        Assertions.assertNotNull(ConfluenciaTest.USER.findTempUserByEmailAndUsername("tempuser@example.com", "tempuser"));
-        Assertions.assertNotNull(ConfluenciaTest.USER.findTempUserByEmailAndUsername("tempuser2@example.com", "tempuser2"));
+        Assertions.assertNull(ConfluenciaTest.USER.findTempUserByEmailAndUsername("invalid@diluv.com", "invalid"));
+        Assertions.assertNull(ConfluenciaTest.USER.findTempUserByEmailAndUsername("tempuser@diluv.com", "invalid"));
+        Assertions.assertNotNull(ConfluenciaTest.USER.findTempUserByEmailAndUsername("tempuser@diluv.com", "tempuser"));
+        Assertions.assertNotNull(ConfluenciaTest.USER.findTempUserByEmailAndUsername("tempuser2@diluv.com", "tempuser2"));
     }
 
 
     @Test
     public void findTempUserByEmailAndCode () {
 
-        Assertions.assertNull(ConfluenciaTest.USER.findTempUserByEmailAndCode("invalid@example.com", "8e883fdd-85ef-415f-a158-d96427a28ede"));
-        Assertions.assertNotNull(ConfluenciaTest.USER.findTempUserByEmailAndCode("tempuser@example.com", "c1632ff7-367e-485f-91dd-92ab75903fa4"));
-        Assertions.assertNotNull(ConfluenciaTest.USER.findTempUserByEmailAndCode("tempuser2@example.com", "14964974-663a-4005-9cf2-d1f390c3b2cc"));
+        Assertions.assertNull(ConfluenciaTest.USER.findTempUserByEmailAndCode("invalid@diluv.com", "8e883fdd-85ef-415f-a158-d96427a28ede"));
+        Assertions.assertNotNull(ConfluenciaTest.USER.findTempUserByEmailAndCode("tempuser@diluv.com", "c1632ff7-367e-485f-91dd-92ab75903fa4"));
+        Assertions.assertNotNull(ConfluenciaTest.USER.findTempUserByEmailAndCode("tempuser2@diluv.com", "14964974-663a-4005-9cf2-d1f390c3b2cc"));
     }
 
     @Test
@@ -104,7 +104,7 @@ public class TestUserDatabase extends ConfluenciaTest {
     @Test
     public void updateTempUser () {
 
-        Assertions.assertTrue(ConfluenciaTest.USER.updateTempUser("tempuser3@example.com", "tempuser3", "2d60b654-a41a-467b-b7ce-b453c7f4b365"));
+        Assertions.assertTrue(ConfluenciaTest.USER.updateTempUser("tempuser3@diluv.com", "tempuser3", "2d60b654-a41a-467b-b7ce-b453c7f4b365"));
     }
 
     @Test
