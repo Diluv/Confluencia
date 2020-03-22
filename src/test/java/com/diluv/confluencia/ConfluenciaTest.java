@@ -16,7 +16,6 @@ import com.diluv.confluencia.database.dao.NewsDAO;
 import com.diluv.confluencia.database.dao.ProjectDAO;
 import com.diluv.confluencia.database.dao.SecurityDAO;
 import com.diluv.confluencia.database.dao.UserDAO;
-import com.diluv.confluencia.util.TestSQLHandler;
 
 @Testcontainers
 public abstract class ConfluenciaTest {
@@ -42,20 +41,6 @@ public abstract class ConfluenciaTest {
 
         if (!init) {
             Confluencia.init(ConfluenciaTest.CONTAINER.getJdbcUrl(), ConfluenciaTest.CONTAINER.getUsername(), ConfluenciaTest.CONTAINER.getPassword(), true);
-
-            TestSQLHandler.loadData("email");
-            TestSQLHandler.loadData("user");
-            TestSQLHandler.loadData("temp_user");
-            TestSQLHandler.loadData("refresh_token");
-            TestSQLHandler.loadData("project");
-            TestSQLHandler.loadData("project_author");
-            TestSQLHandler.loadData("project_file");
-            TestSQLHandler.loadData("api_token");
-            TestSQLHandler.loadData("news");
-            TestSQLHandler.loadData("featured_games");
-            TestSQLHandler.loadData("featured_projects");
-            TestSQLHandler.loadData("user_roles");
-            TestSQLHandler.loadData("passwords");
             init = true;
         }
     }

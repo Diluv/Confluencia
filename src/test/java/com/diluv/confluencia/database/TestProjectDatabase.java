@@ -27,11 +27,8 @@ public class TestProjectDatabase extends ConfluenciaTest {
     public void findAllByUsername () {
 
         Assertions.assertEquals(0, ConfluenciaTest.PROJECT.findAllByUsername("invalid", false, 1, 10, ProjectSort.NEW).size());
-        Assertions.assertEquals(10, ConfluenciaTest.PROJECT.findAllByUsername("test", false, 1, 10, ProjectSort.NEW).size());
-        Assertions.assertEquals(10, ConfluenciaTest.PROJECT.findAllByUsername("test2", false, 1, 10, ProjectSort.NEW).size());
-
-        Assertions.assertEquals(0, ConfluenciaTest.PROJECT.findAllByUsername("test3", false, 1, 10, ProjectSort.NEW).size());
-        Assertions.assertEquals(1, ConfluenciaTest.PROJECT.findAllByUsername("test3", true, 1, 10, ProjectSort.NEW).size());
+        Assertions.assertEquals(10, ConfluenciaTest.PROJECT.findAllByUsername("darkhax", false, 1, 10, ProjectSort.NEW).size());
+        Assertions.assertEquals(10, ConfluenciaTest.PROJECT.findAllByUsername("jaredlll08", false, 1, 10, ProjectSort.NEW).size());
     }
 
     @Test

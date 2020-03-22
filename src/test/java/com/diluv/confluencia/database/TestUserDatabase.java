@@ -15,24 +15,24 @@ public class TestUserDatabase extends ConfluenciaTest {
     public void existsUserByEmail () {
 
         Assertions.assertFalse(ConfluenciaTest.USER.existsUserByEmail("invalid@example.com"));
-        Assertions.assertTrue(ConfluenciaTest.USER.existsUserByEmail("test@example.com"));
-        Assertions.assertTrue(ConfluenciaTest.USER.existsUserByEmail("test2@example.com"));
+        Assertions.assertTrue(ConfluenciaTest.USER.existsUserByEmail("darkhax@diluv.com"));
+        Assertions.assertTrue(ConfluenciaTest.USER.existsUserByEmail("jaredlll08@diluv.com"));
     }
 
     @Test
     public void existsUserByUsername () {
 
         Assertions.assertFalse(ConfluenciaTest.USER.existsUserByUsername("invalid"));
-        Assertions.assertTrue(ConfluenciaTest.USER.existsUserByUsername("test"));
-        Assertions.assertTrue(ConfluenciaTest.USER.existsUserByUsername("test2"));
+        Assertions.assertTrue(ConfluenciaTest.USER.existsUserByUsername("darkhax"));
+        Assertions.assertTrue(ConfluenciaTest.USER.existsUserByUsername("jaredlll08"));
     }
 
     @Test
     public void findOneByUsername () {
 
         Assertions.assertNull(ConfluenciaTest.USER.findOneByUsername("invalid"));
-        Assertions.assertNotNull(ConfluenciaTest.USER.findOneByUsername("test"));
-        Assertions.assertNotNull(ConfluenciaTest.USER.findOneByUsername("test2"));
+        Assertions.assertNotNull(ConfluenciaTest.USER.findOneByUsername("darkhax"));
+        Assertions.assertNotNull(ConfluenciaTest.USER.findOneByUsername("jaredlll08"));
     }
 
 
@@ -40,9 +40,8 @@ public class TestUserDatabase extends ConfluenciaTest {
     public void insertUser () {
 
         // Duplicate
-        Assertions.assertFalse(ConfluenciaTest.USER.insertUser("test4@example.com", "test", "test", "", "", new Timestamp(System.currentTimeMillis())));
-        Assertions.assertFalse(ConfluenciaTest.USER.insertUser("test@example.com", "test4", "test4", "", "", new Timestamp(System.currentTimeMillis())));
-        Assertions.assertFalse(ConfluenciaTest.USER.insertUser("test@example.com", "test", "TEST", "", "", new Timestamp(System.currentTimeMillis())));
+        Assertions.assertFalse(ConfluenciaTest.USER.insertUser("darkhax@diluv.com", "darkhax", "darkhax", "", "", new Timestamp(System.currentTimeMillis())));
+        Assertions.assertFalse(ConfluenciaTest.USER.insertUser("jaredlll08@diluv.com", "jaredlll08", "jaredlll08", "", "", new Timestamp(System.currentTimeMillis())));
 
         // Valid
         Assertions.assertTrue(ConfluenciaTest.USER.insertUser("test4@example.com", "test4", "Test4", "", "", new Timestamp(System.currentTimeMillis())));
@@ -51,7 +50,7 @@ public class TestUserDatabase extends ConfluenciaTest {
     @Test
     public void updateUserPasswordByUserId () {
 
-        Assertions.assertTrue(ConfluenciaTest.USER.updateUserPasswordByUserId(3, "password"));
+        Assertions.assertTrue(ConfluenciaTest.USER.updateUserPasswordByUserId(2, "password"));
     }
 
     @Test
@@ -151,7 +150,7 @@ public class TestUserDatabase extends ConfluenciaTest {
     public void findAPITokenByUserIdAndCode () {
 
         Assertions.assertNull(ConfluenciaTest.USER.findAPITokenByUserIdAndCode(1, "invalid"));
-        Assertions.assertNotNull(ConfluenciaTest.USER.findAPITokenByUserIdAndCode(1, "5a8666ba-fcf9-4f3f-89b0-5cc9d522fe40"));
+        Assertions.assertNotNull(ConfluenciaTest.USER.findAPITokenByUserIdAndCode(1, "4b3b85e3-f7ac-4c7b-b71a-df972909b213"));
     }
 
     @Test
@@ -175,7 +174,7 @@ public class TestUserDatabase extends ConfluenciaTest {
     public void findOnePasswordResetByEmailAndCode () {
 
         Assertions.assertTrue(ConfluenciaTest.USER.insertPasswordReset(1, "testing"));
-        Assertions.assertNotNull(ConfluenciaTest.USER.findOnePasswordResetByEmailAndCode("test@example.com", "testing"));
+        Assertions.assertNotNull(ConfluenciaTest.USER.findOnePasswordResetByEmailAndCode("darkhax@diluv.com", "testing"));
 
         Assertions.assertNull(ConfluenciaTest.USER.findOnePasswordResetByEmailAndCode("test@example.com", "invalid"));
     }

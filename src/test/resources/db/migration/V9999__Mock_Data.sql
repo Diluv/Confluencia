@@ -1,12 +1,31 @@
+INSERT INTO users(id, username, display_name, email, password, password_type, mfa, mfa_secret, created_at)
+VALUES (1, 'darkhax', 'Darkhax', 'darkhax@diluv.com', '$2y$12$Y09/RQkc7icbiOonlBqTeegjtk9VYPKamMTJqkFVtfKDawRwifc8i',
+        'bcrypt', TRUE, NULL, NOW()),
+       (2, 'jaredlll08', 'Jaredlll08', 'jaredlll08@diluv.com',
+        '$2y$12$Y09/RQkc7icbiOonlBqTeegjtk9VYPKamMTJqkFVtfKDawRwifc8i', 'bcrypt', FALSE, NULL, NOW()),
+       (3, 'lclc98', 'lclc98', 'lclc98@diluv.com',
+        '$2y$12$Y09/RQkc7icbiOonlBqTeegjtk9VYPKamMTJqkFVtfKDawRwifc8i', 'bcrypt', FALSE, NULL, NOW());
+
+INSERT INTO user_roles(user_id, role_id)
+VALUES (2, 1);
+
+INSERT INTO temp_users(id, username, email, password, password_type, created_at, verificationCode)
+VALUES (1, 'tempuser', 'tempuser@example.com', '', '', NOW(), 'c1632ff7-367e-485f-91dd-92ab75903fa4'),
+       (2, 'tempuser2', 'tempuser2@example.com', '', '', NOW(), '14964974-663a-4005-9cf2-d1f390c3b2cc'),
+       (3, 'tempuser3', 'tempuser3@example.com', '', '', NOW(), '14164974-663a-4005-9cf2-d1f390c3b2cc');
+
+INSERT INTO api_tokens(user_id, code, name)
+VALUES (1, '4b3b85e3-f7ac-4c7b-b71a-df972909b213', 'testing token');
+
 INSERT INTO projects(name, slug, summary, description, cached_downloads, review, released, created_at, updated_at,
                      user_id, game_slug, project_type_slug)
 VALUES ('Bookshelf', 'bookshelf', 'An open source library for other mods!', 'An open source library for other mods!', 0,
         0, 1, FROM_UNIXTIME(1426128779), FROM_UNIXTIME(1583375717), 1, 'minecraft', 'mods'),
        ('Upgrade Modifiers', 'upgrade-modifiers',
         'Adds upgrade modifiers that can be used to improve your existing equipment.',
-        'Adds upgrade modifiers that can be used to improve your existing equipment.', 0, 0, 0,
+        'Adds upgrade modifiers that can be used to improve your existing equipment.', 0, 0, 1,
         FROM_UNIXTIME(1575426564), FROM_UNIXTIME(1581058918),
-        3, 'minecraft', 'mods'),
+        1, 'minecraft', 'mods'),
        ('Splashy', 'splashy', 'Allows greater control over the splash text on the main menu.',
         'Allows greater control over the splash text on the main menu.', 0, 0, 1, FROM_UNIXTIME(1576326746),
         FROM_UNIXTIME(1583107620), 1,
@@ -427,8 +446,104 @@ VALUES ('Bookshelf', 'bookshelf', 'An open source library for other mods!', 'An 
         FROM_UNIXTIME(1481492202), 2,
         'minecraft', 'mods');
 
+INSERT INTO project_authors(project_id, user_id, role)
+VALUES (94, 1, 'Coauthor'),
+       (44, 2, 'Coauthor'),
+       (48, 2, 'Coauthor'),
+       (60, 2, 'Coauthor'),
+       (6, 2, 'Coauthor');
+
+INSERT INTO project_authors(id, project_id, user_id, role)
+VALUES (6, 1, 2, 'Testing'),
+       (7, 1, 3, 'Testing');
+
+INSERT INTO project_author_permissions(project_author_id, permission)
+VALUES (6, 'project.upload'),
+       (6, 'project.edit');
+
 INSERT INTO project_categories(project_id, categories_id)
 VALUES (1, 1);
 
 INSERT INTO project_links(project_id, type, url)
-VALUES (1, 'Patreon', 'https://www.patreon.com/diluv')
+VALUES (1, 'Patreon', 'https://www.patreon.com/diluv');
+
+INSERT INTO featured_games(slug)
+VALUES ('minecraft');
+
+INSERT INTO featured_projects(project_id)
+VALUES (1),
+       (2),
+       (99);
+
+INSERT INTO refresh_tokens(user_id, code, expired_at)
+VALUES (1, '9bd63558-3835-4e01-963f-66a0f467291c', NOW() + INTERVAL 1 DAY);
+
+INSERT INTO refresh_tokens(user_id, code, expired_at)
+VALUES (1, 'de4602e9-3b81-412f-aaa5-95092b080266', NOW() + INTERVAL 1 DAY);
+
+INSERT INTO refresh_tokens(user_id, code, expired_at)
+VALUES (2, '592d3885-2fa1-4987-8626-e22c1e92e479', NOW() + INTERVAL 1 DAY);
+
+INSERT INTO refresh_tokens(user_id, code, expired_at)
+VALUES (2, '592d3285-2fa1-4987-8626-e22c1e92e479', NOW() + INTERVAL 1 DAY);
+
+INSERT INTO refresh_tokens(user_id, code, expired_at)
+VALUES (2, '52236885-2fa1-4987-8626-e22c1e92e479', NOW() + INTERVAL 1 DAY);
+
+INSERT INTO news(slug, title, summary, description, user_id)
+VALUES ('example', 'Example Post', 'Summary', 'Example', 1);
+
+INSERT INTO password_reset(user_id, code, created_at)
+VALUES (2, 'daf1f148-effd-400e-9b65-a4bf96e5215d', NOW());
+
+INSERT INTO user_compromised_passwords(password_hash, occurrences)
+VALUES ('025160DEE13179BC80BB05102CE5B3CD3FE', 11);
+
+INSERT INTO email_domain_blacklist(domain)
+VALUES ('diluv.com'),
+       ('banned.com'),
+       ('banned2.com');
+
+INSERT INTO email_blacklist (email)
+VALUES ('blacklisted@example.com');
+
+INSERT INTO email_sent(message_id, email, type, sent_at)
+VALUES ('e4a291f7-740a-4b88-bc32-63e97e2d0812', 'test@example.com', 'test', NOW());
+
+INSERT INTO project_files(id, name, size, changelog, sha512, release_type, classifier, processing_status, released,
+                          project_id,
+                          user_id)
+VALUES (1, 'ProjectFile.jar', 100, 'Project file changelog',
+        '5E96A9A98839D073C298BBD0AC73A510E1F13A64151E2C4895440ECDBCD6D483EDA994D2CD5E69C5C00A96783280F7BC1E933667B4A25C53CE3918007D5C77E3',
+        'release', 'binary', 2, 1, 1, 1);
+
+INSERT INTO project_files(id, name, size, changelog, sha512, release_type, classifier, processing_status, released,
+                          project_id,
+                          user_id)
+VALUES (2, 'ProjectFile2.jar', 101, 'Project file changelog',
+        '5E96A9A98839D073C298BBD0AC73A510E1F13A64151E2C4895440ECDBCD6D483EDA994D2CD5E69C5C00A96783280F7BC1E933667B4A25C53CE3918007D5C77E3',
+        'release', 'binary', 2, 0, 1, 1);
+
+INSERT INTO project_files(id, name, size, changelog, sha512, release_type, classifier, processing_status, released,
+                          project_id,
+                          user_id)
+VALUES (3, 'ProjectFile.jar', 1000, 'Changing',
+        '5E96A9A98839D073C298BBD0AC73A510E1F13A64151E2C4895440ECDBCD6D483EDA994D2CD5E69C5C00A96783280F7BC1E933667B4A25C53CE3918007D5C77E3',
+        'release', 'binary', 0, 0, 2, 1);
+
+INSERT INTO project_files(id, name, size, changelog, sha512, release_type, classifier, processing_status, released,
+                          project_id,
+                          user_id)
+VALUES (4, 'ProjectFile.jar', 1000, 'Changing',
+        '5E96A9A98839D073C298BBD0AC73A510E1F13A64151E2C4895440ECDBCD6D483EDA994D2CD5E69C5C00A96783280F7BC1E933667B4A25C53CE3918007D5C77E3',
+        'release', 'binary', 1, 0, 1, 1);
+
+INSERT INTO project_files(id, name, size, changelog, sha512, release_type, classifier, processing_status, released,
+                          project_id,
+                          user_id)
+VALUES (5, 'ProjectFile.jar', 1000, 'Changing',
+        '5E96A9A98839D073C298BBD0AC73A510E1F13A64151E2C4895440ECDBCD6D483EDA994D2CD5E69C5C00A96783280F7BC1E933667B4A25C53CE3918007D5C77E3',
+        'release', 'binary', 5, 0, 1, 1);
+
+INSERT INTO project_file_game_versions(project_file_id, game_version_id)
+VALUES (1, 6);

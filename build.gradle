@@ -45,9 +45,20 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     archiveClassifier = 'javadoc'
 }
 
+task testJar(type: Jar, dependsOn: testClasses) {
+    description = 'Creates a JAR containing the Tests.'
+    from sourceSets.test.output
+    archiveClassifier = 'test'
+}
+
+configurations {
+    testOutput.extendsFrom (testCompile)
+}
+
 artifacts {
     archives sourcesJar
     archives javadocJar
+    testOutput testJar
 }
 
 jar {

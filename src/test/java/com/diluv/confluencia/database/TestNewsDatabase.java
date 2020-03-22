@@ -17,7 +17,7 @@ public class TestNewsDatabase extends ConfluenciaTest {
     @Test
     public void findOneByNewsSlug () {
 
-        Assertions.assertNotNull(ConfluenciaTest.NEWS.findOneByNewsSlug("test"));
+        Assertions.assertNotNull(ConfluenciaTest.NEWS.findOneByNewsSlug("example"));
         Assertions.assertNull(ConfluenciaTest.NEWS.findOneByNewsSlug("invalid"));
     }
 }
