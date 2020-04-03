@@ -14,7 +14,7 @@ public class TestFileDatabase extends ConfluenciaTest {
     @Test
     public void findAllWhereStatusAndLimit () {
 
-        Assertions.assertEquals(4, ConfluenciaTest.FILE.findAllWhereStatusAndLimit(FileProcessingStatus.PENDING, 5).size());
+        Assertions.assertEquals(5, ConfluenciaTest.FILE.findAllWhereStatusAndLimit(FileProcessingStatus.PENDING, 5).size());
     }
 
     @Test
