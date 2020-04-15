@@ -15,4 +15,6 @@ public interface GameDAO {
     List<GameRecord> findFeaturedGames ();
 
     List<GameVersionRecord> findAllGameVersionsByGameSlug (String gameSlug);
+
+    List<GameVersionRecord> findGameVersionsByGameSlugAndVersions (String gameSlug, String[] versions);
 }

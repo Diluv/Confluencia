@@ -204,6 +204,7 @@ CREATE TABLE project_files
 (
     id                        BIGINT       NOT NULL AUTO_INCREMENT,
 
+    version                   VARCHAR(20)  NOT NULL UNIQUE,
     name                      VARCHAR(255) NOT NULL,
     size                      BIGINT       NOT NULL,
     sha512                    VARCHAR(128) NOT NULL,
@@ -235,6 +236,16 @@ CREATE TABLE project_file_game_versions
     PRIMARY KEY (project_file_id, game_version_id),
     FOREIGN KEY (project_file_id) REFERENCES project_files (id),
     FOREIGN KEY (game_version_id) REFERENCES game_versions (id)
+);
+
+CREATE TABLE project_file_dependencies
+(
+    project_file_id            BIGINT NOT NULL,
+    dependency_project_file_id BIGINT NOT NULL,
+
+    PRIMARY KEY (project_file_id, dependency_project_file_id),
+    FOREIGN KEY (project_file_id) REFERENCES project_files (id),
+    FOREIGN KEY (dependency_project_file_id) REFERENCES project_files (id)
 );
 
 CREATE TABLE project_file_antivirus

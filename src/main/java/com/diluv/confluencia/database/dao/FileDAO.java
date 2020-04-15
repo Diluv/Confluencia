@@ -18,7 +18,7 @@ public interface FileDAO {
 
     List<ProjectFileRecord> getLatestFiles (int amount) throws SQLException;
 
-    Long insertProjectFile (String name, long size, String changelog, String sha512, String releaseType, String classifier, long projectId, long userId);
+    Long insertProjectFile (String name, String version, long size, String changelog, String sha512, String releaseType, String classifier, long projectId, long userId);
 
     ProjectFileRecord findOneProjectFileQueueByFileId (long fileId);
 
@@ -29,4 +29,6 @@ public interface FileDAO {
     boolean insertProjectFileAntivirus (long projectFileId, String malware);
 
     List<GameVersionRecord> findAllGameVersionsByProjectFile (long projectFileId);
+
+    boolean insertProjectFileGameVersions (long projectFileId, List<Long> versionIds);
 }

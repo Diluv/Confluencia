@@ -31,9 +31,17 @@ public class TestGameDatabase extends ConfluenciaTest {
     }
 
     @Test
-    public void findAllGameVersionsByGameSlug () {
+    public void `findAllGameVersionsByGameSlug () {
 
         Assertions.assertEquals(0, ConfluenciaTest.GAME.findAllGameVersionsByGameSlug("invalid").size());
         Assertions.assertFalse(ConfluenciaTest.GAME.findAllGameVersionsByGameSlug("minecraft").isEmpty());
+    }
+
+    @Test
+    public void findGameVersionsByGameSlugAndVersions () {
+
+        Assertions.assertEquals(2, ConfluenciaTest.GAME.findGameVersionsByGameSlugAndVersions("minecraft", new String[]{"1.15.2", "1.12.2"}).size());
+        Assertions.assertEquals(1, ConfluenciaTest.GAME.findGameVersionsByGameSlugAndVersions("minecraft", new String[]{"1.15.2", "invalid"}).size());
+        Assertions.assertEquals(0, ConfluenciaTest.GAME.findGameVersionsByGameSlugAndVersions("minecraft", new String[]{"invalid"}).size());
     }
 }
