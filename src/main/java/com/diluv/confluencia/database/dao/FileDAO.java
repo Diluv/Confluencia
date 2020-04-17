@@ -31,4 +31,6 @@ public interface FileDAO {
     List<GameVersionRecord> findAllGameVersionsByProjectFile (long projectFileId);
 
     boolean insertProjectFileGameVersions (long projectFileId, List<Long> versionIds);
+
+    boolean existsByProjectIdAndVersion(long projectId, String version);
 }

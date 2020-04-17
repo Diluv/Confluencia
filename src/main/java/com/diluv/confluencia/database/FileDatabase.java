@@ -30,6 +30,8 @@ public class FileDatabase implements FileDAO {
     private static final String INSERT_PROJECT_FILE_GAME_VERSION = SQLHandler.readFile("project_files/insertProjectFileGameVersions");
     private static final String FIND_ALL_GAME_VERSIONS_BY_FILE_ID = SQLHandler.readFile("project_files/findAllGameVersionsByFileId");
 
+    private static final String EXISTS_BY_PROJECT_ID_AND_VERSION = SQLHandler.readFile("project_files/existsByProjectIdAndVersion");
+
     @Override
     public boolean updateStatusById (FileProcessingStatus status, long id) throws SQLException {
 
@@ -260,6 +262,25 @@ public class FileDatabase implements FileDAO {
         }
         catch (SQLException e) {
             Confluencia.LOGGER.error("Failed to insertProjectFileGameVersions.", e);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean existsByProjectIdAndVersion (long projectId, String version) {
+
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(EXISTS_BY_PROJECT_ID_AND_VERSION)) {
+            stmt.setLong(1, projectId);
+            stmt.setString(2, version);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        }
+        catch (SQLException e) {
+            Confluencia.LOGGER.error("Failed to existsByProjectIdAndVersion.", e);
         }
         return false;
     }

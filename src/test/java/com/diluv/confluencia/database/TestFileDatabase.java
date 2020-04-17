@@ -1,14 +1,14 @@
 package com.diluv.confluencia.database;
 
-import java.sql.SQLException;
-import java.util.Arrays;
+import com.diluv.confluencia.ConfluenciaTest;
+import com.diluv.confluencia.database.record.FileProcessingStatus;
+import com.diluv.confluencia.database.sort.ProjectFileSort;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import com.diluv.confluencia.ConfluenciaTest;
-import com.diluv.confluencia.database.record.FileProcessingStatus;
-import com.diluv.confluencia.database.sort.ProjectFileSort;
+import java.sql.SQLException;
+import java.util.Arrays;
 
 public class TestFileDatabase extends ConfluenciaTest {
 
@@ -91,6 +91,12 @@ public class TestFileDatabase extends ConfluenciaTest {
     public void insertProjectFileGameVersions () {
 
         Assertions.assertTrue(ConfluenciaTest.FILE.insertProjectFileGameVersions(1, Arrays.asList(1L, 2L)));
+    }
 
+    @Test
+    public void existsByProjectIdAndVersion () {
+
+        Assertions.assertTrue(ConfluenciaTest.FILE.existsByProjectIdAndVersion(1, "1.0.0"));
+        Assertions.assertFalse(ConfluenciaTest.FILE.existsByProjectIdAndVersion(1, "invalid"));
     }
 }
