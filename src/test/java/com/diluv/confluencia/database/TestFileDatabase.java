@@ -1,14 +1,14 @@
 package com.diluv.confluencia.database;
 
-import com.diluv.confluencia.ConfluenciaTest;
-import com.diluv.confluencia.database.record.FileProcessingStatus;
-import com.diluv.confluencia.database.sort.ProjectFileSort;
+import java.sql.SQLException;
+import java.util.Arrays;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.sql.SQLException;
-import java.util.Arrays;
+import com.diluv.confluencia.ConfluenciaTest;
+import com.diluv.confluencia.database.record.FileProcessingStatus;
+import com.diluv.confluencia.database.sort.ProjectFileSort;
 
 public class TestFileDatabase extends ConfluenciaTest {
 
