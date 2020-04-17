@@ -25,10 +25,12 @@ public class FileDatabase implements FileDAO {
     private static final String FIND_ALL_BY_GAMESLUG_AND_PROJECTYPESLUG_AND_PROJECTSLUG = SQLHandler.readFile("project_files/findAllByGameSlugAndProjectTypeAndProjectSlug");
     private static final String FIND_ALL_BY_GAMESLUG_AND_PROJECTYPESLUG_AND_PROJECTSLUG_AND_VERSION = SQLHandler.readFile("project_files/findAllByGameSlugAndProjectTypeAndProjectSlugAndVersion");
 
-
     private static final String INSERT_PROJECT_FILE_ANTIVIRUS = SQLHandler.readFile("project_files/insertProjectFileAntivirus");
 
+    private static final String INSERT_PROJECT_FILE_GAME_VERSION = SQLHandler.readFile("project_files/insertProjectFileGameVersions");
     private static final String FIND_ALL_GAME_VERSIONS_BY_FILE_ID = SQLHandler.readFile("project_files/findAllGameVersionsByFileId");
+
+    private static final String EXISTS_BY_PROJECT_ID_AND_VERSION = SQLHandler.readFile("project_files/existsByProjectIdAndVersion");
 
     @Override
     public boolean updateStatusById (FileProcessingStatus status, long id) throws SQLException {
@@ -109,17 +111,18 @@ public class FileDatabase implements FileDAO {
     }
 
     @Override
-    public Long insertProjectFile (String name, long size, String changelog, String sha512, String releaseType, String classifier, long projectId, long userId) {
+    public Long insertProjectFile (String name, String version, long size, String changelog, String sha512, String releaseType, String classifier, long projectId, long userId) {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(INSERT_PROJECT_FILE, new String[]{"id"})) {
             stmt.setString(1, name);
-            stmt.setLong(2, size);
-            stmt.setString(3, changelog);
-            stmt.setString(4, sha512);
-            stmt.setString(5, releaseType);
-            stmt.setString(6, classifier);
-            stmt.setLong(7, projectId);
-            stmt.setLong(8, userId);
+            stmt.setString(2, version);
+            stmt.setLong(3, size);
+            stmt.setString(4, changelog);
+            stmt.setString(5, sha512);
+            stmt.setString(6, releaseType);
+            stmt.setString(7, classifier);
+            stmt.setLong(8, projectId);
+            stmt.setLong(9, userId);
 
             int affectedRows = stmt.executeUpdate();
             if (affectedRows == 0) {
@@ -136,7 +139,7 @@ public class FileDatabase implements FileDAO {
             }
         }
         catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to insert project file queue {}.", e);
+            Confluencia.LOGGER.error("Failed to insert project file {}.", e);
         }
         return null;
     }
@@ -243,5 +246,42 @@ public class FileDatabase implements FileDAO {
             e.printStackTrace();
         }
         return gameVersions;
+    }
+
+    @Override
+    public boolean insertProjectFileGameVersions (long projectFileId, List<Long> versionIds) {
+
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(INSERT_PROJECT_FILE_GAME_VERSION)) {
+            for (Long version : versionIds) {
+                stmt.setLong(1, projectFileId);
+                stmt.setLong(2, version);
+                stmt.addBatch();
+            }
+            stmt.executeBatch();
+            return true;
+        }
+        catch (SQLException e) {
+            Confluencia.LOGGER.error("Failed to insertProjectFileGameVersions.", e);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean existsByProjectIdAndVersion (long projectId, String version) {
+
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(EXISTS_BY_PROJECT_ID_AND_VERSION)) {
+            stmt.setLong(1, projectId);
+            stmt.setString(2, version);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        }
+        catch (SQLException e) {
+            Confluencia.LOGGER.error("Failed to existsByProjectIdAndVersion.", e);
+        }
+        return false;
     }
 }

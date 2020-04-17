@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringJoiner;
 
 import com.diluv.confluencia.Confluencia;
 import com.diluv.confluencia.database.dao.GameDAO;
@@ -21,6 +22,7 @@ public class GameDatabase implements GameDAO {
     private static final String FIND_FEATURED_GAMES = SQLHandler.readFile("game/findFeaturedGames");
 
     private static final String FIND_ALL_GAME_VERSIONS_BY_GAMESLUG = SQLHandler.readFile("game/findAllGameVersionsByGameSlug");
+    private static final String FIND_GAME_VERSIONS_BY_GAME_SLUG_AND_VERSIONS = SQLHandler.readFile("game/findGameVersionsByGameSlugAndVersions");
 
     @Override
     public List<GameRecord> findAll (GameSort sort) {
@@ -88,6 +90,32 @@ public class GameDatabase implements GameDAO {
         }
         catch (SQLException e) {
             Confluencia.LOGGER.error("Failed to run findAllGameVersionsByGameSlug games database script.", e);
+        }
+        return gameVersions;
+    }
+
+    @Override
+    public List<GameVersionRecord> findGameVersionsByGameSlugAndVersions (String gameSlug, String[] versions) {
+
+        StringJoiner b = new StringJoiner(",");
+        for (int i = 0; i < versions.length; i++) {
+            b.add("?");
+        }
+        List<GameVersionRecord> gameVersions = new ArrayList<>();
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_GAME_VERSIONS_BY_GAME_SLUG_AND_VERSIONS.replace("(?)", "(" + b.toString() + ")"))) {
+
+            stmt.setString(1, gameSlug);
+            for (int i = 0; i < versions.length; i++) {
+                stmt.setString(i + 2, versions[i]);
+            }
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    gameVersions.add(new GameVersionRecord(rs));
+                }
+            }
+        }
+        catch (SQLException e) {
+            Confluencia.LOGGER.error("Failed to run findGameVersionsByGameSlugAndVersions games database script.", e);
         }
         return gameVersions;
     }

@@ -1,6 +1,7 @@
 package com.diluv.confluencia.database;
 
 import java.sql.SQLException;
+import java.util.Arrays;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -51,7 +52,7 @@ public class TestFileDatabase extends ConfluenciaTest {
     @Test
     public void insertProjectFile () {
 
-        Long id = ConfluenciaTest.FILE.insertProjectFile("test.jar", 10, "", "sha512", "release", "binary", 1, 1);
+        Long id = ConfluenciaTest.FILE.insertProjectFile("test.jar", "1.0.20", 10, "", "sha512", "release", "binary", 1, 1);
         Assertions.assertNotNull(id);
         Assertions.assertTrue(id.longValue() > 1L);
     }
@@ -83,6 +84,19 @@ public class TestFileDatabase extends ConfluenciaTest {
     @Test
     public void findAllGameVersionsByProjectFile () {
 
-        Assertions.assertEquals(1, ConfluenciaTest.FILE.findAllGameVersionsByProjectFile(1).size());
+        Assertions.assertEquals(3, ConfluenciaTest.FILE.findAllGameVersionsByProjectFile(1).size());
+    }
+
+    @Test
+    public void insertProjectFileGameVersions () {
+
+        Assertions.assertTrue(ConfluenciaTest.FILE.insertProjectFileGameVersions(1, Arrays.asList(1L, 2L)));
+    }
+
+    @Test
+    public void existsByProjectIdAndVersion () {
+
+        Assertions.assertTrue(ConfluenciaTest.FILE.existsByProjectIdAndVersion(1, "1.0.0"));
+        Assertions.assertFalse(ConfluenciaTest.FILE.existsByProjectIdAndVersion(1, "invalid"));
     }
 }
