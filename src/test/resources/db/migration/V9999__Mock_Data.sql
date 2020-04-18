@@ -555,6 +555,42 @@ INSERT INTO project_file_game_versions(project_file_id, game_version_id)
 VALUES (1, 6);
 
 # IS4
+
+## Client
+INSERT INTO Clients(Id, ClientId, ClientName, RequireConsent, RequirePkce, RequireClientSecret, AllowOfflineAccess)
+VALUES (1, 'DILUV_WEBSITE', 'Diluv Website', FALSE, TRUE, FALSE, TRUE);
+INSERT INTO ClientGrantTypes(ClientId, GrantType)
+VALUES (1, 'authorization_code');
+INSERT INTO ClientRedirectUris(ClientId, RedirectUri)
+VALUES (1, 'http://localhost:3000');
+INSERT INTO ClientScopes(ClientId, Scope)
+VALUES (1, 'openid'),
+       (1, 'profile'),
+       (1, 'email');
+INSERT INTO IdentityResources(Id, Name, DisplayName, Required)
+VALUES (1, 'openid', 'Your user identifier', TRUE);
+INSERT INTO IdentityClaims(IdentityResourceId, Type)
+VALUES (1, 'sub');
+
+INSERT INTO IdentityResources(Id, Name, DisplayName, Emphasize)
+VALUES (2, 'profile', 'User profile', TRUE);
+INSERT INTO IdentityClaims(IdentityResourceId, Type)
+VALUES (2, 'name'),
+       (2, 'family_name'),
+       (2, 'given_name'),
+       (2, 'middle_name'),
+       (2, 'nickname'),
+       (2, 'preferred_username'),
+       (2, 'profile'),
+       (2, 'picture'),
+       (2, 'website'),
+       (2, 'gender'),
+       (2, 'birthdate'),
+       (2, 'zoneinfo'),
+       (2, 'locale'),
+       (2, 'updated_at');
+
+## User
 INSERT INTO AspNetUsers (Id, AccessFailedCount, ConcurrencyStamp, Email, EmailConfirmed, LockoutEnabled, LockoutEnd,
                          NormalizedEmail, NormalizedUserName, PasswordHash, PhoneNumber, PhoneNumberConfirmed,
                          SecurityStamp, TwoFactorEnabled, UserName)
