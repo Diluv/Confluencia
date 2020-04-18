@@ -553,3 +553,30 @@ VALUES (6, '1.0.5', 'malware.txt', 1000, 'Changing',
 
 INSERT INTO project_file_game_versions(project_file_id, game_version_id)
 VALUES (1, 6);
+
+# IS4
+INSERT INTO AspNetUsers (Id, AccessFailedCount, ConcurrencyStamp, Email, EmailConfirmed, LockoutEnabled, LockoutEnd,
+                         NormalizedEmail, NormalizedUserName, PasswordHash, PhoneNumber, PhoneNumberConfirmed,
+                         SecurityStamp, TwoFactorEnabled, UserName)
+VALUES ('2982aef4-a4ef-4f15-8288-fc0acefc3ee9', 0, '4e9d8b41-241c-46b6-aa12-445ca43979e6', null, 0, 1, null, null,
+        'BOB', 'AQAAAAEAACcQAAAAEIR8plAoKNxtkwmShSB4fpLRf6Q17vKCZ/p5P0544YlKC51lnHdaSA1BAqiWhs2FIA==', null, 0,
+        '2RZOAFBWMIT2CVCDF6D6Y6LWIWZGZHXM', 0, 'bob'),
+       ('3bbafe41-092e-43a5-aa18-0cfb0c3529d5', 0, '922f4f9b-9a6b-433f-99ea-0a595e008856', null, 0, 1, null, null,
+        'ALICE', 'AQAAAAEAACcQAAAAEKf8qFwVpqZQSQzXTQIPdbeAXqrJ+h7xpEol2TWE1AWbjYO5c40rNKYYIeaVcRpuEQ==', null, 0,
+        '7FJUPD2T4HQKDZO6TNIQMZJIMHXJULOI', 0, 'alice');
+
+INSERT INTO AspNetUserClaims (Id, ClaimType, ClaimValue, UserId)
+VALUES (1, 'name', 'Alice Smith', '3bbafe41-092e-43a5-aa18-0cfb0c3529d5'),
+       (2, 'given_name', 'Alice', '3bbafe41-092e-43a5-aa18-0cfb0c3529d5'),
+       (3, 'family_name', 'Smith', '3bbafe41-092e-43a5-aa18-0cfb0c3529d5'),
+       (4, 'email', 'AliceSmith@email.com', '3bbafe41-092e-43a5-aa18-0cfb0c3529d5'),
+       (5, 'email_verified', 'true', '3bbafe41-092e-43a5-aa18-0cfb0c3529d5'),
+       (6, 'website', 'http://alice.com', '3bbafe41-092e-43a5-aa18-0cfb0c3529d5'),
+       (7, 'address',
+        '{ ''street_address'': ''One Hacker Way'', ''locality'': ''Heidelberg'', ''postal_code'': 69118, ''country'': ''Germany'' }',
+        '3bbafe41-092e-43a5-aa18-0cfb0c3529d5'),
+       (8, 'address',
+        '{ ''street_address'': ''One Hacker Way'', ''locality'': ''Heidelberg'', ''postal_code'': 69118, ''country'': ''Germany'' }',
+        '2982aef4-a4ef-4f15-8288-fc0acefc3ee9'),
+       (9, 'website', 'http://bob.com', '2982aef4-a4ef-4f15-8288-fc0acefc3ee9'),
+       (10, 'email_verified', 'true', '2982aef4-a4ef-4f15-8288-fc0acefc3ee9');
