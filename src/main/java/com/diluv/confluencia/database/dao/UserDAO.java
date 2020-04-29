@@ -18,6 +18,8 @@ public interface UserDAO {
 
     UserRecord findOneByUsername (String username);
 
+    UserRecord findOneByUserId (long userId);
+
     boolean insertUser (String email, String username, String displayName, String password, String passwordType, Timestamp createdAt);
 
     boolean updateUserPasswordByUserId (long userId, String password);

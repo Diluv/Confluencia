@@ -1,14 +1,14 @@
 CREATE TABLE ApiResources
 (
     Id           INT          NOT NULL AUTO_INCREMENT,
-    Enabled      TINYINT(1)   NOT NULL,
+    Enabled      TINYINT(1)   NOT NULL DEFAULT TRUE,
     Name         VARCHAR(200) NOT NULL,
     DisplayName  VARCHAR(200),
     Description  VARCHAR(1000),
-    Created      DATETIME     NOT NULL,
+    Created      DATETIME     NOT NULL DEFAULT NOW(),
     Updated      DATETIME,
     LastAccessed DATETIME,
-    NonEditable  TINYINT(1)   NOT NULL,
+    NonEditable  TINYINT(1)   NOT NULL DEFAULT TRUE,
     PRIMARY KEY (Id)
 );
 
@@ -100,9 +100,9 @@ CREATE TABLE ApiScopes
     Name                    VARCHAR(200) NOT NULL,
     DisplayName             VARCHAR(200),
     Description             VARCHAR(1000),
-    Required                TINYINT(1)   NOT NULL,
-    Emphasize               TINYINT(1)   NOT NULL,
-    ShowInDiscoveryDocument TINYINT(1)   NOT NULL,
+    Required                TINYINT(1)   NOT NULL DEFAULT FALSE,
+    Emphasize               TINYINT(1)   NOT NULL DEFAULT FALSE,
+    ShowInDiscoveryDocument TINYINT(1)   NOT NULL DEFAULT FALSE,
     ApiResourceId           INT          NOT NULL,
     PRIMARY KEY (Id),
     FOREIGN KEY (ApiResourceId) REFERENCES ApiResources (Id) ON DELETE CASCADE
@@ -114,8 +114,8 @@ CREATE TABLE ApiSecrets
     Description   VARCHAR(1000),
     Value         VARCHAR(4000) NOT NULL,
     Expiration    DATETIME,
-    Type          VARCHAR(250)  NOT NULL,
-    Created       DATETIME      NOT NULL,
+    Type          VARCHAR(250)  NOT NULL DEFAULT 'SharedSecret',
+    Created       DATETIME      NOT NULL DEFAULT NOW(),
     ApiResourceId INT           NOT NULL,
     PRIMARY KEY (Id),
     FOREIGN KEY (ApiResourceId) REFERENCES ApiResources (Id) ON DELETE CASCADE

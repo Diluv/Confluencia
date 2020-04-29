@@ -1,13 +1,13 @@
 package com.diluv.confluencia.database;
 
-import java.sql.Timestamp;
-import java.util.Collections;
-import java.util.List;
+import com.diluv.confluencia.ConfluenciaTest;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import com.diluv.confluencia.ConfluenciaTest;
+import java.sql.Timestamp;
+import java.util.Collections;
+import java.util.List;
 
 public class TestUserDatabase extends ConfluenciaTest {
 
@@ -35,6 +35,13 @@ public class TestUserDatabase extends ConfluenciaTest {
         Assertions.assertNotNull(ConfluenciaTest.USER.findOneByUsername("jaredlll08"));
     }
 
+    @Test
+    public void findOneByUserId () {
+
+        Assertions.assertNull(ConfluenciaTest.USER.findOneByUserId(0));
+        Assertions.assertNotNull(ConfluenciaTest.USER.findOneByUserId(1));
+        Assertions.assertNotNull(ConfluenciaTest.USER.findOneByUserId(2));
+    }
 
     @Test
     public void insertUser () {

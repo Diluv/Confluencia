@@ -1,17 +1,18 @@
 package com.diluv.confluencia.database;
 
+import com.diluv.confluencia.Confluencia;
+import com.diluv.confluencia.database.dao.SecurityDAO;
+import com.diluv.confluencia.database.record.CompromisedPasswordRecord;
+import com.diluv.confluencia.database.record.EmailSendRecord;
+import com.diluv.confluencia.database.record.ReferenceTokenRecord;
+import com.diluv.confluencia.utils.SQLHandler;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import com.diluv.confluencia.Confluencia;
-import com.diluv.confluencia.database.dao.SecurityDAO;
-import com.diluv.confluencia.database.record.CompromisedPasswordRecord;
-import com.diluv.confluencia.database.record.EmailSendRecord;
-import com.diluv.confluencia.utils.SQLHandler;
 
 public class SecurityDatabase implements SecurityDAO {
     private static final String INSERT_DOMAIN_BLACKLIST = SQLHandler.readFile("email/insertDomainBlacklist");
@@ -24,6 +25,8 @@ public class SecurityDatabase implements SecurityDAO {
 
     private static final String INSERT_PASSWORD = SQLHandler.readFile("password/insertPassword");
     private static final String FIND_PASSWORD_BY_HASH = SQLHandler.readFile("password/findPasswordByHash");
+
+    private static final String FIND_PERSISTED_GRANTS_BY_KEY_AND_TYPE = SQLHandler.readFile("persisted_grants/findPersistedGrantsByKeyAndType");
 
     @Override
     public boolean insertDomainBlacklist (String[] domains) {
@@ -165,6 +168,25 @@ public class SecurityDatabase implements SecurityDAO {
         }
         catch (SQLException e) {
             Confluencia.LOGGER.error("Failed to find compromised password.", e);
+        }
+        return null;
+    }
+
+    @Override
+    public ReferenceTokenRecord findPersistedGrantByKeyAndType (String key, String type) {
+
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_PERSISTED_GRANTS_BY_KEY_AND_TYPE)) {
+            stmt.setString(1, key);
+            stmt.setString(2, type);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return new ReferenceTokenRecord(rs);
+                }
+            }
+        }
+        catch (SQLException e) {
+            Confluencia.LOGGER.error("Failed to findPersistedGrantByKeyAndType.", e);
         }
         return null;
     }

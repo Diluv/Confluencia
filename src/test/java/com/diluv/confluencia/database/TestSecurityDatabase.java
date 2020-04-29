@@ -72,4 +72,12 @@ public class TestSecurityDatabase extends ConfluenciaTest {
         Assertions.assertNotNull(ConfluenciaTest.SECURITY.findOnePasswordByHash("025160DEE13179BC80BB05102CE5B3CD3FE"));
         Assertions.assertNull(ConfluenciaTest.SECURITY.findOnePasswordByHash("1078A18A6C6D0C99ED7375A90D6B995D350"));
     }
+
+    @Test
+    public void findPersistedGrantByKeyAndType () {
+
+        Assertions.assertNull(ConfluenciaTest.SECURITY.findPersistedGrantByKeyAndType("invalid", "invalid"));
+        Assertions.assertNull(ConfluenciaTest.SECURITY.findPersistedGrantByKeyAndType("w36TSM/IUyxY5P2pA1WaE3bWW8aI8YV43ne+Up2K2w4=", "invalid"));
+        Assertions.assertNotNull(ConfluenciaTest.SECURITY.findPersistedGrantByKeyAndType("w36TSM/IUyxY5P2pA1WaE3bWW8aI8YV43ne+Up2K2w4=", "reference_token"));
+    }
 }

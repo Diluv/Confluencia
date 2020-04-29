@@ -587,7 +587,9 @@ VALUES (1, 'http://localhost:3000');
 INSERT INTO ClientScopes(ClientId, Scope)
 VALUES (1, 'openid'),
        (1, 'profile'),
-       (1, 'email');
+       (1, 'email'),
+       (1, 'diluv_api');
+
 INSERT INTO IdentityResources(Id, Name, DisplayName, Required)
 VALUES (1, 'openid', 'Your user identifier', TRUE);
 INSERT INTO IdentityClaims(IdentityResourceId, Type)
@@ -599,3 +601,11 @@ INSERT INTO IdentityClaims(IdentityResourceId, Type)
 VALUES (2, 'username'),
        (2, 'preferred_username'),
        (2, 'email');
+
+INSERT INTO PersistedGrants(`Key`, Type, SubjectId, ClientId, CreationTime, Expiration, Data)
+VALUES ('w36TSM/IUyxY5P2pA1WaE3bWW8aI8YV43ne+Up2K2w4=', 'reference_token', '1', 'DILUV_WEBSITE', NOW(),
+        NOW() + INTERVAL 1 DAY,
+        '{"Audiences":[],"Issuer":"http://localhost:5000","CreationTime":"2020-04-29T03:38:37Z","Lifetime":3600,"Type":"access_token","ClientId":"DILUV_WEBSITE","AccessTokenType":1,"Claims":[{"Type":"client_id","Value":"DILUV_WEBSITE","ValueType":"http://www.w3.org/2001/XMLSchema#string"},{"Type":"scope","Value":"openid","ValueType":"http://www.w3.org/2001/XMLSchema#string"},{"Type":"scope","Value":"profile","ValueType":"http://www.w3.org/2001/XMLSchema#string"},{"Type":"scope","Value":"offline_access","ValueType":"http://www.w3.org/2001/XMLSchema#string"},{"Type": "sub","Value":"1","ValueType":"http://www.w3.org/2001/XMLSchema#string"},{"Type":"auth_time","Value":"1587912601","ValueType":"http://www.w3.org/2001/XMLSchema#integer64"},{"Type":"idp","Value":"local","ValueType":"http://www.w3.org/2001/XMLSchema#string"},{"Type":"amr","Value":"pwd","ValueType":"http://www.w3.org/2001/XMLSchema#string"}],"Version":4}'),
+       ('u/lvMINQ0CqNfZQOaK342mxeIaRvRe3x+5pIzi3i4GE=', 'reference_token', '2', 'DILUV_WEBSITE', NOW(),
+        NOW() + INTERVAL 1 DAY,
+        '{"Audiences":[],"Issuer":"http://localhost:5000","CreationTime":"2020-04-29T03:38:37Z","Lifetime":3600,"Type":"access_token","ClientId":"DILUV_WEBSITE","AccessTokenType":1,"Claims":[{"Type":"client_id","Value":"DILUV_WEBSITE","ValueType":"http://www.w3.org/2001/XMLSchema#string"},{"Type":"scope","Value":"openid","ValueType":"http://www.w3.org/2001/XMLSchema#string"},{"Type":"scope","Value":"profile","ValueType":"http://www.w3.org/2001/XMLSchema#string"},{"Type":"scope","Value":"offline_access","ValueType":"http://www.w3.org/2001/XMLSchema#string"},{"Type": "sub","Value":"2","ValueType":"http://www.w3.org/2001/XMLSchema#string"},{"Type":"auth_time","Value":"1587912601","ValueType":"http://www.w3.org/2001/XMLSchema#integer64"},{"Type":"idp","Value":"local","ValueType":"http://www.w3.org/2001/XMLSchema#string"},{"Type":"amr","Value":"pwd","ValueType":"http://www.w3.org/2001/XMLSchema#string"}],"Version":4}')
