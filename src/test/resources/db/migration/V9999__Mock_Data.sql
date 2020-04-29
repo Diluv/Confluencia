@@ -587,8 +587,7 @@ VALUES (1, 'http://localhost:3000');
 INSERT INTO ClientScopes(ClientId, Scope)
 VALUES (1, 'openid'),
        (1, 'profile'),
-       (1, 'email'),
-       (1, 'diluv_api');
+       (1, 'email');
 
 INSERT INTO IdentityResources(Id, Name, DisplayName, Required)
 VALUES (1, 'openid', 'Your user identifier', TRUE);
