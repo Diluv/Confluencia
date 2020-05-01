@@ -22,6 +22,7 @@ public class UserDatabase implements UserDAO {
     private static final String EXISTS_USER_BY_EMAIL = SQLHandler.readFile("user/existsUserByEmail");
     private static final String EXISTS_USER_BY_USERNAME = SQLHandler.readFile("user/existsUserByUsername");
     private static final String FIND_USER_BY_USERNAME = SQLHandler.readFile("user/findUserByUsername");
+    private static final String FIND_USER_BY_USER_ID = SQLHandler.readFile("user/findUserByUserId");
     private static final String INSERT_USER = SQLHandler.readFile("user/insertUser");
     private static final String UPDATE_PASSWORD_BY_USERID = SQLHandler.readFile("user/updatePasswordByUserId");
 
@@ -95,6 +96,24 @@ public class UserDatabase implements UserDAO {
         }
         catch (SQLException e) {
             Confluencia.LOGGER.error("Failed to find user by username.", e);
+        }
+        return null;
+    }
+
+    @Override
+    public UserRecord findOneByUserId (long userId) {
+
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_USER_BY_USER_ID)) {
+            stmt.setLong(1, userId);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return new UserRecord(rs);
+                }
+            }
+        }
+        catch (SQLException e) {
+            Confluencia.LOGGER.error("Failed to find user by id.", e);
         }
         return null;
     }

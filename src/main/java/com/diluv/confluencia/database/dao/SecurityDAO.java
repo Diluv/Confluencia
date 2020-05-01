@@ -1,10 +1,11 @@
 package com.diluv.confluencia.database.dao;
 
-import java.util.List;
-import java.util.Map;
-
 import com.diluv.confluencia.database.record.CompromisedPasswordRecord;
 import com.diluv.confluencia.database.record.EmailSendRecord;
+import com.diluv.confluencia.database.record.ReferenceTokenRecord;
+
+import java.util.List;
+import java.util.Map;
 
 public interface SecurityDAO {
 
@@ -23,4 +24,6 @@ public interface SecurityDAO {
     boolean insertPassword (Map<String, Long> hashOccurrences);
 
     CompromisedPasswordRecord findOnePasswordByHash (String hash);
+
+    ReferenceTokenRecord findPersistedGrantByKeyAndType (String key, String type);
 }
