@@ -1,12 +1,5 @@
 package com.diluv.confluencia.database;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.diluv.confluencia.Confluencia;
 import com.diluv.confluencia.database.dao.FileDAO;
 import com.diluv.confluencia.database.record.FileProcessingStatus;
@@ -15,6 +8,13 @@ import com.diluv.confluencia.database.record.ProjectFileRecord;
 import com.diluv.confluencia.database.sort.ProjectFileSort;
 import com.diluv.confluencia.utils.SQLHandler;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 public class FileDatabase implements FileDAO {
 
     private static final String INSERT_PROJECT_FILE = SQLHandler.readFile("project_files/insertProjectFile");
@@ -22,8 +22,8 @@ public class FileDatabase implements FileDAO {
     private static final String UPDATE_STATUS_BY_STATUS = SQLHandler.readFile("project_files/updateStatusByStatus");
     private static final String FIND_ALL_WHERE_STATUS_AND_LIMIT = SQLHandler.readFile("project_files/findAllWhereStatusAndLimit");
     private static final String FIND_ONE_PROJECT_FILE_QUEUE_BY_FILE_ID = SQLHandler.readFile("project_files/findOneByFileId");
-    private static final String FIND_ALL_BY_GAMESLUG_AND_PROJECTYPESLUG_AND_PROJECTSLUG = SQLHandler.readFile("project_files/findAllByGameSlugAndProjectTypeAndProjectSlug");
-    private static final String FIND_ALL_BY_GAMESLUG_AND_PROJECTYPESLUG_AND_PROJECTSLUG_AND_VERSION = SQLHandler.readFile("project_files/findAllByGameSlugAndProjectTypeAndProjectSlugAndVersion");
+    private static final String FIND_ALL_BY_PROJECT_ID = SQLHandler.readFile("project_files/findAllByProjectId");
+    private static final String FIND_ALL_BY_PROJECT_ID_AND_VERSION = SQLHandler.readFile("project_files/findAllByProjectIdAndVersion");
 
     private static final String INSERT_PROJECT_FILE_ANTIVIRUS = SQLHandler.readFile("project_files/insertProjectFileAntivirus");
 
@@ -163,17 +163,15 @@ public class FileDatabase implements FileDAO {
     }
 
     @Override
-    public List<ProjectFileRecord> findAllByGameSlugAndProjectTypeAndProjectSlug (String gameSlug, String projectTypeSlug, String projectSlug, boolean authorized, long page, int limit, ProjectFileSort sort) {
+    public List<ProjectFileRecord> findAllByProjectId (long projectId, boolean authorized, long page, int limit, ProjectFileSort sort) {
 
         List<ProjectFileRecord> projects = new ArrayList<>();
 
-        try (PreparedStatement stmt = sort.getQuery(FIND_ALL_BY_GAMESLUG_AND_PROJECTYPESLUG_AND_PROJECTSLUG)) {
-            stmt.setString(1, gameSlug);
-            stmt.setString(2, projectTypeSlug);
-            stmt.setString(3, projectSlug);
-            stmt.setBoolean(4, authorized);
-            stmt.setLong(5, (page - 1) * limit);
-            stmt.setLong(6, limit);
+        try (PreparedStatement stmt = sort.getQuery(FIND_ALL_BY_PROJECT_ID)) {
+            stmt.setLong(1, projectId);
+            stmt.setBoolean(2, authorized);
+            stmt.setLong(3, (page - 1) * limit);
+            stmt.setLong(4, limit);
 
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
@@ -188,18 +186,16 @@ public class FileDatabase implements FileDAO {
     }
 
     @Override
-    public List<ProjectFileRecord> findAllByGameSlugAndProjectTypeAndProjectSlugWhereVersion (String gameSlug, String projectTypeSlug, String projectSlug, boolean authorized, long page, int limit, ProjectFileSort sort, String version) {
+    public List<ProjectFileRecord> findAllByProjectIdWhereVersion (long projectId, boolean authorized, long page, int limit, ProjectFileSort sort, String version) {
 
         List<ProjectFileRecord> projects = new ArrayList<>();
 
-        try (PreparedStatement stmt = sort.getQuery(FIND_ALL_BY_GAMESLUG_AND_PROJECTYPESLUG_AND_PROJECTSLUG_AND_VERSION)) {
-            stmt.setString(1, gameSlug);
-            stmt.setString(2, projectTypeSlug);
-            stmt.setString(3, projectSlug);
-            stmt.setBoolean(4, authorized);
-            stmt.setString(5, version);
-            stmt.setLong(6, (page - 1) * limit);
-            stmt.setLong(7, limit);
+        try (PreparedStatement stmt = sort.getQuery(FIND_ALL_BY_PROJECT_ID_AND_VERSION)) {
+            stmt.setLong(1, projectId);
+            stmt.setBoolean(2, authorized);
+            stmt.setString(3, version);
+            stmt.setLong(4, (page - 1) * limit);
+            stmt.setLong(5, limit);
 
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {

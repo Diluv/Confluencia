@@ -18,9 +18,7 @@ SELECT pf.id,
 FROM project_files pf
          JOIN projects p ON (p.id = pf.project_id)
          JOIN users u ON (u.id = pf.user_id)
-WHERE p.game_slug = ?
-  AND p.project_type_slug = ?
-  AND p.slug = ?
+WHERE p.id = ?
   AND (pf.released = TRUE OR ?)
 ORDER BY '%sort%' '%order%'
 LIMIT ?, ?;

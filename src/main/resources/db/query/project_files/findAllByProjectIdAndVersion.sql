@@ -20,9 +20,7 @@ FROM project_files pf
          JOIN users u ON (u.id = pf.user_id)
          JOIN project_file_game_versions pfgv ON (pf.id = pfgv.project_file_id)
          JOIN game_versions gv ON (pfgv.game_version_id = gv.id)
-WHERE p.game_slug = ?
-  AND p.project_type_slug = ?
-  AND p.slug = ?
+WHERE p.id = ?
   AND (pf.released = TRUE OR ?)
   AND gv.version = ?
 ORDER BY '%sort%' '%order%'

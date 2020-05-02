@@ -32,21 +32,19 @@ public class TestFileDatabase extends ConfluenciaTest {
     }
 
     @Test
-    public void findAllByGameSlugAndProjectTypeAndProjectSlug () {
+    public void findAllByProjectId () {
 
-        Assertions.assertEquals(0, ConfluenciaTest.FILE.findAllByGameSlugAndProjectTypeAndProjectSlug("invalid", "invalid", "invalid", false, 1, 1, ProjectFileSort.NEW).size());
-        Assertions.assertEquals(0, ConfluenciaTest.FILE.findAllByGameSlugAndProjectTypeAndProjectSlug("minecraft", "invalid", "invalid", false, 1, 1, ProjectFileSort.NEW).size());
-        Assertions.assertEquals(0, ConfluenciaTest.FILE.findAllByGameSlugAndProjectTypeAndProjectSlug("minecraft", "mods", "invalid", false, 1, 1, ProjectFileSort.NEW).size());
-        Assertions.assertEquals(1, ConfluenciaTest.FILE.findAllByGameSlugAndProjectTypeAndProjectSlug("minecraft", "mods", "bookshelf", false, 1, 1, ProjectFileSort.NEW).size());
+        Assertions.assertEquals(0, ConfluenciaTest.FILE.findAllByProjectId(0, false, 1, 1, ProjectFileSort.NEW).size());
+        Assertions.assertEquals(1, ConfluenciaTest.FILE.findAllByProjectId(1, false, 1, 1, ProjectFileSort.NEW).size());
 
-        Assertions.assertEquals(0, ConfluenciaTest.FILE.findAllByGameSlugAndProjectTypeAndProjectSlug("minecraft", "mods", "upgrade-modifiers", false, 1, 1, ProjectFileSort.NEW).size());
-        Assertions.assertEquals(0, ConfluenciaTest.FILE.findAllByGameSlugAndProjectTypeAndProjectSlug("minecraft", "mods", "upgrade-modifiers", true, 1, 1, ProjectFileSort.NEW).size());
+        Assertions.assertEquals(0, ConfluenciaTest.FILE.findAllByProjectId(2, false, 1, 1, ProjectFileSort.NEW).size());
+        Assertions.assertEquals(0, ConfluenciaTest.FILE.findAllByProjectId(2, true, 1, 1, ProjectFileSort.NEW).size());
     }
 
     @Test
-    public void findAllByGameSlugAndProjectTypeAndProjectSlugWhereVersion () {
+    public void findAllByProjectIdWhereVersion () {
 
-        Assertions.assertEquals(1, ConfluenciaTest.FILE.findAllByGameSlugAndProjectTypeAndProjectSlugWhereVersion("minecraft", "mods", "bookshelf", false, 1, 1, ProjectFileSort.NEW, "1.15.2").size());
+        Assertions.assertEquals(1, ConfluenciaTest.FILE.findAllByProjectIdWhereVersion(1, false, 1, 1, ProjectFileSort.NEW, "1.15.2").size());
     }
 
     @Test
@@ -54,7 +52,7 @@ public class TestFileDatabase extends ConfluenciaTest {
 
         Long id = ConfluenciaTest.FILE.insertProjectFile("test.jar", "1.0.20", 10, "", "sha512", "release", "binary", 1, 1);
         Assertions.assertNotNull(id);
-        Assertions.assertTrue(id.longValue() > 1L);
+        Assertions.assertTrue(id > 1L);
     }
 
     @Test
