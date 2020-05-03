@@ -263,3 +263,13 @@ CREATE TABLE PersistedGrants
     Data         LONGTEXT     NOT NULL,
     PRIMARY KEY (`Key`)
 );
+
+CREATE TABLE reference_token_permissions
+(
+    `Key`      VARCHAR(200) NOT NULL,
+
+    permission VARCHAR(255) NOT NULL,
+
+    PRIMARY KEY (`Key`, permission),
+    FOREIGN KEY (`Key`) REFERENCES PersistedGrants (`Key`) ON DELETE CASCADE
+);

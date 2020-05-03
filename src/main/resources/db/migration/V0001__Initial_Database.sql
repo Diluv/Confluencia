@@ -30,37 +30,6 @@ CREATE TABLE temp_users
     PRIMARY KEY (id)
 );
 
-CREATE TABLE refresh_tokens
-(
-    user_id    BIGINT    NOT NULL,
-    code       CHAR(36)  NOT NULL,
-
-    expired_at TIMESTAMP NOT NULL,
-
-    PRIMARY KEY (user_id, code)
-);
-
-CREATE TABLE api_tokens
-(
-    user_id BIGINT      NOT NULL,
-    code    CHAR(36)    NOT NULL,
-
-    name    VARCHAR(20) NOT NULL,
-
-    PRIMARY KEY (user_id, code)
-);
-
-CREATE TABLE api_token_permissions
-(
-    user_id    BIGINT       NOT NULL,
-    code       CHAR(36)     NOT NULL,
-
-    permission VARCHAR(255) NOT NULL,
-
-    PRIMARY KEY (user_id, code, permission),
-    FOREIGN KEY (user_id, code) REFERENCES api_tokens (user_id, code) ON DELETE CASCADE
-);
-
 CREATE TABLE password_reset
 (
     user_id    BIGINT    NOT NULL,

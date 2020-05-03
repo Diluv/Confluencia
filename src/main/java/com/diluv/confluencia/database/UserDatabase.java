@@ -34,15 +34,7 @@ public class UserDatabase implements UserDAO {
     private static final String FIND_TEMPUSER_BY_EMAIL_AND_CODE = SQLHandler.readFile("temp_user/findTempUserByEmailAndCode");
     private static final String DELETE_TEMPUSER = SQLHandler.readFile("temp_user/deleteTempUser");
 
-    private static final String INSERT_REFRESH_TOKEN = SQLHandler.readFile("refresh_token/insertRefreshToken");
-    private static final String FIND_REFRESH_TOKEN_BY_USERID_AND_CODE = SQLHandler.readFile("refresh_token/findRefreshTokenByUserIdAndCode");
     private static final String DELETE_ALL_REFRESH_TOKENS_BY_USERID = SQLHandler.readFile("refresh_token/deleteRefreshTokenByUserId");
-    private static final String DELETE_REFRESH_TOKEN_BY_USERID_AND_CODE = SQLHandler.readFile("refresh_token/deleteRefreshTokenByUserIdAndCode");
-
-    private static final String INSERT_API_TOKEN = SQLHandler.readFile("api_token/insertAPIToken");
-    private static final String INSERT_API_TOKEN_PERMISSIONS = SQLHandler.readFile("api_token/insertAPITokenPermission");
-    private static final String FIND_API_TOKEN_BY_USERID_AND_CODE = SQLHandler.readFile("api_token/findAPITokenByUserIdAndCode");
-    private static final String DELETE_API_TOKEN_BY_USERID_AND_CODE = SQLHandler.readFile("api_token/deleteAPITokenByUserIdAndCode");
 
     private static final String FIND_ALL_USER_ROLES_BY_USER_ID = SQLHandler.readFile("user_roles/findAllUserRolesByUserId");
 
@@ -272,41 +264,6 @@ public class UserDatabase implements UserDAO {
     }
 
     @Override
-    public boolean insertRefreshToken (long userId, String code, Timestamp time) {
-
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(INSERT_REFRESH_TOKEN)) {
-            stmt.setLong(1, userId);
-            stmt.setString(2, code);
-            stmt.setTimestamp(3, time);
-
-            return stmt.executeUpdate() == 1;
-        }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to insertRefreshToken.", e);
-        }
-        return false;
-    }
-
-    @Override
-    public RefreshTokenRecord findRefreshTokenByUserIdAndCode (long userId, String code) {
-
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_REFRESH_TOKEN_BY_USERID_AND_CODE)) {
-            stmt.setLong(1, userId);
-            stmt.setString(2, code);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return new RefreshTokenRecord(rs);
-                }
-            }
-        }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to findRefreshTokenByUserIdAndCode.", e);
-        }
-        return null;
-    }
-
-    @Override
     public boolean deleteAllRefreshTokensByUserId (long userId) {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(DELETE_ALL_REFRESH_TOKENS_BY_USERID)) {
@@ -317,91 +274,6 @@ public class UserDatabase implements UserDAO {
         }
         catch (SQLException e) {
             Confluencia.LOGGER.error("Failed to deleteAllRefreshTokensByUserId.", e);
-        }
-        return false;
-    }
-
-    @Override
-    public boolean deleteRefreshTokenByUserIdAndCode (long userId, String code) {
-
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(DELETE_REFRESH_TOKEN_BY_USERID_AND_CODE)) {
-            stmt.setLong(1, userId);
-            stmt.setString(2, code);
-
-            return stmt.executeUpdate() == 1;
-        }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to deleteRefreshTokenByUserIdAndCode for user {}", userId, e);
-        }
-        return false;
-    }
-
-    @Override
-    public boolean insertAPITokens (long userId, String code, String name) {
-
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(INSERT_API_TOKEN)) {
-            stmt.setLong(1, userId);
-            stmt.setString(2, code);
-            stmt.setString(3, name);
-
-            return stmt.executeUpdate() == 1;
-        }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to insertAPIToken.", e);
-        }
-        return false;
-    }
-
-    @Override
-    public boolean insertAPITokenPermissions (long userId, String code, List<String> permissions) {
-
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(INSERT_API_TOKEN_PERMISSIONS)) {
-
-            for (String permission : permissions) {
-                stmt.setLong(1, userId);
-                stmt.setString(2, code);
-                stmt.setString(3, permission);
-                stmt.addBatch();
-            }
-            stmt.executeLargeBatch();
-            return true;
-        }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to insertAPIToken.", e);
-        }
-        return false;
-    }
-
-    @Override
-    public APITokenRecord findAPITokenByUserIdAndCode (long userId, String code) {
-
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_API_TOKEN_BY_USERID_AND_CODE)) {
-            stmt.setLong(1, userId);
-            stmt.setString(2, code);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return new APITokenRecord(rs);
-                }
-            }
-        }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to findAPITokenByUserIdAndCode.", e);
-        }
-        return null;
-    }
-
-    @Override
-    public boolean deleteAPITokenByUserIdAndCode (long userId, String code) {
-
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(DELETE_API_TOKEN_BY_USERID_AND_CODE)) {
-            stmt.setLong(1, userId);
-            stmt.setString(2, code);
-
-            return stmt.executeUpdate() == 1;
-        }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to deleteAPITokenByUserIdAndCode for user {}", userId, e);
         }
         return false;
     }

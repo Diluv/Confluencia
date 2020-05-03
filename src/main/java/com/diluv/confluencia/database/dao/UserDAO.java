@@ -38,21 +38,7 @@ public interface UserDAO {
 
     boolean deleteTempUser (String email, String username);
 
-    boolean insertRefreshToken (long userId, String code, Timestamp time);
-
-    RefreshTokenRecord findRefreshTokenByUserIdAndCode (long userId, String code);
-
     boolean deleteAllRefreshTokensByUserId (long userId);
-
-    boolean deleteRefreshTokenByUserIdAndCode (long userId, String code);
-
-    boolean insertAPITokens (long userId, String code, String name);
-
-    boolean insertAPITokenPermissions (long userId, String code, List<String> permissions);
-
-    APITokenRecord findAPITokenByUserIdAndCode (long userId, String code);
-
-    boolean deleteAPITokenByUserIdAndCode (long userId, String code);
 
     List<UserRoleRecord> findAllUserRolesByUserId (long userId);
 

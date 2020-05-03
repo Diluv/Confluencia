@@ -1,13 +1,11 @@
 package com.diluv.confluencia.database;
 
-import com.diluv.confluencia.ConfluenciaTest;
+import java.sql.Timestamp;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.sql.Timestamp;
-import java.util.Collections;
-import java.util.List;
+import com.diluv.confluencia.ConfluenciaTest;
 
 public class TestUserDatabase extends ConfluenciaTest {
 
@@ -115,49 +113,9 @@ public class TestUserDatabase extends ConfluenciaTest {
     }
 
     @Test
-    public void findRefreshTokenByUserIdAndCode () {
-
-        Assertions.assertNull(ConfluenciaTest.USER.findRefreshTokenByUserIdAndCode(1, "invalid"));
-        Assertions.assertNotNull(ConfluenciaTest.USER.findRefreshTokenByUserIdAndCode(1, "9bd63558-3835-4e01-963f-66a0f467291c"));
-        Assertions.assertNotNull(ConfluenciaTest.USER.findRefreshTokenByUserIdAndCode(2, "592d3885-2fa1-4987-8626-e22c1e92e479"));
-    }
-
-    @Test
     public void deleteAllRefreshTokensByUserId () {
 
         Assertions.assertTrue(ConfluenciaTest.USER.deleteAllRefreshTokensByUserId(3));
-    }
-
-    @Test
-    public void insertAndDeleteRefreshTokenByUserIdAndCode () {
-
-        String testCode1 = "5d8a8e30-94b1-4b52-8ddd-e9ce6b899d88";
-        String testCode2 = "fca6ad9a-f344-44f5-8ba1-98056369780c";
-        Assertions.assertTrue(ConfluenciaTest.USER.insertRefreshToken(1, testCode1, new Timestamp(System.currentTimeMillis() + 1000 * 60 * 60)));
-        Assertions.assertTrue(ConfluenciaTest.USER.insertRefreshToken(2, testCode2, new Timestamp(System.currentTimeMillis() + 1000 * 60 * 60)));
-
-        Assertions.assertFalse(ConfluenciaTest.USER.deleteRefreshTokenByUserIdAndCode(1, "invalid"));
-        Assertions.assertTrue(ConfluenciaTest.USER.deleteRefreshTokenByUserIdAndCode(1, testCode1));
-        Assertions.assertTrue(ConfluenciaTest.USER.deleteRefreshTokenByUserIdAndCode(2, testCode2));
-    }
-
-    @Test
-    public void insertAPITokens () {
-
-        List<String> permission = Collections.singletonList("file.edit");
-        String testCode1 = "5d8a8e30-94b1-4b52-8ddd-e9ce6b899d88";
-        Assertions.assertTrue(ConfluenciaTest.USER.insertAPITokens(1, testCode1, "CI Token"));
-        Assertions.assertTrue(ConfluenciaTest.USER.insertAPITokenPermissions(1, testCode1, permission));
-
-        Assertions.assertFalse(ConfluenciaTest.USER.deleteAPITokenByUserIdAndCode(1, "invalid"));
-        Assertions.assertTrue(ConfluenciaTest.USER.deleteAPITokenByUserIdAndCode(1, testCode1));
-    }
-
-    @Test
-    public void findAPITokenByUserIdAndCode () {
-
-        Assertions.assertNull(ConfluenciaTest.USER.findAPITokenByUserIdAndCode(1, "invalid"));
-        Assertions.assertNotNull(ConfluenciaTest.USER.findAPITokenByUserIdAndCode(1, "4b3b85e3-f7ac-4c7b-b71a-df972909b213"));
     }
 
     @Test

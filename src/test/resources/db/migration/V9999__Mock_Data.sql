@@ -14,9 +14,6 @@ VALUES (1, 'tempuser', 'tempuser@diluv.com', '', '', NOW(), 'c1632ff7-367e-485f-
        (2, 'tempuser2', 'tempuser2@diluv.com', '', '', NOW(), '14964974-663a-4005-9cf2-d1f390c3b2cc'),
        (3, 'tempuser3', 'tempuser3@diluv.com', '', '', NOW(), '14164974-663a-4005-9cf2-d1f390c3b2cc');
 
-INSERT INTO api_tokens(user_id, code, name)
-VALUES (1, '4b3b85e3-f7ac-4c7b-b71a-df972909b213', 'testing token');
-
 INSERT INTO projects(name, slug, summary, description, cached_downloads, review, released, created_at, updated_at,
                      user_id, game_slug, project_type_slug)
 VALUES ('Bookshelf', 'bookshelf', 'An open source library for other mods!', 'An open source library for other mods!', 0,
@@ -501,21 +498,6 @@ INSERT INTO featured_projects(project_id)
 VALUES (1),
        (2),
        (99);
-
-INSERT INTO refresh_tokens(user_id, code, expired_at)
-VALUES (1, '9bd63558-3835-4e01-963f-66a0f467291c', NOW() + INTERVAL 1 DAY);
-
-INSERT INTO refresh_tokens(user_id, code, expired_at)
-VALUES (1, 'de4602e9-3b81-412f-aaa5-95092b080266', NOW() + INTERVAL 1 DAY);
-
-INSERT INTO refresh_tokens(user_id, code, expired_at)
-VALUES (2, '592d3885-2fa1-4987-8626-e22c1e92e479', NOW() + INTERVAL 1 DAY);
-
-INSERT INTO refresh_tokens(user_id, code, expired_at)
-VALUES (2, '592d3285-2fa1-4987-8626-e22c1e92e479', NOW() + INTERVAL 1 DAY);
-
-INSERT INTO refresh_tokens(user_id, code, expired_at)
-VALUES (2, '52236885-2fa1-4987-8626-e22c1e92e479', NOW() + INTERVAL 1 DAY);
 
 INSERT INTO news(slug, title, summary, description, user_id)
 VALUES ('example', 'Example Post', 'Summary', 'Example', 1);

@@ -1,3 +1,4 @@
 DELETE
-FROM refresh_tokens
-WHERE user_id = ?;
+FROM PersistedGrants
+WHERE SubjectId = ?
+  AND Type = 'refresh_token';
