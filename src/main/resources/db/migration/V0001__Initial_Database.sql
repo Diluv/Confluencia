@@ -209,12 +209,12 @@ CREATE TABLE project_file_game_versions
 
 CREATE TABLE project_file_dependencies
 (
-    project_file_id            BIGINT NOT NULL,
-    dependency_project_file_id BIGINT NOT NULL,
+    project_file_id       BIGINT NOT NULL,
+    dependency_project_id BIGINT NOT NULL,
 
-    PRIMARY KEY (project_file_id, dependency_project_file_id),
+    PRIMARY KEY (project_file_id, dependency_project_id),
     FOREIGN KEY (project_file_id) REFERENCES project_files (id),
-    FOREIGN KEY (dependency_project_file_id) REFERENCES project_files (id)
+    FOREIGN KEY (dependency_project_id) REFERENCES projects (id)
 );
 
 CREATE TABLE project_file_antivirus

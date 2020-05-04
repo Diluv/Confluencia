@@ -1,10 +1,10 @@
 package com.diluv.confluencia.database;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import com.diluv.confluencia.ConfluenciaTest;
 import com.diluv.confluencia.database.sort.ProjectSort;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class TestProjectDatabase extends ConfluenciaTest {
 
@@ -29,6 +29,13 @@ public class TestProjectDatabase extends ConfluenciaTest {
         Assertions.assertEquals(0, ConfluenciaTest.PROJECT.findAllByUsername("invalid", false, 1, 10, ProjectSort.NEW).size());
         Assertions.assertEquals(10, ConfluenciaTest.PROJECT.findAllByUsername("darkhax", false, 1, 10, ProjectSort.NEW).size());
         Assertions.assertEquals(10, ConfluenciaTest.PROJECT.findAllByUsername("jaredlll08", false, 1, 10, ProjectSort.NEW).size());
+    }
+
+    @Test
+    public void findAllProjectsByProjectIds () {
+
+        Assertions.assertEquals(3, ConfluenciaTest.PROJECT.findAllProjectsByProjectIds(new long[]{1, 2, 3}).size());
+        Assertions.assertEquals(2, ConfluenciaTest.PROJECT.findAllProjectsByProjectIds(new long[]{1000, 2, 3}).size());
     }
 
     @Test

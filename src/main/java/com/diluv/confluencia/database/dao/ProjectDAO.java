@@ -19,6 +19,8 @@ public interface ProjectDAO {
 
     List<ProjectRecord> findAllByUsername (String username, boolean authorized, long page, int limit, ProjectSort sort);
 
+    List<ProjectRecord> findAllProjectsByProjectIds(long[] projectIds);
+
     List<ProjectRecord> findAllProjectsByGameSlugAndProjectType (String gameSlug, String projectTypeSlug, long page, int limit, ProjectSort sort);
 
     List<ProjectRecord> findAllProjectsByGameSlugAndProjectTypeAndVersion (String gameSlug, String projectTypeSlug, long page, int limit, ProjectSort sort, String version);

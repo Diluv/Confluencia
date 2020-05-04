@@ -70,10 +70,14 @@ public class ProjectFileRecord {
      */
     private final long projectId;
 
-    //TODO
+    /**
+     * The project type slug the project is under.
+     */
     private final String projectTypeSlug;
 
-    //TODO
+    /**
+     * The game slug the project is under.
+     */
     private final String gameSlug;
 
     /**

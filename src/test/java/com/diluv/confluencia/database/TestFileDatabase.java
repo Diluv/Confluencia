@@ -80,9 +80,21 @@ public class TestFileDatabase extends ConfluenciaTest {
     }
 
     @Test
-    public void findAllGameVersionsByProjectFile () {
+    public void findAllProjectDependenciesById () {
 
-        Assertions.assertEquals(3, ConfluenciaTest.FILE.findAllGameVersionsByProjectFile(1).size());
+        Assertions.assertEquals(2, ConfluenciaTest.FILE.findAllProjectDependenciesById(1).size());
+    }
+
+    @Test
+    public void findAllGameVersionsById () {
+
+        Assertions.assertEquals(3, ConfluenciaTest.FILE.findAllGameVersionsById(1).size());
+    }
+
+    @Test
+    public void insertProjectFileDependency () {
+
+        Assertions.assertTrue(ConfluenciaTest.FILE.insertProjectFileDependency(2, Arrays.asList(2L, 3L)));
     }
 
     @Test

@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringJoiner;
 
 import com.diluv.confluencia.Confluencia;
 import com.diluv.confluencia.database.dao.ProjectDAO;
@@ -20,6 +21,7 @@ public class ProjectDatabase implements ProjectDAO {
 
     private static final String INSERT_PROJECT = SQLHandler.readFile("project/insertProject");
     private static final String FIND_ALL_BY_USERNAME = SQLHandler.readFile("project/findAllByUsername");
+    private static final String FIND_ALL_BY_PROJECT_IDS = SQLHandler.readFile("project/findAllByProjectIds");
     private static final String FIND_ALL_BY_GAMESLUG_AND_PROJECTYPESLUG = SQLHandler.readFile("project/findAllByGameSlugAndProjectTypeSlug");
     private static final String FIND_ALL_BY_GAMESLUG_AND_PROJECTYPESLUG_AND_VERSION = SQLHandler.readFile("project/findAllByGameSlugAndProjectTypeSlugAndVersion");
     private static final String FIND_ONE_BY_GAMESLUG_AND_PROJECTYPESLUG_AND_PROJECTSLUG = SQLHandler.readFile("project/findOneByGameSlugAndProjectTypeSlugAndProjectSlug");
@@ -111,6 +113,31 @@ public class ProjectDatabase implements ProjectDAO {
         }
         catch (SQLException e) {
             Confluencia.LOGGER.error("Failed to run findAllByUsername database script for user {}.", username, e);
+        }
+        return projects;
+    }
+
+    @Override
+    public List<ProjectRecord> findAllProjectsByProjectIds (long[] projectIds) {
+
+        StringJoiner b = new StringJoiner(",");
+        for (int i = 0; i < projectIds.length; i++) {
+            b.add("?");
+        }
+        List<ProjectRecord> projects = new ArrayList<>();
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL_BY_PROJECT_IDS.replace("(?)", "(" + b.toString() + ")"))) {
+
+            for (int i = 0; i < projectIds.length; i++) {
+                stmt.setLong(i + 1, projectIds[i]);
+            }
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    projects.add(new ProjectRecord(rs));
+                }
+            }
+        }
+        catch (SQLException e) {
+            Confluencia.LOGGER.error("Failed to run findGameVersionsByGameSlugAndVersions games database script.", e);
         }
         return projects;
     }

@@ -27,8 +27,10 @@ public class FileDatabase implements FileDAO {
 
     private static final String INSERT_PROJECT_FILE_ANTIVIRUS = SQLHandler.readFile("project_files/insertProjectFileAntivirus");
 
+    private static final String INSERT_PROJECT_FILE_DEPENDENCIES = SQLHandler.readFile("project_files/insertProjectFileDependencies");
     private static final String INSERT_PROJECT_FILE_GAME_VERSION = SQLHandler.readFile("project_files/insertProjectFileGameVersions");
-    private static final String FIND_ALL_GAME_VERSIONS_BY_FILE_ID = SQLHandler.readFile("project_files/findAllGameVersionsByFileId");
+    private static final String FIND_ALL_DEPENDENCIES_BY_ID = SQLHandler.readFile("project_files/findAllDependenciesById");
+    private static final String FIND_ALL_GAME_VERSIONS_BY_ID = SQLHandler.readFile("project_files/findAllGameVersionsById");
 
     private static final String EXISTS_BY_PROJECT_ID_AND_VERSION = SQLHandler.readFile("project_files/existsByProjectIdAndVersion");
 
@@ -226,10 +228,29 @@ public class FileDatabase implements FileDAO {
     }
 
     @Override
-    public List<GameVersionRecord> findAllGameVersionsByProjectFile (long projectFileId) {
+    public List<Long> findAllProjectDependenciesById (long projectFileId) {
+
+        List<Long> projectId = new ArrayList<>();
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL_DEPENDENCIES_BY_ID)) {
+            stmt.setLong(1, projectFileId);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    projectId.add(rs.getLong(1));
+                }
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return projectId;
+    }
+
+    @Override
+    public List<GameVersionRecord> findAllGameVersionsById (long projectFileId) {
 
         List<GameVersionRecord> gameVersions = new ArrayList<>();
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL_GAME_VERSIONS_BY_FILE_ID)) {
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL_GAME_VERSIONS_BY_ID)) {
             stmt.setLong(1, projectFileId);
 
             try (ResultSet rs = stmt.executeQuery()) {
@@ -242,6 +263,24 @@ public class FileDatabase implements FileDAO {
             e.printStackTrace();
         }
         return gameVersions;
+    }
+
+    @Override
+    public boolean insertProjectFileDependency (long projectFileId, List<Long> dependencyIds) {
+
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(INSERT_PROJECT_FILE_DEPENDENCIES)) {
+            for (Long dependency : dependencyIds) {
+                stmt.setLong(1, projectFileId);
+                stmt.setLong(2, dependency);
+                stmt.addBatch();
+            }
+            stmt.executeBatch();
+            return true;
+        }
+        catch (SQLException e) {
+            Confluencia.LOGGER.error("Failed to insertProjectFileDependency.", e);
+        }
+        return false;
     }
 
     @Override

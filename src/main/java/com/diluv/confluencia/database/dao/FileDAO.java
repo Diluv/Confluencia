@@ -28,7 +28,11 @@ public interface FileDAO {
 
     boolean insertProjectFileAntivirus (long projectFileId, String malware);
 
-    List<GameVersionRecord> findAllGameVersionsByProjectFile (long projectFileId);
+    List<Long> findAllProjectDependenciesById (long projectFileId);
+
+    List<GameVersionRecord> findAllGameVersionsById (long projectFileId);
+
+    boolean insertProjectFileDependency(long projectFileId, List<Long> dependencyIds);
 
     boolean insertProjectFileGameVersions (long projectFileId, List<Long> versionIds);
 
