@@ -14,7 +14,8 @@ SELECT pf.id,
        p.project_type_slug,
        p.game_slug,
        pf.user_id,
-       u.username as username
+       u.username     AS username,
+       u.display_name AS display_name
 FROM project_files pf
          JOIN projects p ON (p.id = pf.project_id)
          JOIN users u ON (u.id = pf.user_id)

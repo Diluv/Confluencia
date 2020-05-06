@@ -90,6 +90,11 @@ public class ProjectFileRecord {
      */
     private final String username;
 
+    /**
+     * The display username of the user who uploaded the file.
+     */
+    private final String userDisplayName;
+
     public ProjectFileRecord (ResultSet rs) throws SQLException {
 
         this.id = rs.getLong("id");
@@ -109,6 +114,7 @@ public class ProjectFileRecord {
         this.gameSlug = rs.getString("game_slug");
         this.userId = rs.getLong("user_id");
         this.username = rs.getString("username");
+        this.userDisplayName = rs.getString("display_name");
     }
 
     public long getId () {
@@ -194,5 +200,10 @@ public class ProjectFileRecord {
     public String getUsername () {
 
         return this.username;
+    }
+
+    public String getUserDisplayName () {
+
+        return this.userDisplayName;
     }
 }
