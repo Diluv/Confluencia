@@ -1,3 +1,8 @@
+INSERT INTO games(slug, name, url, image_url, banner_url)
+VALUES ('rimworld', 'RimWorld', 'https://rimworldgame.com/',
+        'https://download.nodecdn.net/containers/diluvstaging/games/rimworld/rimworld.png',
+        'https://images.placeholders.dev/?width=1200&height=150');
+
 INSERT INTO users(id, username, display_name, email, password, password_type, mfa, mfa_secret, created_at)
 VALUES (1, 'darkhax', 'Darkhax', 'darkhax@diluv.com', '$2y$12$Y09/RQkc7icbiOonlBqTeegjtk9VYPKamMTJqkFVtfKDawRwifc8i',
         'bcrypt', TRUE, NULL, NOW()),
@@ -497,6 +502,11 @@ VALUES ('minecraft');
 INSERT INTO featured_projects(project_id)
 VALUES (1),
        (2),
+       (5),
+       (10),
+       (15),
+       (11),
+       (12),
        (99);
 
 INSERT INTO news(slug, title, summary, description, user_id)

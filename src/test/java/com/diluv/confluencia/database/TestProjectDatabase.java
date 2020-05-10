@@ -70,7 +70,7 @@ public class TestProjectDatabase extends ConfluenciaTest {
     @Test
     public void findFeaturedProjects () {
 
-        Assertions.assertEquals(3, ConfluenciaTest.PROJECT.findFeaturedProjects().size());
+        Assertions.assertEquals(6, ConfluenciaTest.PROJECT.findFeaturedProjects().size());
     }
 
     @Test
