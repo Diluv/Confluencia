@@ -9,6 +9,8 @@ VALUES (1, 'darkhax', 'Darkhax', 'darkhax@diluv.com', '$2y$12$Y09/RQkc7icbiOonlB
        (2, 'jaredlll08', 'Jaredlll08', 'jaredlll08@diluv.com',
         '$2y$12$Y09/RQkc7icbiOonlBqTeegjtk9VYPKamMTJqkFVtfKDawRwifc8i', 'bcrypt', FALSE, NULL, NOW()),
        (3, 'lclc98', 'lclc98', 'lclc98@diluv.com',
+        '$2y$12$Y09/RQkc7icbiOonlBqTeegjtk9VYPKamMTJqkFVtfKDawRwifc8i', 'bcrypt', FALSE, NULL, NOW()),
+       (4, 'noprojects', 'noprojects', 'abc@diluv.com',
         '$2y$12$Y09/RQkc7icbiOonlBqTeegjtk9VYPKamMTJqkFVtfKDawRwifc8i', 'bcrypt', FALSE, NULL, NOW());
 
 INSERT INTO user_roles(user_id, role_id)
