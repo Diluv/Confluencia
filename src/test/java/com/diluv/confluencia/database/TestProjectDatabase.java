@@ -9,6 +9,11 @@ import org.junit.jupiter.api.Test;
 public class TestProjectDatabase extends ConfluenciaTest {
 
     @Test
+    public void countAll () {
+        Assertions.assertEquals(128, ConfluenciaTest.PROJECT.countAll());
+    }
+
+    @Test
     public void findOneProjectByProjectId () {
 
         Assertions.assertNotNull(ConfluenciaTest.PROJECT.findOneProjectByProjectId(1));
@@ -70,7 +75,7 @@ public class TestProjectDatabase extends ConfluenciaTest {
     @Test
     public void findFeaturedProjects () {
 
-        Assertions.assertEquals(6, ConfluenciaTest.PROJECT.findFeaturedProjects().size());
+        Assertions.assertEquals(4, ConfluenciaTest.PROJECT.findFeaturedProjects().size());
     }
 
     @Test

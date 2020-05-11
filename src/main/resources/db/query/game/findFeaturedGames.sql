@@ -6,4 +6,4 @@ SELECT g.slug,
 FROM featured_games fg
          JOIN games g ON (fg.slug = g.slug)
 ORDER BY RAND()
-LIMIT 6;
+LIMIT 4;

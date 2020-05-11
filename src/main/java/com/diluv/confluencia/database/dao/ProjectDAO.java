@@ -11,6 +11,8 @@ import com.diluv.confluencia.database.sort.ProjectSort;
 
 public interface ProjectDAO {
 
+    long countAll ();
+
     boolean insertProject (String slug, String name, String summary, String description, long userId, String gameSlug, String projectTypeSlug);
 
     ProjectRecord findOneProjectByProjectId (long id);
@@ -19,7 +21,7 @@ public interface ProjectDAO {
 
     List<ProjectRecord> findAllByUsername (String username, boolean authorized, long page, int limit, ProjectSort sort);
 
-    List<ProjectRecord> findAllProjectsByProjectIds(long[] projectIds);
+    List<ProjectRecord> findAllProjectsByProjectIds (long[] projectIds);
 
     List<ProjectRecord> findAllProjectsByGameSlugAndProjectType (String gameSlug, String projectTypeSlug, long page, int limit, ProjectSort sort);
 

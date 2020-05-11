@@ -10,6 +10,11 @@ import com.diluv.confluencia.ConfluenciaTest;
 public class TestUserDatabase extends ConfluenciaTest {
 
     @Test
+    public void countAll () {
+        Assertions.assertEquals(3, ConfluenciaTest.USER.countAll());
+    }
+
+    @Test
     public void existsUserByEmail () {
 
         Assertions.assertFalse(ConfluenciaTest.USER.existsUserByEmail("invalid@example.com"));

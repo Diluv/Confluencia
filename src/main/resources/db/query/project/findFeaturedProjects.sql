@@ -18,4 +18,4 @@ FROM featured_projects fp
          JOIN projects p ON (fp.project_id = p.id)
          JOIN users u ON (u.id = p.user_id)
 ORDER BY RAND()
-LIMIT 6;
+LIMIT 4;

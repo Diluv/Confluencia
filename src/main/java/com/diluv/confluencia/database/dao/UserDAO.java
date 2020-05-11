@@ -3,14 +3,14 @@ package com.diluv.confluencia.database.dao;
 import java.sql.Timestamp;
 import java.util.List;
 
-import com.diluv.confluencia.database.record.APITokenRecord;
 import com.diluv.confluencia.database.record.PasswordResetRecord;
-import com.diluv.confluencia.database.record.RefreshTokenRecord;
 import com.diluv.confluencia.database.record.TempUserRecord;
 import com.diluv.confluencia.database.record.UserRecord;
 import com.diluv.confluencia.database.record.UserRoleRecord;
 
 public interface UserDAO {
+
+    long countAll();
 
     boolean existsUserByEmail (String email);
 

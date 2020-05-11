@@ -19,6 +19,7 @@ import com.diluv.confluencia.utils.SQLHandler;
 
 public class ProjectDatabase implements ProjectDAO {
 
+    private static final String COUNT_ALL = SQLHandler.readFile("project/countAll");
     private static final String INSERT_PROJECT = SQLHandler.readFile("project/insertProject");
     private static final String FIND_ALL_BY_USERNAME = SQLHandler.readFile("project/findAllByUsername");
     private static final String FIND_ALL_BY_PROJECT_IDS = SQLHandler.readFile("project/findAllByProjectIds");
@@ -37,6 +38,22 @@ public class ProjectDatabase implements ProjectDAO {
 
     private static final String FIND_ALL_CATEGORIES_BY_GAMESLUG_AND_PROJECTYPESLUG = SQLHandler.readFile("category/findAllCategoriesByGameSlugAndProjectTypeSlug");
     private static final String FIND_ALL_CATEGORIES_BY_PROJECT_ID = SQLHandler.readFile("category/findAllCategoriesByProjectId");
+
+
+    @Override
+    public long countAll () {
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(COUNT_ALL)) {
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getLong(1);
+                }
+            }
+        }
+        catch (SQLException e) {
+            Confluencia.LOGGER.error("Failed to run countAll.", e);
+        }
+        return 0;
+    }
 
     @Override
     public boolean insertProject (String slug, String name, String summary, String description, long userId, String gameSlug, String projectTypeSlug) {

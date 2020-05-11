@@ -9,15 +9,15 @@ import java.util.List;
 
 import com.diluv.confluencia.Confluencia;
 import com.diluv.confluencia.database.dao.UserDAO;
-import com.diluv.confluencia.database.record.APITokenRecord;
 import com.diluv.confluencia.database.record.PasswordResetRecord;
-import com.diluv.confluencia.database.record.RefreshTokenRecord;
 import com.diluv.confluencia.database.record.TempUserRecord;
 import com.diluv.confluencia.database.record.UserRecord;
 import com.diluv.confluencia.database.record.UserRoleRecord;
 import com.diluv.confluencia.utils.SQLHandler;
 
 public class UserDatabase implements UserDAO {
+
+    private static final String COUNT_ALL = SQLHandler.readFile("user/countAll");
 
     private static final String EXISTS_USER_BY_EMAIL = SQLHandler.readFile("user/existsUserByEmail");
     private static final String EXISTS_USER_BY_USERNAME = SQLHandler.readFile("user/existsUserByUsername");
@@ -41,6 +41,21 @@ public class UserDatabase implements UserDAO {
     private static final String INSERT_PASSWORD_RESET = SQLHandler.readFile("user_reset/insertPasswordReset");
     private static final String DELETE_PASSWORD_RESET = SQLHandler.readFile("user_reset/deletePasswordReset");
     private static final String FIND_ONE_PASSWORD_RESET_BY_EMAIL_AND_CODE = SQLHandler.readFile("user_reset/findOnePasswordResetByEmailAndCode");
+
+    @Override
+    public long countAll () {
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(COUNT_ALL)) {
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getLong(1);
+                }
+            }
+        }
+        catch (SQLException e) {
+            Confluencia.LOGGER.error("Failed to run countAll.", e);
+        }
+        return 0;
+    }
 
     @Override
     public boolean existsUserByEmail (String email) {
