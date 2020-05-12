@@ -12,7 +12,7 @@ public class TestGameDatabase extends ConfluenciaTest {
     public void findOneBySlug () {
 
         // Allowed
-        Assertions.assertNotNull(ConfluenciaTest.GAME.findOneBySlug("minecraft"));
+        Assertions.assertNotNull(ConfluenciaTest.GAME.findOneBySlug("minecraft-je"));
 
         // Not found
         Assertions.assertNull(ConfluenciaTest.GAME.findOneBySlug("notfound"));
@@ -34,14 +34,14 @@ public class TestGameDatabase extends ConfluenciaTest {
     public void findAllGameVersionsByGameSlug () {
 
         Assertions.assertEquals(0, ConfluenciaTest.GAME.findAllGameVersionsByGameSlug("invalid").size());
-        Assertions.assertFalse(ConfluenciaTest.GAME.findAllGameVersionsByGameSlug("minecraft").isEmpty());
+        Assertions.assertFalse(ConfluenciaTest.GAME.findAllGameVersionsByGameSlug("minecraft-je").isEmpty());
     }
 
     @Test
     public void findGameVersionsByGameSlugAndVersions () {
 
-        Assertions.assertEquals(2, ConfluenciaTest.GAME.findGameVersionsByGameSlugAndVersions("minecraft", new String[]{"1.15.2", "1.12.2"}).size());
-        Assertions.assertEquals(1, ConfluenciaTest.GAME.findGameVersionsByGameSlugAndVersions("minecraft", new String[]{"1.15.2", "invalid"}).size());
-        Assertions.assertEquals(0, ConfluenciaTest.GAME.findGameVersionsByGameSlugAndVersions("minecraft", new String[]{"invalid"}).size());
+        Assertions.assertEquals(2, ConfluenciaTest.GAME.findGameVersionsByGameSlugAndVersions("minecraft-je", new String[]{"1.15.2", "1.12.2"}).size());
+        Assertions.assertEquals(1, ConfluenciaTest.GAME.findGameVersionsByGameSlugAndVersions("minecraft-je", new String[]{"1.15.2", "invalid"}).size());
+        Assertions.assertEquals(0, ConfluenciaTest.GAME.findGameVersionsByGameSlugAndVersions("minecraft-je", new String[]{"invalid"}).size());
     }
 }
