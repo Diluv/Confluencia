@@ -1,7 +1,5 @@
-INSERT INTO games(slug, name, url, image_url, banner_url)
-VALUES ('minecraft', 'Minecraft', 'https://www.minecraft.net',
-        'https://download.nodecdn.net/containers/diluvstaging/games/minecraft-je/minecraft-je.png',
-        'https://images.placeholders.dev/?width=1200&height=150');
+INSERT INTO games(slug, name, url)
+VALUES ('minecraft', 'Minecraft', 'https://www.minecraft.net');
 
 INSERT INTO project_types(game_slug, slug, name, max_file_size)
 VALUES ('minecraft', 'mods', 'Mods', 25000000);
