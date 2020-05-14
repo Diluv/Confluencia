@@ -11,6 +11,7 @@ public class TestUserDatabase extends ConfluenciaTest {
 
     @Test
     public void countAll () {
+
         Assertions.assertEquals(3, ConfluenciaTest.USER.countAll());
     }
 

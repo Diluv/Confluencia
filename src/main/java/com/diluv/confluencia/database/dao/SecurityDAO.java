@@ -1,11 +1,11 @@
 package com.diluv.confluencia.database.dao;
 
+import java.util.List;
+import java.util.Map;
+
 import com.diluv.confluencia.database.record.CompromisedPasswordRecord;
 import com.diluv.confluencia.database.record.EmailSendRecord;
 import com.diluv.confluencia.database.record.ReferenceTokenRecord;
-
-import java.util.List;
-import java.util.Map;
 
 public interface SecurityDAO {
 

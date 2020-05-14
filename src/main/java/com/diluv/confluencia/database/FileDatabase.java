@@ -1,5 +1,12 @@
 package com.diluv.confluencia.database;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.diluv.confluencia.Confluencia;
 import com.diluv.confluencia.database.dao.FileDAO;
 import com.diluv.confluencia.database.record.FileProcessingStatus;
@@ -7,13 +14,6 @@ import com.diluv.confluencia.database.record.GameVersionRecord;
 import com.diluv.confluencia.database.record.ProjectFileRecord;
 import com.diluv.confluencia.database.sort.ProjectFileSort;
 import com.diluv.confluencia.utils.SQLHandler;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class FileDatabase implements FileDAO {
 

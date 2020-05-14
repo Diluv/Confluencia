@@ -1,15 +1,16 @@
 package com.diluv.confluencia.database;
 
-import com.diluv.confluencia.ConfluenciaTest;
-import com.diluv.confluencia.database.sort.ProjectSort;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import com.diluv.confluencia.ConfluenciaTest;
+import com.diluv.confluencia.database.sort.ProjectSort;
 
 public class TestProjectDatabase extends ConfluenciaTest {
 
     @Test
     public void countAll () {
+
         Assertions.assertEquals(128, ConfluenciaTest.PROJECT.countAll());
     }
 

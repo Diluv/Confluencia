@@ -10,7 +10,7 @@ import com.diluv.confluencia.database.record.UserRoleRecord;
 
 public interface UserDAO {
 
-    long countAll();
+    long countAll ();
 
     boolean existsUserByEmail (String email);
 

@@ -42,6 +42,7 @@ public class ProjectDatabase implements ProjectDAO {
 
     @Override
     public long countAll () {
+
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(COUNT_ALL)) {
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {

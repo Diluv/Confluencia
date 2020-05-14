@@ -44,6 +44,7 @@ public class UserDatabase implements UserDAO {
 
     @Override
     public long countAll () {
+
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(COUNT_ALL)) {
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {

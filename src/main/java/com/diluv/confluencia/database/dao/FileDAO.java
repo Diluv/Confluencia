@@ -32,7 +32,7 @@ public interface FileDAO {
 
     List<GameVersionRecord> findAllGameVersionsById (long projectFileId);
 
-    boolean insertProjectFileDependency(long projectFileId, List<Long> dependencyIds);
+    boolean insertProjectFileDependency (long projectFileId, List<Long> dependencyIds);
 
     boolean insertProjectFileGameVersions (long projectFileId, List<Long> versionIds);
 
