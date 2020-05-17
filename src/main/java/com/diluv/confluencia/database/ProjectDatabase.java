@@ -9,7 +9,7 @@ import java.util.StringJoiner;
 
 import com.diluv.confluencia.Confluencia;
 import com.diluv.confluencia.database.dao.ProjectDAO;
-import com.diluv.confluencia.database.record.CategoryRecord;
+import com.diluv.confluencia.database.record.TagRecord;
 import com.diluv.confluencia.database.record.ProjectAuthorRecord;
 import com.diluv.confluencia.database.record.ProjectLinkRecord;
 import com.diluv.confluencia.database.record.ProjectRecord;
@@ -36,8 +36,8 @@ public class ProjectDatabase implements ProjectDAO {
     private static final String FIND_ALL_PROJECTTYPES_BY_GAMESLUG = SQLHandler.readFile("project_types/findAllByGameSlug");
     private static final String FIND_ONE_PROJECTTYPES_BY_GAMESLUG_AND_PROJECTYPESLUG = SQLHandler.readFile("project_types/findOneByGameSlugAndProjectTypeSlug");
 
-    private static final String FIND_ALL_CATEGORIES_BY_GAMESLUG_AND_PROJECTYPESLUG = SQLHandler.readFile("category/findAllCategoriesByGameSlugAndProjectTypeSlug");
-    private static final String FIND_ALL_CATEGORIES_BY_PROJECT_ID = SQLHandler.readFile("category/findAllCategoriesByProjectId");
+    private static final String FIND_ALL_TAGS_BY_GAMESLUG_AND_PROJECTYPESLUG = SQLHandler.readFile("tags/findAllTagsByGameSlugAndProjectTypeSlug");
+    private static final String FIND_ALL_TAGS_BY_PROJECT_ID = SQLHandler.readFile("tags/findAllTagsByProjectId");
 
 
     @Override
@@ -279,42 +279,42 @@ public class ProjectDatabase implements ProjectDAO {
     }
 
     @Override
-    public List<CategoryRecord> findAllCategoriesByGameSlugAndProjectTypeSlug (String gameSlug, String projectTypeSlug) {
+    public List<TagRecord> findAllTagsByGameSlugAndProjectTypeSlug (String gameSlug, String projectTypeSlug) {
 
-        List<CategoryRecord> categories = new ArrayList<>();
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL_CATEGORIES_BY_GAMESLUG_AND_PROJECTYPESLUG)) {
+        List<TagRecord> tags = new ArrayList<>();
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL_TAGS_BY_GAMESLUG_AND_PROJECTYPESLUG)) {
             stmt.setString(1, gameSlug);
             stmt.setString(2, projectTypeSlug);
 
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    categories.add(new CategoryRecord(rs));
+                    tags.add(new TagRecord(rs));
                 }
             }
         }
         catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to run findAllCategoriesByGameSlugAndProjectTypeSlug database script for game slug {}.", gameSlug, e);
+            Confluencia.LOGGER.error("Failed to run findAllTagsByGameSlugAndProjectTypeSlug database script for game slug {}.", gameSlug, e);
         }
-        return categories;
+        return tags;
     }
 
     @Override
-    public List<CategoryRecord> findAllCategoriesByProjectId (long projectId) {
+    public List<TagRecord> findAllTagsByProjectId (long projectId) {
 
-        List<CategoryRecord> categories = new ArrayList<>();
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL_CATEGORIES_BY_PROJECT_ID)) {
+        List<TagRecord> tags = new ArrayList<>();
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL_TAGS_BY_PROJECT_ID)) {
             stmt.setLong(1, projectId);
 
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    categories.add(new CategoryRecord(rs));
+                    tags.add(new TagRecord(rs));
                 }
             }
         }
         catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to run findAllCategoriesByProjectId database script for project id {}.", projectId, e);
+            Confluencia.LOGGER.error("Failed to run findAllTagsByProjectId database script for project id {}.", projectId, e);
         }
-        return categories;
+        return tags;
     }
 
     @Override

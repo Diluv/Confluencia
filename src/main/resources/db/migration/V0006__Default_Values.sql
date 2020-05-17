@@ -4,8 +4,8 @@ VALUES ('minecraft-je', 'Minecraft Java Edition', 'https://www.minecraft.net');
 INSERT INTO project_types(game_slug, slug, name, max_file_size)
 VALUES ('minecraft-je', 'mods', 'Mods', 25000000);
 
-INSERT INTO categories(game_slug, project_type_slug, slug, name, icon_url)
-VALUES ('minecraft-je', 'mods', 'tech', 'Tech', 'https://images.placeholders.dev/?width=1200&height=150');
+INSERT INTO tags(game_slug, project_type_slug, slug, name)
+VALUES ('minecraft-je', 'mods', 'tech', 'Tech');
 
 INSERT INTO game_versions(game_slug, version, type, released)
 VALUES ('minecraft-je', '20w10a', 'snapshot', STR_TO_DATE('2020-03-04T16:21:41', '%Y-%m-%dT%H:%i:%s')),

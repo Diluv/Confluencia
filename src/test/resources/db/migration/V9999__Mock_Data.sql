@@ -490,7 +490,7 @@ INSERT INTO project_author_permissions(project_author_id, permission)
 VALUES (6, 'project.upload'),
        (6, 'project.edit');
 
-INSERT INTO project_categories(project_id, categories_id)
+INSERT INTO project_tags(project_id, tag_id)
 VALUES (1, 1);
 
 INSERT INTO project_links(project_id, type, url)

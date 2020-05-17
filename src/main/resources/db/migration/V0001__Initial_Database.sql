@@ -81,7 +81,7 @@ CREATE TABLE project_types
     FOREIGN KEY (game_slug) REFERENCES games (slug)
 );
 
-CREATE TABLE categories
+CREATE TABLE tags
 (
     id                BIGINT       NOT NULL AUTO_INCREMENT,
 
@@ -90,7 +90,6 @@ CREATE TABLE categories
     slug              VARCHAR(200) NOT NULL,
 
     name              VARCHAR(200) NOT NULL,
-    icon_url          VARCHAR(255) NOT NULL,
 
     PRIMARY KEY (id),
     FOREIGN KEY (game_slug) REFERENCES games (slug),
@@ -156,14 +155,14 @@ CREATE TABLE project_author_permissions
     FOREIGN KEY (project_author_id) REFERENCES project_authors (id)
 );
 
-CREATE TABLE project_categories
+CREATE TABLE project_tags
 (
-    project_id    BIGINT NOT NULL,
-    categories_id BIGINT NOT NULL,
+    project_id BIGINT NOT NULL,
+    tag_id     BIGINT NOT NULL,
 
-    PRIMARY KEY (project_id, categories_id),
+    PRIMARY KEY (project_id, tag_id),
     FOREIGN KEY (project_id) REFERENCES projects (id),
-    FOREIGN KEY (categories_id) REFERENCES categories (id)
+    FOREIGN KEY (tag_id) REFERENCES tags (id)
 );
 
 CREATE TABLE project_files
