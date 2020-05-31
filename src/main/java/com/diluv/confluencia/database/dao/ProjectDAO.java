@@ -1,17 +1,15 @@
 package com.diluv.confluencia.database.dao;
 
-import java.util.List;
-
-import com.diluv.confluencia.database.record.TagRecord;
-import com.diluv.confluencia.database.record.ProjectAuthorRecord;
-import com.diluv.confluencia.database.record.ProjectLinkRecord;
-import com.diluv.confluencia.database.record.ProjectRecord;
-import com.diluv.confluencia.database.record.ProjectTypeRecord;
+import com.diluv.confluencia.database.record.*;
 import com.diluv.confluencia.database.sort.ProjectSort;
+
+import java.util.List;
 
 public interface ProjectDAO {
 
     long countAll ();
+
+    long countAllByGameSlug (String gameSlug);
 
     boolean insertProject (String slug, String name, String summary, String description, long userId, String gameSlug, String projectTypeSlug);
 

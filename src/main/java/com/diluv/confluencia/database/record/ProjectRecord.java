@@ -14,7 +14,9 @@ public class ProjectRecord {
     private final long createdAt;
     private final long updatedAt;
     private final String gameSlug;
+    private final String gameName;
     private final String projectTypeSlug;
+    private final String projectTypeName;
     private final boolean released;
     private final boolean review;
     private final long userId;
@@ -33,33 +35,15 @@ public class ProjectRecord {
         this.createdAt = rs.getTimestamp("created_at").getTime();
         this.updatedAt = rs.getTimestamp("updated_at").getTime();
         this.gameSlug = rs.getString("game_slug");
+        this.gameName = rs.getString("game_name");
         this.projectTypeSlug = rs.getString("project_type_slug");
+        this.projectTypeName = rs.getString("project_type_name");
         this.review = rs.getBoolean("review");
         this.released = rs.getBoolean("released");
         this.userId = rs.getLong("user_id");
         this.username = rs.getString("username");
         this.userDisplayName = rs.getString("display_name");
         this.userCreatedAt = rs.getTimestamp("user_created_at").getTime();
-    }
-
-    public ProjectRecord (long id, String name, String slug, String summary, String description, long cachedDownloads, long createdAt, long updatedAt, String gameSlug, String projectTypeSlug, boolean released, boolean review, long userId, String username, String userDisplayName, long userCreatedAt) {
-
-        this.id = id;
-        this.name = name;
-        this.slug = slug;
-        this.summary = summary;
-        this.description = description;
-        this.cachedDownloads = cachedDownloads;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.gameSlug = gameSlug;
-        this.projectTypeSlug = projectTypeSlug;
-        this.released = released;
-        this.review = review;
-        this.userId = userId;
-        this.username = username;
-        this.userDisplayName = userDisplayName;
-        this.userCreatedAt = userCreatedAt;
     }
 
     public long getId () {
@@ -107,9 +91,19 @@ public class ProjectRecord {
         return this.gameSlug;
     }
 
+    public String getGameName () {
+
+        return this.gameName;
+    }
+
     public String getProjectTypeSlug () {
 
         return this.projectTypeSlug;
+    }
+
+    public String getProjectTypeName () {
+
+        return this.projectTypeName;
     }
 
     public boolean isReleased () {

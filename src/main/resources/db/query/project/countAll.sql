@@ -1,3 +1,3 @@
-SELECT COUNT(*)
-FROM projects
-WHERE released = TRUE;
+SELECT COUNT(p.id)
+FROM projects p
+WHERE p.released = TRUE;

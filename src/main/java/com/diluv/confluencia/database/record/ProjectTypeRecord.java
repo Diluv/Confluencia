@@ -7,6 +7,7 @@ public class ProjectTypeRecord {
     private final String slug;
     private final String name;
     private final String gameSlug;
+    private final String gameName;
     private final long maxFileSize;
     private final long projectCount;
 
@@ -15,6 +16,7 @@ public class ProjectTypeRecord {
         this.slug = rs.getString("slug");
         this.name = rs.getString("name");
         this.gameSlug = rs.getString("game_slug");
+        this.gameName = rs.getString("game_name");
         this.maxFileSize = rs.getLong("max_file_size");
         this.projectCount = rs.getLong("project_count");
     }
@@ -32,6 +34,11 @@ public class ProjectTypeRecord {
     public String getGameSlug () {
 
         return this.gameSlug;
+    }
+
+    public String getGameName () {
+
+        return this.gameName;
     }
 
     public long getMaxFileSize () {

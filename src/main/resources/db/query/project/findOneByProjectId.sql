@@ -7,7 +7,9 @@ SELECT p.id,
        p.created_at,
        p.updated_at,
        p.game_slug,
+       g.name       AS game_name,
        p.project_type_slug,
+       pt.name      AS project_type_name,
        p.released,
        p.review,
        p.user_id,
@@ -16,5 +18,7 @@ SELECT p.id,
        u.created_at AS user_created_at
 FROM projects p
          JOIN users u ON (u.id = p.user_id)
+         JOIN games g ON (p.game_slug = g.slug)
+         JOIN project_types pt ON (p.project_type_slug = pt.slug)
 WHERE p.id = ?
 LIMIT 1;

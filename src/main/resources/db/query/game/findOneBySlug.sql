@@ -1,6 +1,6 @@
-SELECT slug,
-       name,
-       url
-FROM games
-WHERE slug = ?
+SELECT g.slug,
+       g.name,
+       g.url
+FROM games g
+WHERE g.slug = ?
 LIMIT 1;

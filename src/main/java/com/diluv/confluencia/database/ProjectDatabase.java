@@ -9,17 +9,18 @@ import java.util.StringJoiner;
 
 import com.diluv.confluencia.Confluencia;
 import com.diluv.confluencia.database.dao.ProjectDAO;
-import com.diluv.confluencia.database.record.TagRecord;
 import com.diluv.confluencia.database.record.ProjectAuthorRecord;
 import com.diluv.confluencia.database.record.ProjectLinkRecord;
 import com.diluv.confluencia.database.record.ProjectRecord;
 import com.diluv.confluencia.database.record.ProjectTypeRecord;
+import com.diluv.confluencia.database.record.TagRecord;
 import com.diluv.confluencia.database.sort.ProjectSort;
 import com.diluv.confluencia.utils.SQLHandler;
 
 public class ProjectDatabase implements ProjectDAO {
 
     private static final String COUNT_ALL = SQLHandler.readFile("project/countAll");
+    private static final String COUNT_ALL_BY_GAME_SLUG = SQLHandler.readFile("project/countAllByGameSlug");
     private static final String INSERT_PROJECT = SQLHandler.readFile("project/insertProject");
     private static final String FIND_ALL_BY_USERNAME = SQLHandler.readFile("project/findAllByUsername");
     private static final String FIND_ALL_BY_PROJECT_IDS = SQLHandler.readFile("project/findAllByProjectIds");
@@ -39,7 +40,6 @@ public class ProjectDatabase implements ProjectDAO {
     private static final String FIND_ALL_TAGS_BY_GAMESLUG_AND_PROJECTYPESLUG = SQLHandler.readFile("tags/findAllTagsByGameSlugAndProjectTypeSlug");
     private static final String FIND_ALL_TAGS_BY_PROJECT_ID = SQLHandler.readFile("tags/findAllTagsByProjectId");
 
-
     @Override
     public long countAll () {
 
@@ -52,6 +52,23 @@ public class ProjectDatabase implements ProjectDAO {
         }
         catch (SQLException e) {
             Confluencia.LOGGER.error("Failed to run countAll.", e);
+        }
+        return 0;
+    }
+
+    @Override
+    public long countAllByGameSlug (String gameSlug) {
+
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(COUNT_ALL_BY_GAME_SLUG)) {
+            stmt.setString(1, gameSlug);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getLong(1);
+                }
+            }
+        }
+        catch (SQLException e) {
+            Confluencia.LOGGER.error("Failed to run countAllByGameSlug.", e);
         }
         return 0;
     }
