@@ -13,7 +13,7 @@ import com.diluv.confluencia.database.record.ProjectLinkRecord;
 import com.diluv.confluencia.database.record.ProjectRecord;
 import com.diluv.confluencia.database.record.ProjectTypeRecord;
 import com.diluv.confluencia.database.record.TagRecord;
-import com.diluv.confluencia.database.sort.ProjectSort;
+import com.diluv.confluencia.database.sort.Sort;
 import com.diluv.confluencia.utils.SQLHandler;
 
 public class ProjectDatabase {
@@ -125,7 +125,7 @@ public class ProjectDatabase {
         return null;
     }
 
-    public List<ProjectRecord> findAllByUsername (String username, boolean authorized, long page, int limit, ProjectSort sort) {
+    public List<ProjectRecord> findAllByUsername (String username, boolean authorized, long page, int limit, Sort sort) {
 
         List<ProjectRecord> projects = new ArrayList<>();
         try (PreparedStatement stmt = sort.getQuery(FIND_ALL_BY_USERNAME)) {
@@ -174,7 +174,7 @@ public class ProjectDatabase {
                                                                         String search,
                                                                         long page,
                                                                         int limit,
-                                                                        ProjectSort sort) {
+                                                                        Sort sort) {
 
         List<ProjectRecord> projects = new ArrayList<>();
 
@@ -201,7 +201,7 @@ public class ProjectDatabase {
                                                                                   String search,
                                                                                   long page,
                                                                                   int limit,
-                                                                                  ProjectSort sort,
+                                                                                  Sort sort,
                                                                                   String version) {
 
         List<ProjectRecord> projects = new ArrayList<>();

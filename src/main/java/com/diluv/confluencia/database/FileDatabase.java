@@ -11,7 +11,7 @@ import com.diluv.confluencia.Confluencia;
 import com.diluv.confluencia.database.record.FileProcessingStatus;
 import com.diluv.confluencia.database.record.GameVersionRecord;
 import com.diluv.confluencia.database.record.ProjectFileRecord;
-import com.diluv.confluencia.database.sort.ProjectFileSort;
+import com.diluv.confluencia.database.sort.Sort;
 import com.diluv.confluencia.utils.SQLHandler;
 
 public class FileDatabase {
@@ -157,7 +157,7 @@ public class FileDatabase {
         return null;
     }
 
-    public List<ProjectFileRecord> findAllByProjectId (long projectId, boolean authorized, long page, int limit, ProjectFileSort sort) {
+    public List<ProjectFileRecord> findAllByProjectId (long projectId, boolean authorized, long page, int limit, Sort sort) {
 
         List<ProjectFileRecord> projects = new ArrayList<>();
 
@@ -179,7 +179,7 @@ public class FileDatabase {
         return projects;
     }
 
-    public List<ProjectFileRecord> findAllByProjectIdWhereVersion (long projectId, boolean authorized, long page, int limit, ProjectFileSort sort, String version) {
+    public List<ProjectFileRecord> findAllByProjectIdWhereVersion (long projectId, boolean authorized, long page, int limit, Sort sort, String version) {
 
         List<ProjectFileRecord> projects = new ArrayList<>();
 

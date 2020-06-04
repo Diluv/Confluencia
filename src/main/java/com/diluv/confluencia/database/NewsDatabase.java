@@ -8,14 +8,14 @@ import java.util.List;
 
 import com.diluv.confluencia.Confluencia;
 import com.diluv.confluencia.database.record.NewsRecord;
-import com.diluv.confluencia.database.sort.NewsSort;
+import com.diluv.confluencia.database.sort.Sort;
 import com.diluv.confluencia.utils.SQLHandler;
 
 public class NewsDatabase {
     private static final String FIND_ALL = SQLHandler.readFile("news/findAll");
     private static final String FIND_ONE_BY_SLUG = SQLHandler.readFile("news/findAllBySlug");
 
-    public List<NewsRecord> findAll (long page, int limit, NewsSort sort) {
+    public List<NewsRecord> findAll (long page, int limit, Sort sort) {
 
         List<NewsRecord> news = new ArrayList<>();
 

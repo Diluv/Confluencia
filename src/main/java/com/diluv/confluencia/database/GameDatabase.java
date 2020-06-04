@@ -10,7 +10,7 @@ import java.util.StringJoiner;
 import com.diluv.confluencia.Confluencia;
 import com.diluv.confluencia.database.record.GameRecord;
 import com.diluv.confluencia.database.record.GameVersionRecord;
-import com.diluv.confluencia.database.sort.GameSort;
+import com.diluv.confluencia.database.sort.Sort;
 import com.diluv.confluencia.utils.SQLHandler;
 
 public class GameDatabase {
@@ -23,7 +23,7 @@ public class GameDatabase {
     private static final String FIND_ALL_GAME_VERSIONS_BY_GAMESLUG = SQLHandler.readFile("game/findAllGameVersionsByGameSlug");
     private static final String FIND_GAME_VERSIONS_BY_GAME_SLUG_AND_VERSIONS = SQLHandler.readFile("game/findGameVersionsByGameSlugAndVersions");
 
-    public List<GameRecord> findAll (GameSort sort) {
+    public List<GameRecord> findAll (Sort sort) {
 
         List<GameRecord> gameRecords = new ArrayList<>();
         try (PreparedStatement stmt = sort.getQuery(FIND_ALL)) {

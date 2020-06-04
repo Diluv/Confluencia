@@ -8,7 +8,9 @@ import org.junit.jupiter.api.Test;
 
 import com.diluv.confluencia.ConfluenciaTest;
 import com.diluv.confluencia.database.record.FileProcessingStatus;
+import com.diluv.confluencia.database.sort.Order;
 import com.diluv.confluencia.database.sort.ProjectFileSort;
+import com.diluv.confluencia.database.sort.Sort;
 
 public class TestFileDatabase extends ConfluenciaTest {
 

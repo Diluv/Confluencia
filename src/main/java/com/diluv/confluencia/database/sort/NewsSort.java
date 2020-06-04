@@ -1,34 +1,26 @@
 package com.diluv.confluencia.database.sort;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.diluv.confluencia.Confluencia;
+public class NewsSort {
 
-public enum NewsSort {
+    private static final List<Sort> LIST = new ArrayList<>();
 
-    OLD("created_at", Order.ASC),
-    NEW("created_at", Order.DESC);
+    public static final Sort OLD = addSort(new Sort("Oldest", "created_at", Order.ASC));
+    public static final Sort NEW = addSort(new Sort("Newest", "created_at", Order.DESC));
 
-    public final String sort;
-    public final String order;
+    private static Sort addSort (Sort sort) {
 
-    NewsSort (String sort, Order order) {
-
-        this.sort = sort;
-        this.order = order.name;
+        LIST.add(sort);
+        return sort;
     }
 
-    public PreparedStatement getQuery (String query) throws SQLException {
+    public static Sort fromString (String text, Sort defaultSort) {
 
-        return Confluencia.connection().prepareStatement(query.replace("'%sort%'", this.sort).replace("'%order%'", this.order));
-    }
-
-    public static NewsSort fromString (String text, NewsSort defaultSort) {
-
-        for (NewsSort b : NewsSort.values()) {
-            if (b.name().equalsIgnoreCase(text)) {
-                return b;
+        for (Sort sort : LIST) {
+            if (sort.getSort().equalsIgnoreCase(text)) {
+                return sort;
             }
         }
         return defaultSort;
