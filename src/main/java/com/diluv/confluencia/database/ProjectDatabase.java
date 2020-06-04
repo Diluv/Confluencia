@@ -169,15 +169,21 @@ public class ProjectDatabase {
         return projects;
     }
 
-    public List<ProjectRecord> findAllProjectsByGameSlugAndProjectType (String gameSlug, String projectTypeSlug, long page, int limit, ProjectSort sort) {
+    public List<ProjectRecord> findAllProjectsByGameSlugAndProjectType (String gameSlug,
+                                                                        String projectTypeSlug,
+                                                                        String search,
+                                                                        long page,
+                                                                        int limit,
+                                                                        ProjectSort sort) {
 
         List<ProjectRecord> projects = new ArrayList<>();
 
         try (PreparedStatement stmt = sort.getQuery(FIND_ALL_BY_GAMESLUG_AND_PROJECTYPESLUG)) {
             stmt.setString(1, gameSlug);
             stmt.setString(2, projectTypeSlug);
-            stmt.setLong(3, (page - 1) * limit);
-            stmt.setLong(4, limit);
+            stmt.setString(3, search);
+            stmt.setLong(4, (page - 1) * limit);
+            stmt.setLong(5, limit);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     projects.add(new ProjectRecord(rs));
@@ -190,7 +196,13 @@ public class ProjectDatabase {
         return projects;
     }
 
-    public List<ProjectRecord> findAllProjectsByGameSlugAndProjectTypeAndVersion (String gameSlug, String projectTypeSlug, long page, int limit, ProjectSort sort, String version) {
+    public List<ProjectRecord> findAllProjectsByGameSlugAndProjectTypeAndVersion (String gameSlug,
+                                                                                  String projectTypeSlug,
+                                                                                  String search,
+                                                                                  long page,
+                                                                                  int limit,
+                                                                                  ProjectSort sort,
+                                                                                  String version) {
 
         List<ProjectRecord> projects = new ArrayList<>();
 
@@ -198,8 +210,9 @@ public class ProjectDatabase {
             stmt.setString(1, gameSlug);
             stmt.setString(2, projectTypeSlug);
             stmt.setString(3, version);
-            stmt.setLong(4, (page - 1) * limit);
-            stmt.setLong(5, limit);
+            stmt.setString(4, search);
+            stmt.setLong(5, (page - 1) * limit);
+            stmt.setLong(6, limit);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     projects.add(new ProjectRecord(rs));

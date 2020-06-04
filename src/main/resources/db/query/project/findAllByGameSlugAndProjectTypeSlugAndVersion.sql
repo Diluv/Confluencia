@@ -27,5 +27,6 @@ WHERE p.released = TRUE
   AND p.game_slug = ?
   AND p.project_type_slug = ?
   AND gv.version = ?
+  AND p.name LIKE ?
 ORDER BY '%sort%' '%order%'
 LIMIT ?, ?;

@@ -23,5 +23,6 @@ FROM projects p
 WHERE p.released = TRUE
   AND p.game_slug = ?
   AND p.project_type_slug = ?
+  AND p.name LIKE ?
 ORDER BY '%sort%' '%order%'
 LIMIT ?, ?;

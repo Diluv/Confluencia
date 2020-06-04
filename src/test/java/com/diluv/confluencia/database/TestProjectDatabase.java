@@ -69,15 +69,15 @@ public class TestProjectDatabase extends ConfluenciaTest {
     @Test
     public void findAllProjectsByGameSlugAndProjectType () {
 
-        Assertions.assertEquals(0, ConfluenciaTest.PROJECT.findAllProjectsByGameSlugAndProjectType("invalid", "invalid", 1, 10, ProjectSort.NEW).size());
-        Assertions.assertEquals(0, ConfluenciaTest.PROJECT.findAllProjectsByGameSlugAndProjectType("minecraft-je", "invalid", 1, 10, ProjectSort.NEW).size());
-        Assertions.assertEquals(10, ConfluenciaTest.PROJECT.findAllProjectsByGameSlugAndProjectType("minecraft-je", "mods", 1, 10, ProjectSort.NEW).size());
+        Assertions.assertEquals(0, ConfluenciaTest.PROJECT.findAllProjectsByGameSlugAndProjectType("invalid", "invalid", "%%", 1, 10, ProjectSort.NEW).size());
+        Assertions.assertEquals(0, ConfluenciaTest.PROJECT.findAllProjectsByGameSlugAndProjectType("minecraft-je", "invalid", "%%", 1, 10, ProjectSort.NEW).size());
+        Assertions.assertEquals(10, ConfluenciaTest.PROJECT.findAllProjectsByGameSlugAndProjectType("minecraft-je", "mods", "%%", 1, 10, ProjectSort.NEW).size());
     }
 
     @Test
     public void findAllProjectsByGameSlugAndProjectTypeAndVersion () {
 
-        Assertions.assertEquals(1, ConfluenciaTest.PROJECT.findAllProjectsByGameSlugAndProjectTypeAndVersion("minecraft-je", "mods", 1, 10, ProjectSort.NEW, "1.15.2").size());
+        Assertions.assertEquals(1, ConfluenciaTest.PROJECT.findAllProjectsByGameSlugAndProjectTypeAndVersion("minecraft-je", "mods", "%%", 1, 10, ProjectSort.NEW, "1.15.2").size());
     }
 
     @Test
