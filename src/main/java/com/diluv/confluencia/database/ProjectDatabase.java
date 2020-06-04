@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.StringJoiner;
 
 import com.diluv.confluencia.Confluencia;
-import com.diluv.confluencia.database.dao.ProjectDAO;
 import com.diluv.confluencia.database.record.ProjectAuthorRecord;
 import com.diluv.confluencia.database.record.ProjectLinkRecord;
 import com.diluv.confluencia.database.record.ProjectRecord;
@@ -17,7 +16,7 @@ import com.diluv.confluencia.database.record.TagRecord;
 import com.diluv.confluencia.database.sort.ProjectSort;
 import com.diluv.confluencia.utils.SQLHandler;
 
-public class ProjectDatabase implements ProjectDAO {
+public class ProjectDatabase {
 
     private static final String COUNT_ALL = SQLHandler.readFile("project/countAll");
     private static final String COUNT_ALL_BY_GAME_SLUG = SQLHandler.readFile("project/countAllByGameSlug");
@@ -40,7 +39,6 @@ public class ProjectDatabase implements ProjectDAO {
     private static final String FIND_ALL_TAGS_BY_GAMESLUG_AND_PROJECTYPESLUG = SQLHandler.readFile("tags/findAllTagsByGameSlugAndProjectTypeSlug");
     private static final String FIND_ALL_TAGS_BY_PROJECT_ID = SQLHandler.readFile("tags/findAllTagsByProjectId");
 
-    @Override
     public long countAll () {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(COUNT_ALL)) {
@@ -56,7 +54,6 @@ public class ProjectDatabase implements ProjectDAO {
         return 0;
     }
 
-    @Override
     public long countAllByGameSlug (String gameSlug) {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(COUNT_ALL_BY_GAME_SLUG)) {
@@ -73,7 +70,6 @@ public class ProjectDatabase implements ProjectDAO {
         return 0;
     }
 
-    @Override
     public boolean insertProject (String slug, String name, String summary, String description, long userId, String gameSlug, String projectTypeSlug) {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(INSERT_PROJECT)) {
@@ -93,7 +89,6 @@ public class ProjectDatabase implements ProjectDAO {
         return false;
     }
 
-    @Override
     public ProjectRecord findOneProjectByProjectId (long id) {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ONE_BY_PROJECTID)) {
@@ -111,7 +106,6 @@ public class ProjectDatabase implements ProjectDAO {
         return null;
     }
 
-    @Override
     public ProjectRecord findOneProjectByGameSlugAndProjectTypeSlugAndProjectSlug (String gameSlug, String projectTypeSlug, String projectSlug) {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ONE_BY_GAMESLUG_AND_PROJECTYPESLUG_AND_PROJECTSLUG)) {
@@ -131,7 +125,6 @@ public class ProjectDatabase implements ProjectDAO {
         return null;
     }
 
-    @Override
     public List<ProjectRecord> findAllByUsername (String username, boolean authorized, long page, int limit, ProjectSort sort) {
 
         List<ProjectRecord> projects = new ArrayList<>();
@@ -152,7 +145,6 @@ public class ProjectDatabase implements ProjectDAO {
         return projects;
     }
 
-    @Override
     public List<ProjectRecord> findAllProjectsByProjectIds (long[] projectIds) {
 
         StringJoiner b = new StringJoiner(",");
@@ -177,7 +169,6 @@ public class ProjectDatabase implements ProjectDAO {
         return projects;
     }
 
-    @Override
     public List<ProjectRecord> findAllProjectsByGameSlugAndProjectType (String gameSlug, String projectTypeSlug, long page, int limit, ProjectSort sort) {
 
         List<ProjectRecord> projects = new ArrayList<>();
@@ -199,7 +190,6 @@ public class ProjectDatabase implements ProjectDAO {
         return projects;
     }
 
-    @Override
     public List<ProjectRecord> findAllProjectsByGameSlugAndProjectTypeAndVersion (String gameSlug, String projectTypeSlug, long page, int limit, ProjectSort sort, String version) {
 
         List<ProjectRecord> projects = new ArrayList<>();
@@ -222,7 +212,6 @@ public class ProjectDatabase implements ProjectDAO {
         return projects;
     }
 
-    @Override
     public List<ProjectRecord> findFeaturedProjects () {
 
         List<ProjectRecord> projects = new ArrayList<>();
@@ -239,7 +228,6 @@ public class ProjectDatabase implements ProjectDAO {
         return projects;
     }
 
-    @Override
     public List<ProjectAuthorRecord> findAllProjectAuthorsByProjectId (long projectId) {
 
         List<ProjectAuthorRecord> projectAuthors = new ArrayList<>();
@@ -258,7 +246,6 @@ public class ProjectDatabase implements ProjectDAO {
         return projectAuthors;
     }
 
-    @Override
     public List<ProjectTypeRecord> findAllProjectTypesByGameSlug (String gameSlug) {
 
         List<ProjectTypeRecord> projects = new ArrayList<>();
@@ -276,7 +263,6 @@ public class ProjectDatabase implements ProjectDAO {
         return projects;
     }
 
-    @Override
     public ProjectTypeRecord findOneProjectTypeByGameSlugAndProjectTypeSlug (String gameSlug, String projectTypeSlug) {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ONE_PROJECTTYPES_BY_GAMESLUG_AND_PROJECTYPESLUG)) {
@@ -295,7 +281,6 @@ public class ProjectDatabase implements ProjectDAO {
         return null;
     }
 
-    @Override
     public List<TagRecord> findAllTagsByGameSlugAndProjectTypeSlug (String gameSlug, String projectTypeSlug) {
 
         List<TagRecord> tags = new ArrayList<>();
@@ -315,7 +300,6 @@ public class ProjectDatabase implements ProjectDAO {
         return tags;
     }
 
-    @Override
     public List<TagRecord> findAllTagsByProjectId (long projectId) {
 
         List<TagRecord> tags = new ArrayList<>();
@@ -334,7 +318,6 @@ public class ProjectDatabase implements ProjectDAO {
         return tags;
     }
 
-    @Override
     public List<ProjectLinkRecord> findAllLinksByProjectId (long id) {
 
         List<ProjectLinkRecord> projectLinks = new ArrayList<>();

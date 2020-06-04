@@ -8,14 +8,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.diluv.confluencia.Confluencia;
-import com.diluv.confluencia.database.dao.UserDAO;
 import com.diluv.confluencia.database.record.PasswordResetRecord;
 import com.diluv.confluencia.database.record.TempUserRecord;
 import com.diluv.confluencia.database.record.UserRecord;
 import com.diluv.confluencia.database.record.UserRoleRecord;
 import com.diluv.confluencia.utils.SQLHandler;
 
-public class UserDatabase implements UserDAO {
+public class UserDatabase {
 
     private static final String COUNT_ALL = SQLHandler.readFile("user/countAll");
 
@@ -42,7 +41,6 @@ public class UserDatabase implements UserDAO {
     private static final String DELETE_PASSWORD_RESET = SQLHandler.readFile("user_reset/deletePasswordReset");
     private static final String FIND_ONE_PASSWORD_RESET_BY_EMAIL_AND_CODE = SQLHandler.readFile("user_reset/findOnePasswordResetByEmailAndCode");
 
-    @Override
     public long countAll () {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(COUNT_ALL)) {
@@ -58,7 +56,6 @@ public class UserDatabase implements UserDAO {
         return 0;
     }
 
-    @Override
     public boolean existsUserByEmail (String email) {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(EXISTS_USER_BY_EMAIL)) {
@@ -74,7 +71,6 @@ public class UserDatabase implements UserDAO {
         return false;
     }
 
-    @Override
     public boolean existsUserByUsername (String username) {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(EXISTS_USER_BY_USERNAME)) {
@@ -90,7 +86,6 @@ public class UserDatabase implements UserDAO {
         return false;
     }
 
-    @Override
     public UserRecord findOneByUsername (String username) {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_USER_BY_USERNAME)) {
@@ -108,7 +103,6 @@ public class UserDatabase implements UserDAO {
         return null;
     }
 
-    @Override
     public UserRecord findOneByUserId (long userId) {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_USER_BY_USER_ID)) {
@@ -126,7 +120,6 @@ public class UserDatabase implements UserDAO {
         return null;
     }
 
-    @Override
     public boolean insertUser (String email, String username, String displayName, String password, String passwordType, Timestamp createdAt) {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(INSERT_USER)) {
@@ -145,7 +138,6 @@ public class UserDatabase implements UserDAO {
         return false;
     }
 
-    @Override
     public boolean updateUserPasswordByUserId (long userId, String password) {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(UPDATE_PASSWORD_BY_USERID)) {
@@ -160,7 +152,6 @@ public class UserDatabase implements UserDAO {
         return false;
     }
 
-    @Override
     public boolean existsTempUserByEmail (String email) {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(EXISTS_TEMPUSER_BY_EMAIL)) {
@@ -176,7 +167,6 @@ public class UserDatabase implements UserDAO {
         return true;
     }
 
-    @Override
     public boolean existsTempUserByUsername (String username) {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(EXISTS_TEMPUSER_BY_USERNAME)) {
@@ -192,7 +182,6 @@ public class UserDatabase implements UserDAO {
         return true;
     }
 
-    @Override
     public boolean insertTempUser (String email, String username, String password, String passwordType, String verificationCode) {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(INSERT_TEMPUSER)) {
@@ -210,7 +199,6 @@ public class UserDatabase implements UserDAO {
         return false;
     }
 
-    @Override
     public boolean updateTempUser (String email, String username, String verificationCode) {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(UPDATE_TEMPUSER)) {
@@ -226,7 +214,6 @@ public class UserDatabase implements UserDAO {
         return false;
     }
 
-    @Override
     public TempUserRecord findTempUserByEmailAndUsername (String email, String username) {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_TEMPUSER_BY_EMAIL_AND_USERNAME)) {
@@ -245,7 +232,6 @@ public class UserDatabase implements UserDAO {
         return null;
     }
 
-    @Override
     public TempUserRecord findTempUserByEmailAndCode (String email, String code) {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_TEMPUSER_BY_EMAIL_AND_CODE)) {
@@ -264,7 +250,6 @@ public class UserDatabase implements UserDAO {
         return null;
     }
 
-    @Override
     public boolean deleteTempUser (String email, String username) {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(DELETE_TEMPUSER)) {
@@ -279,7 +264,6 @@ public class UserDatabase implements UserDAO {
         return false;
     }
 
-    @Override
     public boolean deleteAllRefreshTokensByUserId (long userId) {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(DELETE_ALL_REFRESH_TOKENS_BY_USERID)) {
@@ -294,7 +278,6 @@ public class UserDatabase implements UserDAO {
         return false;
     }
 
-    @Override
     public List<UserRoleRecord> findAllUserRolesByUserId (long userId) {
 
         List<UserRoleRecord> userRoles = new ArrayList<>();
@@ -313,7 +296,6 @@ public class UserDatabase implements UserDAO {
         return userRoles;
     }
 
-    @Override
     public boolean insertPasswordReset (long userId, String code) {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(INSERT_PASSWORD_RESET)) {
@@ -329,7 +311,6 @@ public class UserDatabase implements UserDAO {
         return false;
     }
 
-    @Override
     public boolean deletePasswordReset (long userId, String code) {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(DELETE_PASSWORD_RESET)) {
@@ -345,7 +326,6 @@ public class UserDatabase implements UserDAO {
         return false;
     }
 
-    @Override
     public PasswordResetRecord findOnePasswordResetByEmailAndCode (String email, String code) {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ONE_PASSWORD_RESET_BY_EMAIL_AND_CODE)) {

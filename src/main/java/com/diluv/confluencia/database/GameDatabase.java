@@ -8,13 +8,12 @@ import java.util.List;
 import java.util.StringJoiner;
 
 import com.diluv.confluencia.Confluencia;
-import com.diluv.confluencia.database.dao.GameDAO;
 import com.diluv.confluencia.database.record.GameRecord;
 import com.diluv.confluencia.database.record.GameVersionRecord;
 import com.diluv.confluencia.database.sort.GameSort;
 import com.diluv.confluencia.utils.SQLHandler;
 
-public class GameDatabase implements GameDAO {
+public class GameDatabase {
 
     private static final String FIND_ALL = SQLHandler.readFile("game/findAll");
     private static final String FIND_ONE_BY_SLUG = SQLHandler.readFile("game/findOneBySlug");
@@ -24,7 +23,6 @@ public class GameDatabase implements GameDAO {
     private static final String FIND_ALL_GAME_VERSIONS_BY_GAMESLUG = SQLHandler.readFile("game/findAllGameVersionsByGameSlug");
     private static final String FIND_GAME_VERSIONS_BY_GAME_SLUG_AND_VERSIONS = SQLHandler.readFile("game/findGameVersionsByGameSlugAndVersions");
 
-    @Override
     public List<GameRecord> findAll (GameSort sort) {
 
         List<GameRecord> gameRecords = new ArrayList<>();
@@ -41,7 +39,6 @@ public class GameDatabase implements GameDAO {
         return gameRecords;
     }
 
-    @Override
     public GameRecord findOneBySlug (String name) {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ONE_BY_SLUG)) {
@@ -59,7 +56,6 @@ public class GameDatabase implements GameDAO {
         return null;
     }
 
-    @Override
     public List<GameRecord> findFeaturedGames () {
 
         List<GameRecord> gameRecords = new ArrayList<>();
@@ -76,7 +72,6 @@ public class GameDatabase implements GameDAO {
         return gameRecords;
     }
 
-    @Override
     public List<GameVersionRecord> findAllGameVersionsByGameSlug (String gameSlug) {
 
         List<GameVersionRecord> gameVersions = new ArrayList<>();
@@ -94,7 +89,6 @@ public class GameDatabase implements GameDAO {
         return gameVersions;
     }
 
-    @Override
     public List<GameVersionRecord> findGameVersionsByGameSlugAndVersions (String gameSlug, String[] versions) {
 
         StringJoiner b = new StringJoiner(",");

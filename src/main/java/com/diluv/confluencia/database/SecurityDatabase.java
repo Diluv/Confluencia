@@ -8,13 +8,12 @@ import java.util.List;
 import java.util.Map;
 
 import com.diluv.confluencia.Confluencia;
-import com.diluv.confluencia.database.dao.SecurityDAO;
 import com.diluv.confluencia.database.record.CompromisedPasswordRecord;
 import com.diluv.confluencia.database.record.EmailSendRecord;
 import com.diluv.confluencia.database.record.ReferenceTokenRecord;
 import com.diluv.confluencia.utils.SQLHandler;
 
-public class SecurityDatabase implements SecurityDAO {
+public class SecurityDatabase {
     private static final String INSERT_DOMAIN_BLACKLIST = SQLHandler.readFile("email/insertDomainBlacklist");
     private static final String EXISTS_BLACKLIST = SQLHandler.readFile("email/existsBlacklist");
 
@@ -28,7 +27,6 @@ public class SecurityDatabase implements SecurityDAO {
 
     private static final String FIND_PERSISTED_GRANTS_BY_KEY_AND_TYPE = SQLHandler.readFile("persisted_grants/findPersistedGrantsByKeyAndType");
 
-    @Override
     public boolean insertDomainBlacklist (String[] domains) {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(INSERT_DOMAIN_BLACKLIST)) {
@@ -45,7 +43,6 @@ public class SecurityDatabase implements SecurityDAO {
         return false;
     }
 
-    @Override
     public boolean existsBlacklist (String email, String domain) {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(EXISTS_BLACKLIST)) {
@@ -64,7 +61,6 @@ public class SecurityDatabase implements SecurityDAO {
         return false;
     }
 
-    @Override
     public boolean insertEmailSent (String messageId, String email, String type) {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(INSERT_EMAIL_SENT)) {
@@ -80,7 +76,6 @@ public class SecurityDatabase implements SecurityDAO {
         return false;
     }
 
-    @Override
     public boolean existsEmailSent (String messageId) {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(EXISTS_EMAIL_SENT)) {
@@ -96,7 +91,6 @@ public class SecurityDatabase implements SecurityDAO {
         return false;
     }
 
-    @Override
     public EmailSendRecord findEmailSentByEmailAndType (String email, String type) {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_EMAIL_SENT_BY_EMAIL_AND_TYPE)) {
@@ -115,7 +109,6 @@ public class SecurityDatabase implements SecurityDAO {
         return null;
     }
 
-    @Override
     public List<EmailSendRecord> findEmailSentByEmail (String email) {
 
         List<EmailSendRecord> emailSendRecords = new ArrayList<>();
@@ -135,7 +128,6 @@ public class SecurityDatabase implements SecurityDAO {
         return emailSendRecords;
     }
 
-    @Override
     public boolean insertPassword (Map<String, Long> hashOccurrences) {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(INSERT_PASSWORD)) {
@@ -154,7 +146,6 @@ public class SecurityDatabase implements SecurityDAO {
         return false;
     }
 
-    @Override
     public CompromisedPasswordRecord findOnePasswordByHash (String hash) {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_PASSWORD_BY_HASH)) {
@@ -172,7 +163,6 @@ public class SecurityDatabase implements SecurityDAO {
         return null;
     }
 
-    @Override
     public ReferenceTokenRecord findPersistedGrantByKeyAndType (String key, String type) {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_PERSISTED_GRANTS_BY_KEY_AND_TYPE)) {

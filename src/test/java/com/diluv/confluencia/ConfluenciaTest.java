@@ -10,12 +10,6 @@ import com.diluv.confluencia.database.NewsDatabase;
 import com.diluv.confluencia.database.ProjectDatabase;
 import com.diluv.confluencia.database.SecurityDatabase;
 import com.diluv.confluencia.database.UserDatabase;
-import com.diluv.confluencia.database.dao.FileDAO;
-import com.diluv.confluencia.database.dao.GameDAO;
-import com.diluv.confluencia.database.dao.NewsDAO;
-import com.diluv.confluencia.database.dao.ProjectDAO;
-import com.diluv.confluencia.database.dao.SecurityDAO;
-import com.diluv.confluencia.database.dao.UserDAO;
 
 @Testcontainers
 public abstract class ConfluenciaTest {
@@ -27,12 +21,12 @@ public abstract class ConfluenciaTest {
         CONTAINER.start();
     }
 
-    public static final SecurityDAO SECURITY = new SecurityDatabase();
-    public static final FileDAO FILE = new FileDatabase();
-    public static final GameDAO GAME = new GameDatabase();
-    public static final ProjectDAO PROJECT = new ProjectDatabase();
-    public static final UserDAO USER = new UserDatabase();
-    public static final NewsDAO NEWS = new NewsDatabase();
+    public static final SecurityDatabase SECURITY = new SecurityDatabase();
+    public static final FileDatabase FILE = new FileDatabase();
+    public static final GameDatabase GAME = new GameDatabase();
+    public static final ProjectDatabase PROJECT = new ProjectDatabase();
+    public static final UserDatabase USER = new UserDatabase();
+    public static final NewsDatabase NEWS = new NewsDatabase();
 
     private static boolean init;
 

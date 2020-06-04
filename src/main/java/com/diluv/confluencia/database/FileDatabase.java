@@ -8,14 +8,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.diluv.confluencia.Confluencia;
-import com.diluv.confluencia.database.dao.FileDAO;
 import com.diluv.confluencia.database.record.FileProcessingStatus;
 import com.diluv.confluencia.database.record.GameVersionRecord;
 import com.diluv.confluencia.database.record.ProjectFileRecord;
 import com.diluv.confluencia.database.sort.ProjectFileSort;
 import com.diluv.confluencia.utils.SQLHandler;
 
-public class FileDatabase implements FileDAO {
+public class FileDatabase {
 
     private static final String INSERT_PROJECT_FILE = SQLHandler.readFile("project_files/insertProjectFile");
     private static final String UPDATE_STATUS_BY_ID = SQLHandler.readFile("project_files/updateStatusById");
@@ -34,7 +33,6 @@ public class FileDatabase implements FileDAO {
 
     private static final String EXISTS_BY_PROJECT_ID_AND_VERSION = SQLHandler.readFile("project_files/existsByProjectIdAndVersion");
 
-    @Override
     public boolean updateStatusById (FileProcessingStatus status, long id) throws SQLException {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(UPDATE_STATUS_BY_ID)) {
@@ -47,7 +45,6 @@ public class FileDatabase implements FileDAO {
         return false;
     }
 
-    @Override
     public boolean updateStatusByStatus (FileProcessingStatus set, FileProcessingStatus where) {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(UPDATE_STATUS_BY_STATUS)) {
@@ -63,7 +60,6 @@ public class FileDatabase implements FileDAO {
         return false;
     }
 
-    @Override
     public List<ProjectFileRecord> findAllWhereStatusAndLimit (FileProcessingStatus status, int amount) {
 
         final List<ProjectFileRecord> fileQueueRecord = new ArrayList<>();
@@ -82,7 +78,6 @@ public class FileDatabase implements FileDAO {
         return fileQueueRecord;
     }
 
-    @Override
     public List<ProjectFileRecord> getLatestFiles (int amount) throws SQLException {
 
         List<ProjectFileRecord> fileQueueRecord;
@@ -112,7 +107,6 @@ public class FileDatabase implements FileDAO {
         return fileQueueRecord;
     }
 
-    @Override
     public Long insertProjectFile (String name, String version, long size, String changelog, String sha512, String releaseType, String classifier, long projectId, long userId) {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(INSERT_PROJECT_FILE, new String[]{"id"})) {
@@ -146,7 +140,6 @@ public class FileDatabase implements FileDAO {
         return null;
     }
 
-    @Override
     public ProjectFileRecord findOneProjectFileQueueByFileId (long fileId) {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ONE_PROJECT_FILE_QUEUE_BY_FILE_ID)) {
@@ -164,7 +157,6 @@ public class FileDatabase implements FileDAO {
         return null;
     }
 
-    @Override
     public List<ProjectFileRecord> findAllByProjectId (long projectId, boolean authorized, long page, int limit, ProjectFileSort sort) {
 
         List<ProjectFileRecord> projects = new ArrayList<>();
@@ -187,7 +179,6 @@ public class FileDatabase implements FileDAO {
         return projects;
     }
 
-    @Override
     public List<ProjectFileRecord> findAllByProjectIdWhereVersion (long projectId, boolean authorized, long page, int limit, ProjectFileSort sort, String version) {
 
         List<ProjectFileRecord> projects = new ArrayList<>();
@@ -211,7 +202,6 @@ public class FileDatabase implements FileDAO {
         return projects;
     }
 
-    @Override
     public boolean insertProjectFileAntivirus (long projectFileId, String malware) {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(INSERT_PROJECT_FILE_ANTIVIRUS)) {
@@ -227,7 +217,6 @@ public class FileDatabase implements FileDAO {
         return false;
     }
 
-    @Override
     public List<Long> findAllProjectDependenciesById (long projectFileId) {
 
         List<Long> projectId = new ArrayList<>();
@@ -246,7 +235,6 @@ public class FileDatabase implements FileDAO {
         return projectId;
     }
 
-    @Override
     public List<GameVersionRecord> findAllGameVersionsById (long projectFileId) {
 
         List<GameVersionRecord> gameVersions = new ArrayList<>();
@@ -265,7 +253,6 @@ public class FileDatabase implements FileDAO {
         return gameVersions;
     }
 
-    @Override
     public boolean insertProjectFileDependency (long projectFileId, List<Long> dependencyIds) {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(INSERT_PROJECT_FILE_DEPENDENCIES)) {
@@ -283,7 +270,6 @@ public class FileDatabase implements FileDAO {
         return false;
     }
 
-    @Override
     public boolean insertProjectFileGameVersions (long projectFileId, List<Long> versionIds) {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(INSERT_PROJECT_FILE_GAME_VERSION)) {
@@ -301,7 +287,6 @@ public class FileDatabase implements FileDAO {
         return false;
     }
 
-    @Override
     public boolean existsByProjectIdAndVersion (long projectId, String version) {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(EXISTS_BY_PROJECT_ID_AND_VERSION)) {
