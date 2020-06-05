@@ -16,14 +16,4 @@ public class GameSort {
         LIST.add(sort);
         return sort;
     }
-
-    public static Sort fromString (String text, Sort defaultSort) {
-
-        for (Sort sort : LIST) {
-            if (sort.getSlug().equalsIgnoreCase(text)) {
-                return sort;
-            }
-        }
-        return defaultSort;
-    }
 }
