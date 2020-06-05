@@ -35,7 +35,7 @@ public class ProjectDatabase {
 
     private static final String FIND_ALL_PROJECTTYPES_BY_GAMESLUG = SQLHandler.readFile("project_types/findAllByGameSlug");
     private static final String FIND_ONE_PROJECTTYPES_BY_GAMESLUG_AND_PROJECTYPESLUG = SQLHandler.readFile("project_types/findOneByGameSlugAndProjectTypeSlug");
-
+    private static final String FIND_DEFAULT_PROJECTTYPES_BY_GAMESLUG_AND_PROJECTYPESLUG = SQLHandler.readFile("project_types/findDefaultProjectTypesByGameSlug");
     private static final String FIND_ALL_TAGS_BY_GAMESLUG_AND_PROJECTYPESLUG = SQLHandler.readFile("tags/findAllTagsByGameSlugAndProjectTypeSlug");
     private static final String FIND_ALL_TAGS_BY_PROJECT_ID = SQLHandler.readFile("tags/findAllTagsByProjectId");
 
@@ -274,6 +274,23 @@ public class ProjectDatabase {
             Confluencia.LOGGER.error("Failed to run findAllProjectTypesByGameSlug database script for game slug {}.", gameSlug, e);
         }
         return projects;
+    }
+
+    public String findDefaultProjectTypesByGameSlug (String gameSlug) {
+
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_DEFAULT_PROJECTTYPES_BY_GAMESLUG_AND_PROJECTYPESLUG)) {
+            stmt.setString(1, gameSlug);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString(1);
+                }
+            }
+        }
+        catch (SQLException e) {
+            Confluencia.LOGGER.error("Failed to run findDefaultProjectTypesByGameSlug script for game {} .", gameSlug, e);
+        }
+        return null;
     }
 
     public ProjectTypeRecord findOneProjectTypeByGameSlugAndProjectTypeSlug (String gameSlug, String projectTypeSlug) {

@@ -81,6 +81,16 @@ CREATE TABLE project_types
     FOREIGN KEY (game_slug) REFERENCES games (slug)
 );
 
+CREATE TABLE default_project_type
+(
+    game_slug         VARCHAR(200) NOT NULL,
+    project_type_slug VARCHAR(200) NOT NULL,
+
+    PRIMARY KEY (game_slug),
+    FOREIGN KEY (game_slug) REFERENCES games (slug),
+    FOREIGN KEY (game_slug, project_type_slug) REFERENCES project_types (game_slug, slug)
+);
+
 CREATE TABLE tags
 (
     id                BIGINT       NOT NULL AUTO_INCREMENT,
