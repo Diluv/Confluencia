@@ -1,27 +1,34 @@
 package com.diluv.confluencia.database.sort;
 
+import com.diluv.confluencia.Confluencia;
+
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import com.diluv.confluencia.Confluencia;
-
 public class Sort {
 
+    private final String slug;
     private final String displayName;
-    private final String sort;
+    private final String column;
     private final String order;
 
-    public Sort (String displayName, String sort, Order order) {
+    public Sort (String slug, String displayName, String column, Order order) {
 
+        this.slug = slug;
         this.displayName = displayName;
-        this.sort = sort;
+        this.column = column;
         this.order = order.name;
     }
 
     public PreparedStatement getQuery (String query) throws SQLException {
 
-        final String replace = query.replace("'%sort%'", this.sort).replace("'%order%'", this.order);
+        final String replace = query.replace("'%sort%'", this.column).replace("'%order%'", this.order);
         return Confluencia.connection().prepareStatement(replace);
+    }
+
+    public String getSlug () {
+
+        return this.slug;
     }
 
     public String getDisplayName () {
@@ -29,9 +36,9 @@ public class Sort {
         return this.displayName;
     }
 
-    public String getSort () {
+    public String getColumn () {
 
-        return this.sort;
+        return this.column;
     }
 
     public String getOrder () {

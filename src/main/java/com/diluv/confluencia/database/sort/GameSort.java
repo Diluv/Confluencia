@@ -7,9 +7,9 @@ public class GameSort {
 
     public static final List<Sort> LIST = new ArrayList<>();
 
-    public static final Sort NAME = addSort(new Sort("Name", "name", Order.ASC));
-    public static final Sort OLD = addSort(new Sort("Oldest", "created_at", Order.ASC));
-    public static final Sort NEW = addSort(new Sort("Newest", "created_at", Order.DESC));
+    public static final Sort NAME = addSort(new Sort("name", "Name", "name", Order.ASC));
+    public static final Sort OLD = addSort(new Sort("old", "Oldest", "created_at", Order.ASC));
+    public static final Sort NEW = addSort(new Sort("new", "Newest", "created_at", Order.DESC));
 
     private static Sort addSort (Sort sort) {
 
@@ -20,7 +20,7 @@ public class GameSort {
     public static Sort fromString (String text, Sort defaultSort) {
 
         for (Sort sort : LIST) {
-            if (sort.getSort().equalsIgnoreCase(text)) {
+            if (sort.getSlug().equalsIgnoreCase(text)) {
                 return sort;
             }
         }
