@@ -19,9 +19,15 @@ public class TestGameDatabase extends ConfluenciaTest {
     }
 
     @Test
+    public void countAll () {
+
+        Assertions.assertEquals(2, ConfluenciaTest.GAME.countAll(""));
+    }
+
+    @Test
     public void findAll () {
 
-        Assertions.assertEquals(2, ConfluenciaTest.GAME.findAll(GameSort.NEW).size());
+        Assertions.assertEquals(2, ConfluenciaTest.GAME.findAll(1, 25, GameSort.NEW, "").size());
     }
 
     @Test
