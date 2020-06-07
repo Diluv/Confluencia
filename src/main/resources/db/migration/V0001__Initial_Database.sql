@@ -43,12 +43,12 @@ CREATE TABLE password_reset
 
 CREATE TABLE games
 (
-    slug       VARCHAR(200) NOT NULL,
+    slug                 VARCHAR(200) NOT NULL,
 
-    name       VARCHAR(255) NOT NULL,
-    url        VARCHAR(255) NOT NULL,
-
-    created_at TIMESTAMP    NOT NULL DEFAULT NOW(),
+    name                 VARCHAR(255) NOT NULL,
+    url                  VARCHAR(255) NOT NULL,
+    default_project_type VARCHAR(200) NOT NULL,
+    created_at           TIMESTAMP    NOT NULL DEFAULT NOW(),
 
     PRIMARY KEY (slug)
 );
@@ -75,20 +75,9 @@ CREATE TABLE project_types
     name          VARCHAR(200) NOT NULL,
 
     max_file_size BIGINT       NOT NULL DEFAULT 5000000,
-    project_count BIGINT       NOT NULL DEFAULT 0,
 
     PRIMARY KEY (game_slug, slug),
     FOREIGN KEY (game_slug) REFERENCES games (slug)
-);
-
-CREATE TABLE default_project_type
-(
-    game_slug         VARCHAR(200) NOT NULL,
-    project_type_slug VARCHAR(200) NOT NULL,
-
-    PRIMARY KEY (game_slug),
-    FOREIGN KEY (game_slug) REFERENCES games (slug),
-    FOREIGN KEY (game_slug, project_type_slug) REFERENCES project_types (game_slug, slug)
 );
 
 CREATE TABLE tags
@@ -263,14 +252,3 @@ CREATE TABLE featured_projects
     PRIMARY KEY (id),
     FOREIGN KEY (project_id) REFERENCES projects (id)
 );
-
-CREATE TRIGGER after_members_insert
-    AFTER INSERT
-    ON projects
-    FOR EACH ROW
-BEGIN
-    UPDATE project_types pt
-    SET project_count=project_count + 1
-    WHERE pt.slug = NEW.project_type_slug
-      AND pt.game_slug = NEW.game_slug;
-END;

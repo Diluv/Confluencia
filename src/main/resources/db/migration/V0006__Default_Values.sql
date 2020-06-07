@@ -1,5 +1,5 @@
-INSERT INTO games(slug, name, url)
-VALUES ('minecraft-je', 'Minecraft Java Edition', 'https://www.minecraft.net');
+INSERT INTO games(slug, name, url, default_project_type)
+VALUES ('minecraft-je', 'Minecraft Java Edition', 'https://www.minecraft.net', 'mods');
 
 INSERT INTO project_types(game_slug, slug, name, max_file_size)
 VALUES ('minecraft-je', 'mods', 'Mods', 25000000),
@@ -521,6 +521,3 @@ VALUES ('admin');
 
 INSERT INTO role_permissions(role_id, permission)
 VALUES (1, 'admin.view');
-
-INSERT INTO default_project_type(game_slug, project_type_slug)
-VALUES ('minecraft-je', 'mods');

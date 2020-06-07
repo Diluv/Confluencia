@@ -35,7 +35,6 @@ public class ProjectDatabase {
 
     private static final String FIND_ALL_PROJECTTYPES_BY_GAMESLUG = SQLHandler.readFile("project_types/findAllByGameSlug");
     private static final String FIND_ONE_PROJECTTYPES_BY_GAMESLUG_AND_PROJECTYPESLUG = SQLHandler.readFile("project_types/findOneByGameSlugAndProjectTypeSlug");
-    private static final String FIND_DEFAULT_PROJECTTYPES_BY_GAMESLUG_AND_PROJECTYPESLUG = SQLHandler.readFile("project_types/findDefaultProjectTypesByGameSlug");
     private static final String FIND_ALL_TAGS_BY_GAMESLUG_AND_PROJECTYPESLUG = SQLHandler.readFile("tags/findAllTagsByGameSlugAndProjectTypeSlug");
     private static final String FIND_ALL_TAGS_BY_PROJECT_ID = SQLHandler.readFile("tags/findAllTagsByProjectId");
 
@@ -181,7 +180,7 @@ public class ProjectDatabase {
         try (PreparedStatement stmt = sort.getQuery(FIND_ALL_BY_GAMESLUG_AND_PROJECTYPESLUG)) {
             stmt.setString(1, gameSlug);
             stmt.setString(2, projectTypeSlug);
-            stmt.setString(3, search);
+            stmt.setString(3, "%" + search + "%");
             stmt.setLong(4, (page - 1) * limit);
             stmt.setLong(5, limit);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -210,7 +209,7 @@ public class ProjectDatabase {
             stmt.setString(1, gameSlug);
             stmt.setString(2, projectTypeSlug);
             stmt.setString(3, version);
-            stmt.setString(4, search);
+            stmt.setString(4, "%" + search + "%");
             stmt.setLong(5, (page - 1) * limit);
             stmt.setLong(6, limit);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -276,28 +275,17 @@ public class ProjectDatabase {
         return projects;
     }
 
-    public String findDefaultProjectTypesByGameSlug (String gameSlug) {
-
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_DEFAULT_PROJECTTYPES_BY_GAMESLUG_AND_PROJECTYPESLUG)) {
-            stmt.setString(1, gameSlug);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getString(1);
-                }
-            }
-        }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to run findDefaultProjectTypesByGameSlug script for game {} .", gameSlug, e);
-        }
-        return null;
-    }
-
     public ProjectTypeRecord findOneProjectTypeByGameSlugAndProjectTypeSlug (String gameSlug, String projectTypeSlug) {
 
+        return findOneProjectTypeByGameSlugAndProjectTypeSlug(gameSlug, projectTypeSlug, "");
+    }
+
+    public ProjectTypeRecord findOneProjectTypeByGameSlugAndProjectTypeSlug (String gameSlug, String projectTypeSlug, String search) {
+
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ONE_PROJECTTYPES_BY_GAMESLUG_AND_PROJECTYPESLUG)) {
-            stmt.setString(1, gameSlug);
-            stmt.setString(2, projectTypeSlug);
+            stmt.setString(1, "%" + search + "%");
+            stmt.setString(2, gameSlug);
+            stmt.setString(3, projectTypeSlug);
 
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
