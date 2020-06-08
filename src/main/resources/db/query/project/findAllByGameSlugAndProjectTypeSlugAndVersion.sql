@@ -7,26 +7,26 @@ SELECT p.id,
        p.created_at,
        p.updated_at,
        p.game_slug,
-       g.name       AS game_name,
+       (SELECT g.name FROM games g WHERE g.slug = p.game_slug) AS game_name,
        p.project_type_slug,
-       pt.name      AS project_type_name,
+       (SELECT pt.name
+        FROM project_types pt
+        WHERE pt.game_slug = p.game_slug
+          AND pt.slug = p.project_type_slug)                   AS project_type_name,
        p.released,
        p.review,
        p.user_id,
        u.username,
        u.display_name,
-       u.created_at AS user_created_at
+       u.created_at                                            AS user_created_at
 FROM projects p
-         JOIN users u ON (u.id = p.user_id)
-         JOIN project_files pf on p.id = pf.project_id
-         JOIN project_file_game_versions pfgv on pf.id = pfgv.project_file_id
-         JOIN game_versions gv on pfgv.game_version_id = gv.id
-         JOIN games g ON (p.game_slug = g.slug)
-         JOIN project_types pt ON (p.project_type_slug = pt.slug)
+         LEFT OUTER JOIN users u ON (u.id = p.user_id)
+         LEFT OUTER JOIN project_files pf ON (p.id = pf.project_id)
+         LEFT OUTER JOIN project_file_game_versions pfgv ON (pf.id = pfgv.project_file_id)
+         LEFT OUTER JOIN game_versions gv ON (pfgv.game_version_id = gv.id)
 WHERE p.released = TRUE
   AND p.game_slug = ?
   AND p.project_type_slug = ?
   AND gv.version = ?
   AND p.name LIKE ?
-ORDER BY '%sort%' '%order%'
-LIMIT ?, ?;
+LIMIT ?, ?

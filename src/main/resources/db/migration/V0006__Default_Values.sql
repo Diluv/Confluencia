@@ -1,9 +1,13 @@
 INSERT INTO games(slug, name, url, default_project_type)
-VALUES ('minecraft-je', 'Minecraft Java Edition', 'https://www.minecraft.net', 'mods');
+VALUES ('minecraft-je', 'Minecraft Java Edition', 'https://www.minecraft.net', 'mods'),
+       ('minecraft-bedrock', 'Minecraft Bedrock Edition', 'https://www.minecraft.net', 'mods'),
+       ('minecraft-dungeons', 'Minecraft Dungeons', 'https://www.minecraftdungeons.net/', 'mods');
 
 INSERT INTO project_types(game_slug, slug, name, max_file_size)
 VALUES ('minecraft-je', 'mods', 'Mods', 25000000),
-       ('minecraft-je', 'maps', 'Maps', 25000000);
+       ('minecraft-je', 'maps', 'Maps', 25000000),
+       ('minecraft-bedrock', 'mods', 'Mods', 25000000),
+       ('minecraft-dungeons', 'mods', 'Mods', 25000000);
 
 INSERT INTO tags(game_slug, project_type_slug, slug, name)
 VALUES ('minecraft-je', 'mods', 'tech', 'Tech');

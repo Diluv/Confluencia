@@ -1,6 +1,3 @@
-INSERT INTO games(slug, name, url, default_project_type)
-VALUES ('rimworld', 'RimWorld', 'https://rimworldgame.com/', 'mods');
-
 INSERT INTO users(id, username, display_name, email, password, password_type, mfa, mfa_secret, created_at)
 VALUES (1, 'darkhax', 'Darkhax', 'darkhax@diluv.com', '$2y$12$Y09/RQkc7icbiOonlBqTeegjtk9VYPKamMTJqkFVtfKDawRwifc8i',
         'bcrypt', TRUE, NULL, NOW()),
@@ -589,7 +586,9 @@ INSERT INTO project_links(project_id, type, url)
 VALUES (1, 'Patreon', 'https://www.patreon.com/diluv');
 
 INSERT INTO featured_games(slug)
-VALUES ('minecraft-je');
+VALUES ('minecraft-je'),
+       ('minecraft-bedrock'),
+       ('minecraft-dungeons');
 
 INSERT INTO featured_projects(project_id)
 VALUES (1),
