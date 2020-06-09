@@ -23,8 +23,7 @@ public class ProjectDatabase {
     private static final String INSERT_PROJECT = SQLHandler.readFile("project/insertProject");
     private static final String FIND_ALL_BY_USERNAME = SQLHandler.readFile("project/findAllByUsername");
     private static final String FIND_ALL_BY_PROJECT_IDS = SQLHandler.readFile("project/findAllByProjectIds");
-    private static final String FIND_ALL_BY_GAMESLUG_AND_PROJECTYPESLUG = SQLHandler.readFile("project/findAllByGameSlugAndProjectTypeSlug");
-    private static final String FIND_ALL_BY_GAMESLUG_AND_PROJECTYPESLUG_AND_VERSION = SQLHandler.readFile("project/findAllByGameSlugAndProjectTypeSlugAndVersion");
+    private static final String FIND_ALL_BY_GAME_AND_PROJECTYPE = SQLHandler.readFile("project/findAllByGameAndProjectType");
     private static final String FIND_ONE_BY_GAMESLUG_AND_PROJECTYPESLUG_AND_PROJECTSLUG = SQLHandler.readFile("project/findOneByGameSlugAndProjectTypeSlugAndProjectSlug");
     private static final String FIND_ONE_BY_PROJECTID = SQLHandler.readFile("project/findOneByProjectId");
     private static final String FIND_ALL_LINKS_BY_PROJECTID = SQLHandler.readFile("project/findAllLinksByProjectId");
@@ -168,50 +167,46 @@ public class ProjectDatabase {
         return projects;
     }
 
-    public List<ProjectRecord> findAllProjectsByGameSlugAndProjectType (String gameSlug,
-                                                                        String projectTypeSlug,
-                                                                        String search,
-                                                                        long page,
-                                                                        int limit,
-                                                                        Sort sort) {
+    public List<ProjectRecord> findAllByGameAndProjectType (String gameSlug, String projectTypeSlug,
+                                                            String search, long page, int limit, Sort sort) {
 
-        List<ProjectRecord> projects = new ArrayList<>();
-
-        try (PreparedStatement stmt = sort.getQuery(FIND_ALL_BY_GAMESLUG_AND_PROJECTYPESLUG)) {
-            stmt.setString(1, gameSlug);
-            stmt.setString(2, projectTypeSlug);
-            stmt.setString(3, "%" + search + "%");
-            stmt.setLong(4, (page - 1) * limit);
-            stmt.setLong(5, limit);
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    projects.add(new ProjectRecord(rs));
-                }
-            }
-        }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to run findAllProjectsByGameSlugAndProjectType script for game {} and type {}.", gameSlug, projectTypeSlug, e);
-        }
-        return projects;
+        return this.findAllByGameAndProjectType(gameSlug, projectTypeSlug, search, page, limit, sort, null, null);
     }
 
-    public List<ProjectRecord> findAllProjectsByGameSlugAndProjectTypeAndVersion (String gameSlug,
-                                                                                  String projectTypeSlug,
-                                                                                  String search,
-                                                                                  long page,
-                                                                                  int limit,
-                                                                                  Sort sort,
-                                                                                  String version) {
+    public List<ProjectRecord> findAllByGameAndProjectType (String gameSlug, String projectTypeSlug,
+                                                            String search, long page, int limit,
+                                                            Sort sort, String version, String[] tags) {
 
+
+        final boolean hasNoTags = tags == null || tags.length == 0;
+        String query = FIND_ALL_BY_GAME_AND_PROJECTYPE;
+        if (!hasNoTags) {
+            StringJoiner b = new StringJoiner(",");
+            for (int i = 0; i < tags.length; i++) {
+                b.add("?");
+            }
+            query = query.replace("(?)", "(" + b.toString() + ")");
+        }
         List<ProjectRecord> projects = new ArrayList<>();
 
-        try (PreparedStatement stmt = sort.getQuery(FIND_ALL_BY_GAMESLUG_AND_PROJECTYPESLUG_AND_VERSION)) {
-            stmt.setString(1, gameSlug);
-            stmt.setString(2, projectTypeSlug);
-            stmt.setString(3, version);
-            stmt.setString(4, "%" + search + "%");
-            stmt.setLong(5, (page - 1) * limit);
-            stmt.setLong(6, limit);
+        try (PreparedStatement stmt = sort.getQuery(query)) {
+            int i = 1;
+            stmt.setString(i++, gameSlug);
+            stmt.setString(i++, projectTypeSlug);
+            stmt.setBoolean(i++, version == null);
+            stmt.setString(i++, version);
+            stmt.setBoolean(i++, hasNoTags);
+            if (hasNoTags) {
+                stmt.setString(i++, null);
+            }
+            else {
+                for (String tag : tags) {
+                    stmt.setString(i++, tag);
+                }
+            }
+            stmt.setString(i++, "%" + search + "%");
+            stmt.setLong(i++, (page - 1) * limit);
+            stmt.setLong(i++, limit);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     projects.add(new ProjectRecord(rs));

@@ -1,6 +1,6 @@
 INSERT INTO users(id, username, display_name, email, password, password_type, mfa, mfa_secret, created_at)
-VALUES (1, 'darkhax', 'Darkhax', 'darkhax@diluv.com', '$2y$12$Y09/RQkc7icbiOonlBqTeegjtk9VYPKamMTJqkFVtfKDawRwifc8i',
-        'bcrypt', TRUE, NULL, NOW()),
+VALUES (1, 'darkhax', 'Darkhax', 'darkhax@diluv.com',
+        '$2y$12$Y09/RQkc7icbiOonlBqTeegjtk9VYPKamMTJqkFVtfKDawRwifc8i', 'bcrypt', TRUE, NULL, NOW()),
        (2, 'jaredlll08', 'Jaredlll08', 'jaredlll08@diluv.com',
         '$2y$12$Y09/RQkc7icbiOonlBqTeegjtk9VYPKamMTJqkFVtfKDawRwifc8i', 'bcrypt', FALSE, NULL, NOW()),
        (3, 'lclc98', 'lclc98', 'lclc98@diluv.com',
@@ -386,8 +386,7 @@ This project is sponsored by Nodecraft! Use code Darkhax for 30% off your first 
        ('ModTweaker', 'modtweaker',
         'ModTweaker is an addon for CraftTweaker, a recipe manipulator utility for Minecraft. It allows you...',
         'ModTweaker is an addon for CraftTweaker, a recipe manipulator utility for Minecraft. It allows you...', 0, 0,
-        TRUE,
-        FROM_UNIXTIME(1401662691), FROM_UNIXTIME(1581643023), 2, 'minecraft-je', 'mods'),
+        TRUE, FROM_UNIXTIME(1401662691), FROM_UNIXTIME(1581643023), 2, 'minecraft-je', 'mods'),
        ('How Do I Do This Again?', 'how-do-i-do-this-again',
         'Randomizes the main menu button locations.',
         'Randomizes the main menu button locations.', 0, FALSE, TRUE,
@@ -564,6 +563,11 @@ This project is sponsored by Nodecraft! Use code Darkhax for 30% off your first 
         'Overhauls the select world screen and displays extra information!', 0, FALSE, TRUE,
         FROM_UNIXTIME(1481492093), FROM_UNIXTIME(1481492202), 2, 'minecraft-je', 'mods');
 
+INSERT INTO projects(name, slug, summary, description, cached_downloads, review, released, created_at, updated_at,
+                     user_id, game_slug, project_type_slug)
+VALUES ('Bookshelf Bedrock', 'bookshelf', 'A bedrock bookshelf', 'A bedrock bookshelf', 0, FALSE, TRUE,
+        NOW(), NOW(), 1, 'minecraft-bedrock', 'mods');
+
 INSERT INTO project_authors(project_id, user_id, role)
 VALUES (94, 1, 'Coauthor'),
        (44, 2, 'Coauthor'),
@@ -580,7 +584,8 @@ VALUES (6, 'project.upload'),
        (6, 'project.edit');
 
 INSERT INTO project_tags(project_id, tag_id)
-VALUES (1, 1);
+VALUES (1, 1),
+       (128, 3);
 
 INSERT INTO project_links(project_id, type, url)
 VALUES (1, 'Patreon', 'https://www.patreon.com/diluv');

@@ -10,7 +10,9 @@ VALUES ('minecraft-je', 'mods', 'Mods', 25000000),
        ('minecraft-dungeons', 'mods', 'Mods', 25000000);
 
 INSERT INTO tags(game_slug, project_type_slug, slug, name)
-VALUES ('minecraft-je', 'mods', 'tech', 'Tech');
+VALUES ('minecraft-je', 'mods', 'tech', 'Tech'),
+       ('minecraft-je', 'mods', 'magic', 'Magic'),
+       ('minecraft-bedrock', 'mods', 'magic', 'Magic');
 
 INSERT INTO game_versions(game_slug, version, type, released)
 VALUES ('minecraft-je', '20w10a', 'snapshot', STR_TO_DATE('2020-03-04T16:21:41', '%Y-%m-%dT%H:%i:%s')),
