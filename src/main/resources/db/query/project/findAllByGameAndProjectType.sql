@@ -36,4 +36,5 @@ WHERE p.released = TRUE
                              JOIN tags t ON (pt.tag_id = t.id)
                     WHERE t.slug IN (?)))
   AND p.name LIKE ?
+ORDER BY '%sort%' '%order%'
 LIMIT ?, ?
