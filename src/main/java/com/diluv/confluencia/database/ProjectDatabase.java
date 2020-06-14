@@ -178,6 +178,7 @@ public class ProjectDatabase {
                                                             Sort sort, String version, String[] tags) {
 
 
+        int tagLength = 0;
         final boolean hasNoTags = tags == null || tags.length == 0;
         String query = FIND_ALL_BY_GAME_AND_PROJECTYPE;
         if (!hasNoTags) {
@@ -186,6 +187,7 @@ public class ProjectDatabase {
                 b.add("?");
             }
             query = query.replace("(?)", "(" + b.toString() + ")");
+            tagLength = tags.length;
         }
         List<ProjectRecord> projects = new ArrayList<>();
 
@@ -204,6 +206,7 @@ public class ProjectDatabase {
                     stmt.setString(i++, tag);
                 }
             }
+            stmt.setInt(i++, tagLength);
             stmt.setString(i++, "%" + search + "%");
             stmt.setLong(i++, (page - 1) * limit);
             stmt.setLong(i++, limit);

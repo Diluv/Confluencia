@@ -79,7 +79,10 @@ public class TestProjectDatabase extends ConfluenciaTest {
 
         Assertions.assertEquals(1, ConfluenciaTest.PROJECT.findAllByGameAndProjectType("minecraft-je", "mods", "", 1, 10, ProjectSort.NEW, "1.15.2", new String[0]).size());
         Assertions.assertEquals(1, ConfluenciaTest.PROJECT.findAllByGameAndProjectType("minecraft-je", "mods", "", 1, 10, ProjectSort.NEW, "1.15.2", new String[]{"tech"}).size());
-        Assertions.assertEquals(1, ConfluenciaTest.PROJECT.findAllByGameAndProjectType("minecraft-je", "mods", "", 1, 10, ProjectSort.NEW, null, new String[]{"tech"}).size());
+        Assertions.assertEquals(1, ConfluenciaTest.PROJECT.findAllByGameAndProjectType("minecraft-je", "mods", "", 1, 10, ProjectSort.NEW, "1.15.2", new String[]{"tech"}).size());
+        Assertions.assertEquals(1, ConfluenciaTest.PROJECT.findAllByGameAndProjectType("minecraft-je", "mods", "", 1, 10, ProjectSort.NEW, null, new String[]{"tech", "magic"}).size());
+        Assertions.assertEquals(2, ConfluenciaTest.PROJECT.findAllByGameAndProjectType("minecraft-je", "mods", "", 1, 10, ProjectSort.NEW, null, new String[]{"magic"}).size());
+        Assertions.assertEquals(2, ConfluenciaTest.PROJECT.findAllByGameAndProjectType("minecraft-je", "mods", "", 1, 10, ProjectSort.NEW, null, new String[]{"tech"}).size());
     }
 
     @Test

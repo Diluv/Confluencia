@@ -585,7 +585,9 @@ VALUES (6, 'project.upload'),
 
 INSERT INTO project_tags(project_id, tag_id)
 VALUES (1, 1),
-       (128, 3);
+       (128, 2),
+       (2, 1),
+       (2, 2);
 
 INSERT INTO project_links(project_id, type, url)
 VALUES (1, 'Patreon', 'https://www.patreon.com/diluv');

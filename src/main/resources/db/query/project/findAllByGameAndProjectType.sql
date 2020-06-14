@@ -26,15 +26,20 @@ FROM projects p
 WHERE p.released = TRUE
   AND p.game_slug = ?
   AND p.project_type_slug = ?
-  AND (? OR p.id = (SELECT pf.project_id
-                    FROM project_files pf
-                             JOIN project_file_game_versions pfgv ON (pf.id = pfgv.project_file_id)
-                             JOIN game_versions gv ON (pfgv.game_version_id = gv.id)
-                    WHERE gv.version = ?))
-  AND (? OR p.id = (SELECT pt.project_id
-                    FROM project_tags pt
-                             JOIN tags t ON (pt.tag_id = t.id)
-                    WHERE t.slug IN (?)))
+  AND (? OR p.id IN (SELECT pf.project_id
+                     FROM project_files pf
+                              JOIN project_file_game_versions pfgv ON (pf.id = pfgv.project_file_id)
+                              JOIN game_versions gv ON (pfgv.game_version_id = gv.id)
+                     WHERE gv.version = ?
+                       AND gv.game_slug = p.game_slug))
+  AND (? OR p.id IN (SELECT pt.project_id
+                     FROM project_tags pt
+                              JOIN tags t ON (pt.tag_id = t.id)
+                     WHERE t.slug IN (?)
+                       AND t.game_slug = p.game_slug
+                       AND t.project_type_slug = p.project_type_slug
+                     GROUP BY pt.project_id
+                     HAVING COUNT(pt.project_id) = ?))
   AND p.name LIKE ?
 ORDER BY '%sort%' '%order%'
 LIMIT ?, ?
