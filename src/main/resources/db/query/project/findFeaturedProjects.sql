@@ -21,5 +21,6 @@ FROM featured_projects fp
          JOIN users u ON (u.id = p.user_id)
          JOIN games g ON (p.game_slug = g.slug)
          JOIN project_types pt ON (p.project_type_slug = pt.slug)
+GROUP BY (fp.project_id)
 ORDER BY RAND()
 LIMIT 4;
