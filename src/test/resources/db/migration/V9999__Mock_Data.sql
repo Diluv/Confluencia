@@ -11,10 +11,10 @@ VALUES (1, 'darkhax', 'Darkhax', 'darkhax@diluv.com',
 INSERT INTO user_roles(user_id, role_id)
 VALUES (2, 1);
 
-INSERT INTO temp_users(id, username, email, password, password_type, created_at, verificationCode)
-VALUES (1, 'tempuser', 'tempuser@diluv.com', '', '', NOW(), 'c1632ff7-367e-485f-91dd-92ab75903fa4'),
-       (2, 'tempuser2', 'tempuser2@diluv.com', '', '', NOW(), '14964974-663a-4005-9cf2-d1f390c3b2cc'),
-       (3, 'tempuser3', 'tempuser3@diluv.com', '', '', NOW(), '14164974-663a-4005-9cf2-d1f390c3b2cc');
+INSERT INTO temp_users(id, username, email, password, password_type, created_at, verification_code)
+VALUES (1, 'tempuser', 'tempuser@diluv.com', '', '', NOW(), '26757111'),
+       (2, 'tempuser2', 'tempuser2@diluv.com', '', '', NOW(), '10931681'),
+       (3, 'tempuser3', 'tempuser3@diluv.com', '', '', NOW(), '51601365');
 
 INSERT INTO projects(name, slug, summary, description, cached_downloads, review, released, created_at, updated_at,
                      user_id, game_slug, project_type_slug)
@@ -620,8 +620,8 @@ INSERT INTO email_domain_blacklist(domain)
 VALUES ('banned.com'),
        ('banned2.com');
 
-INSERT INTO email_blacklist (email)
-VALUES ('blacklisted@diluv.com');
+INSERT INTO email_blacklist (email, reason)
+VALUES ('blacklisted@diluv.com', 'Example disabled email');
 
 INSERT INTO email_sent(message_id, email, type, sent_at)
 VALUES ('e4a291f7-740a-4b88-bc32-63e97e2d0812', 'test@diluv.com', 'test', NOW());

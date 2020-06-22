@@ -25,7 +25,7 @@ CREATE TABLE temp_users
     password_type    VARCHAR(30)  NOT NULL,
     created_at       TIMESTAMP    NOT NULL DEFAULT NOW(),
 
-    verificationCode CHAR(36)     NOT NULL,
+    verification_code CHAR(8)     NOT NULL,
 
     PRIMARY KEY (id)
 );

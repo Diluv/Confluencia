@@ -9,7 +9,7 @@ public class TempUserRecord extends BaseUserRecord {
     public TempUserRecord (ResultSet rs) throws SQLException {
 
         super(rs);
-        this.verificationCode = rs.getString("verificationCode");
+        this.verificationCode = rs.getString("verification_code");
     }
 
     public String getVerificationCode () {

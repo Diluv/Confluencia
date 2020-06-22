@@ -4,8 +4,8 @@ SELECT id,
        password,
        password_type,
        created_at,
-       verificationCode
+       verification_code
 FROM temp_users
 WHERE email = ?
-  AND verificationCode = ?
+  AND verification_code = ?
 LIMIT 1;
