@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import com.diluv.confluencia.ConfluenciaTest;
 import com.diluv.confluencia.database.sort.ProjectSort;
 
+import java.util.Arrays;
+
 public class TestProjectDatabase extends ConfluenciaTest {
 
     @Test
@@ -100,7 +102,7 @@ public class TestProjectDatabase extends ConfluenciaTest {
     @Test
     public void insertProject () {
 
-        Assertions.assertTrue(ConfluenciaTest.PROJECT.insertProject("project_insert", "Insert", "Insert Summary", "Insert Description", 2, "minecraft-je", "mods"));
+        Assertions.assertNotNull(ConfluenciaTest.PROJECT.insertProject("project_insert", "Insert", "Insert Summary", "Insert Description", 2, "minecraft-je", "mods"));
     }
 
     @Test
@@ -121,5 +123,11 @@ public class TestProjectDatabase extends ConfluenciaTest {
     public void findAllLinksByProjectId () {
 
         Assertions.assertEquals(1, ConfluenciaTest.PROJECT.findAllLinksByProjectId(1).size());
+    }
+
+    @Test
+    public void insertProjectTags () {
+
+        Assertions.assertTrue(ConfluenciaTest.PROJECT.insertProjectTags(25, Arrays.asList(1L, 2L)));
     }
 }

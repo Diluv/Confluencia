@@ -36,6 +36,7 @@ public class ProjectDatabase {
     private static final String FIND_ONE_PROJECTTYPES_BY_GAMESLUG_AND_PROJECTYPESLUG = SQLHandler.readFile("project_types/findOneByGameSlugAndProjectTypeSlug");
     private static final String FIND_ALL_TAGS_BY_GAMESLUG_AND_PROJECTYPESLUG = SQLHandler.readFile("tags/findAllTagsByGameSlugAndProjectTypeSlug");
     private static final String FIND_ALL_TAGS_BY_PROJECT_ID = SQLHandler.readFile("tags/findAllTagsByProjectId");
+    private static final String INSERT_PROJECT_TAG = SQLHandler.readFile("tags/insertProjectTags");
 
     public long countAll () {
 
@@ -68,9 +69,9 @@ public class ProjectDatabase {
         return 0;
     }
 
-    public boolean insertProject (String slug, String name, String summary, String description, long userId, String gameSlug, String projectTypeSlug) {
+    public Long insertProject (String slug, String name, String summary, String description, long userId, String gameSlug, String projectTypeSlug) {
 
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(INSERT_PROJECT)) {
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(INSERT_PROJECT, new String[]{"id"})) {
             stmt.setString(1, slug);
             stmt.setString(2, name);
             stmt.setString(3, summary);
@@ -79,12 +80,24 @@ public class ProjectDatabase {
             stmt.setString(6, gameSlug);
             stmt.setString(7, projectTypeSlug);
 
-            return stmt.executeUpdate() == 1;
+            int affectedRows = stmt.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Creating project file failed, no rows affected.");
+            }
+
+            try (ResultSet rs = stmt.getGeneratedKeys()) {
+                if (rs.next()) {
+                    return rs.getLong(1);
+                }
+                else {
+                    throw new SQLException("Creating project file failed, no ID obtained.");
+                }
+            }
         }
         catch (SQLException e) {
             Confluencia.LOGGER.error("Failed to run insertProject script for project {} with name {} by {}.", slug, name, userId, e);
         }
-        return false;
+        return null;
     }
 
     public ProjectRecord findOneProjectByProjectId (long id) {
@@ -349,5 +362,21 @@ public class ProjectDatabase {
             Confluencia.LOGGER.error("Failed to run findAllLinksByProjectId database script for projectId {}.", id, e);
         }
         return projectLinks;
+    }
+
+    public boolean insertProjectTags (long projectId, List<Long> tags) {
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(INSERT_PROJECT_TAG)) {
+            for (long tagId : tags) {
+                stmt.setLong(1, projectId);
+                stmt.setLong(2, tagId);
+                stmt.addBatch();
+            }
+            stmt.executeBatch();
+            return true;
+        }
+        catch (SQLException e) {
+            Confluencia.LOGGER.error("Failed to insertProjectTags.", e);
+        }
+        return false;
     }
 }
