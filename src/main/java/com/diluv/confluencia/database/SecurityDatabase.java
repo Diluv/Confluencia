@@ -14,8 +14,8 @@ import com.diluv.confluencia.database.record.ReferenceTokenRecord;
 import com.diluv.confluencia.utils.SQLHandler;
 
 public class SecurityDatabase {
-    private static final String INSERT_DOMAIN_BLACKLIST = SQLHandler.readFile("email/insertDomainBlacklist");
-    private static final String EXISTS_BLACKLIST = SQLHandler.readFile("email/existsBlacklist");
+    private static final String INSERT_DOMAIN_BLOCKLIST = SQLHandler.readFile("email/insertDomainBlocklist");
+    private static final String EXISTS_BLOCKLIST = SQLHandler.readFile("email/existsBlocklist");
 
     private static final String INSERT_EMAIL_SENT = SQLHandler.readFile("email/insertEmailSent");
     private static final String EXISTS_EMAIL_SENT = SQLHandler.readFile("email/existsEmailSent");
@@ -27,9 +27,9 @@ public class SecurityDatabase {
 
     private static final String FIND_PERSISTED_GRANTS_BY_KEY_AND_TYPE = SQLHandler.readFile("persisted_grants/findPersistedGrantsByKeyAndType");
 
-    public boolean insertDomainBlacklist (String[] domains) {
+    public boolean insertDomainBlocklist (String[] domains) {
 
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(INSERT_DOMAIN_BLACKLIST)) {
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(INSERT_DOMAIN_BLOCKLIST)) {
             for (String domain : domains) {
                 stmt.setString(1, domain);
                 stmt.addBatch();
@@ -38,14 +38,14 @@ public class SecurityDatabase {
             return true;
         }
         catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to insert email domain blacklist {}.", e);
+            Confluencia.LOGGER.error("Failed to insert email domain blocklist {}.", e);
         }
         return false;
     }
 
-    public boolean existsBlacklist (String email, String domain) {
+    public boolean existsBlocklist (String email, String domain) {
 
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(EXISTS_BLACKLIST)) {
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(EXISTS_BLOCKLIST)) {
             stmt.setString(1, email);
             stmt.setString(2, domain);
 
@@ -56,7 +56,7 @@ public class SecurityDatabase {
             }
         }
         catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to check domain {} against database email blacklist.", e);
+            Confluencia.LOGGER.error("Failed to check domain {} against database email blocklist.", e);
         }
         return false;
     }
@@ -86,7 +86,7 @@ public class SecurityDatabase {
             }
         }
         catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to check domain {} against database email blacklist.", e);
+            Confluencia.LOGGER.error("Failed to check domain {} against database email blocklist.", e);
         }
         return false;
     }

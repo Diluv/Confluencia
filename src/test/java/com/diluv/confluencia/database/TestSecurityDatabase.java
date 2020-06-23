@@ -11,22 +11,22 @@ import com.diluv.confluencia.ConfluenciaTest;
 public class TestSecurityDatabase extends ConfluenciaTest {
 
     @Test
-    public void insertDomainBlacklist () {
+    public void insertDomainBlocklist () {
 
-        Assertions.assertTrue(ConfluenciaTest.SECURITY.insertDomainBlacklist(new String[]{"blacklisted2.com"}));
+        Assertions.assertTrue(ConfluenciaTest.SECURITY.insertDomainBlocklist(new String[]{"blocked.com"}));
     }
 
     @Test
-    public void existsBlacklist () {
+    public void existsBlocklist () {
 
         // Allowed
-        Assertions.assertFalse(ConfluenciaTest.SECURITY.existsBlacklist("test@diluv.com", "diluv.com"));
+        Assertions.assertFalse(ConfluenciaTest.SECURITY.existsBlocklist("test@diluv.com", "diluv.com"));
 
-        // Blacklisted email
-        Assertions.assertTrue(ConfluenciaTest.SECURITY.existsBlacklist("blacklisted@diluv.com", "diluv.com"));
+        // Blocked email
+        Assertions.assertTrue(ConfluenciaTest.SECURITY.existsBlocklist("blocked@diluv.com", "diluv.com"));
 
-        // Blacklisted domain
-        Assertions.assertTrue(ConfluenciaTest.SECURITY.existsBlacklist("test@banned.com", "banned.com"));
+        // Blocked domain
+        Assertions.assertTrue(ConfluenciaTest.SECURITY.existsBlocklist("test@banned.com", "banned.com"));
     }
 
     @Test

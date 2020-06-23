@@ -21,29 +21,50 @@ CREATE TABLE email_bounce
     FOREIGN KEY (message_id) REFERENCES email_sent (message_id)
 );
 
-CREATE TABLE email_blacklist
+CREATE TABLE email_blocklist
 (
     email  VARCHAR(255) NOT NULL,
     reason TEXT         NOT NULL,
     PRIMARY KEY (email)
 );
 
-CREATE TABLE email_domain_blacklist
+CREATE TABLE email_domain_blocklist
 (
     domain VARCHAR(255) NOT NULL,
     PRIMARY KEY (domain)
 );
 
-CREATE TABLE username_blacklist
+CREATE TABLE username_blocklist
 (
     username VARCHAR(30) NOT NULL,
     PRIMARY KEY (username)
 );
 
-CREATE TABLE contains_username_blacklist
+CREATE TABLE contains_username_blist
 (
     username VARCHAR(30) NOT NULL,
     PRIMARY KEY (username)
+);
+
+CREATE TABLE user_mfa_recovery
+(
+    user_id  BIGINT  NOT NULL,
+
+    2fa_code CHAR(8) NOT NULL,
+    valid    BOOL DEFAULT TRUE,
+
+    PRIMARY KEY (user_id, 2fa_code),
+    FOREIGN KEY (user_id) REFERENCES users (id)
+);
+
+CREATE TABLE user_mfa_email
+(
+    user_id           BIGINT    NOT NULL,
+    verification_code CHAR(8)   NOT NULL,
+    created_at        TIMESTAMP NOT NULL DEFAULT NOW(),
+
+    PRIMARY KEY (user_id, verification_code),
+    FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
 CREATE TABLE user_compromised_passwords

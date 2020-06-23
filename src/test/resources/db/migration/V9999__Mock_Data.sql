@@ -616,12 +616,12 @@ VALUES (2, 'daf1f148-effd-400e-9b65-a4bf96e5215d', NOW());
 INSERT INTO user_compromised_passwords(password_hash, occurrences)
 VALUES ('025160DEE13179BC80BB05102CE5B3CD3FE', 11);
 
-INSERT INTO email_domain_blacklist(domain)
+INSERT INTO email_domain_blocklist(domain)
 VALUES ('banned.com'),
        ('banned2.com');
 
-INSERT INTO email_blacklist (email, reason)
-VALUES ('blacklisted@diluv.com', 'Example disabled email');
+INSERT INTO email_blocklist (email, reason)
+VALUES ('blocked@diluv.com', 'Example disabled email');
 
 INSERT INTO email_sent(message_id, email, type, sent_at)
 VALUES ('e4a291f7-740a-4b88-bc32-63e97e2d0812', 'test@diluv.com', 'test', NOW());
