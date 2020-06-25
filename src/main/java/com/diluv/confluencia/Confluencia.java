@@ -20,6 +20,7 @@ public class Confluencia {
 
         ds = new HikariDataSource();
         ds.setJdbcUrl(url + "?useLegacyDatetimeCode=false&serverTimezone=UTC");
+        ds.setMaxLifetime(500000); // 500 seconds < 600 second (wait timeout)
         ds.setUsername(username);
         ds.setPassword(password);
         ds.addDataSourceProperty("rewriteBatchedStatements", "true");
