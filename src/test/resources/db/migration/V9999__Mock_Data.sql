@@ -11,7 +11,7 @@ VALUES (1, 'darkhax', 'Darkhax', 'darkhax@diluv.com',
 INSERT INTO user_roles(user_id, role_id)
 VALUES (2, 1);
 
-INSERT INTO temp_users(id, username, email, password, password_type, created_at, verification_code)
+INSERT INTO temp_users(id, username, email, password, password_type, created_at, code)
 VALUES (1, 'tempuser', 'tempuser@diluv.com', '', '', NOW(), '26757111'),
        (2, 'tempuser2', 'tempuser2@diluv.com', '', '', NOW(), '10931681'),
        (3, 'tempuser3', 'tempuser3@diluv.com', '', '', NOW(), '51601365');

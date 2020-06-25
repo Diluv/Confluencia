@@ -48,22 +48,22 @@ CREATE TABLE contains_username_blist
 
 CREATE TABLE user_mfa_recovery
 (
-    user_id  BIGINT  NOT NULL,
+    user_id BIGINT  NOT NULL,
 
-    2fa_code CHAR(8) NOT NULL,
-    valid    BOOL DEFAULT TRUE,
+    code    CHAR(8) NOT NULL,
+    valid   BOOL DEFAULT TRUE,
 
-    PRIMARY KEY (user_id, 2fa_code),
+    PRIMARY KEY (user_id, code),
     FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
 CREATE TABLE user_mfa_email
 (
-    user_id           BIGINT    NOT NULL,
-    verification_code CHAR(8)   NOT NULL,
-    created_at        TIMESTAMP NOT NULL DEFAULT NOW(),
+    user_id    BIGINT    NOT NULL,
+    code       CHAR(8)   NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
 
-    PRIMARY KEY (user_id, verification_code),
+    PRIMARY KEY (user_id, code),
     FOREIGN KEY (user_id) REFERENCES users (id)
 );
 

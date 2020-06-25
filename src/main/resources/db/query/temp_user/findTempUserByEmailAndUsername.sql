@@ -4,7 +4,7 @@ SELECT id,
        password,
        password_type,
        created_at,
-       verification_code
+       code
 FROM temp_users
 WHERE email = ?
   AND username = ?

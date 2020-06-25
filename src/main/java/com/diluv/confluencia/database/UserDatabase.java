@@ -182,14 +182,14 @@ public class UserDatabase {
         return true;
     }
 
-    public boolean insertTempUser (String email, String username, String password, String passwordType, String verificationCode) {
+    public boolean insertTempUser (String email, String username, String password, String passwordType, String code) {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(INSERT_TEMPUSER)) {
             stmt.setString(1, email);
             stmt.setString(2, username);
             stmt.setString(3, password);
             stmt.setString(4, passwordType);
-            stmt.setString(5, verificationCode);
+            stmt.setString(5, code);
 
             return stmt.executeUpdate() == 1;
         }
@@ -199,10 +199,10 @@ public class UserDatabase {
         return false;
     }
 
-    public boolean updateTempUser (String email, String username, String verificationCode) {
+    public boolean updateTempUser (String email, String username, String code) {
 
         try (PreparedStatement stmt = Confluencia.connection().prepareStatement(UPDATE_TEMPUSER)) {
-            stmt.setString(1, verificationCode);
+            stmt.setString(1, code);
             stmt.setString(2, email);
             stmt.setString(3, username);
 

@@ -1,4 +1,4 @@
 UPDATE temp_users
-SET verification_code = ?
+SET code = ?
 WHERE email = ?
   AND username = ?

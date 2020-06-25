@@ -4,16 +4,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class TempUserRecord extends BaseUserRecord {
-    private final String verificationCode;
+    private final String code;
 
     public TempUserRecord (ResultSet rs) throws SQLException {
 
         super(rs);
-        this.verificationCode = rs.getString("verification_code");
+        this.code = rs.getString("code");
     }
 
-    public String getVerificationCode () {
+    public String getCode () {
 
-        return this.verificationCode;
+        return this.code;
     }
 }
