@@ -4,7 +4,7 @@ VALUES ('minecraft-je', 'Minecraft Java Edition', 'https://www.minecraft.net'),
        ('minecraft-dungeons', 'Minecraft Dungeons', 'https://www.minecraftdungeons.net/');
 
 INSERT INTO project_types(game_slug, slug, name, max_file_size)
-VALUES ('minecraft-je', 'forge-mods', 'Forge mods', 25000000),
+VALUES ('minecraft-je', 'forge-mods', 'Forge Mods', 25000000),
        ('minecraft-je', 'maps', 'Maps', 25000000),
        ('minecraft-bedrock', 'mods', 'Mods', 25000000),
        ('minecraft-dungeons', 'mods', 'Mods', 25000000);
