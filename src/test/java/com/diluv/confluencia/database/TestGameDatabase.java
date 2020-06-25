@@ -21,7 +21,8 @@ public class TestGameDatabase extends ConfluenciaTest {
     @Test
     public void countAll () {
 
-        Assertions.assertEquals(3, ConfluenciaTest.GAME.countAll(""));
+        Assertions.assertEquals(3, ConfluenciaTest.GAME.countAll());
+        Assertions.assertEquals(1, ConfluenciaTest.GAME.countAll("bedrock"));
     }
 
     @Test
@@ -49,5 +50,11 @@ public class TestGameDatabase extends ConfluenciaTest {
         Assertions.assertEquals(2, ConfluenciaTest.GAME.findGameVersionsByGameSlugAndVersions("minecraft-je", new String[]{"1.15.2", "1.12.2"}).size());
         Assertions.assertEquals(1, ConfluenciaTest.GAME.findGameVersionsByGameSlugAndVersions("minecraft-je", new String[]{"1.15.2", "invalid"}).size());
         Assertions.assertEquals(0, ConfluenciaTest.GAME.findGameVersionsByGameSlugAndVersions("minecraft-je", new String[]{"invalid"}).size());
+    }
+
+    @Test
+    public void countAllProjectTypes () {
+
+        Assertions.assertEquals(4, ConfluenciaTest.GAME.countAllProjectTypes());
     }
 }

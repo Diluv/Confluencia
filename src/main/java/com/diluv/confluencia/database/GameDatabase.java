@@ -16,6 +16,7 @@ import com.diluv.confluencia.utils.SQLHandler;
 public class GameDatabase {
 
     private static final String COUNT_ALL = SQLHandler.readFile("game/countAll");
+    private static final String COUNT_ALL_SEARCH = SQLHandler.readFile("game/countAllSearch");
     private static final String FIND_ALL = SQLHandler.readFile("game/findAll");
     private static final String FIND_ONE_BY_SLUG = SQLHandler.readFile("game/findOneBySlug");
 
@@ -24,9 +25,25 @@ public class GameDatabase {
     private static final String FIND_ALL_GAME_VERSIONS_BY_GAMESLUG = SQLHandler.readFile("game/findAllGameVersionsByGameSlug");
     private static final String FIND_GAME_VERSIONS_BY_GAME_SLUG_AND_VERSIONS = SQLHandler.readFile("game/findGameVersionsByGameSlugAndVersions");
 
+    private static final String COUNT_ALL_PROJECT_TYPES = SQLHandler.readFile("project_types/countAll");
+
+    public long countAll () {
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(COUNT_ALL)) {
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getLong(1);
+                }
+            }
+        }
+        catch (SQLException e) {
+            Confluencia.LOGGER.error("Failed to run countAll games database script.", e);
+        }
+        return 0;
+    }
+
     public long countAll (String search) {
 
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(COUNT_ALL)) {
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(COUNT_ALL_SEARCH)) {
             stmt.setString(1, "%" + search + "%");
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -132,5 +149,19 @@ public class GameDatabase {
             Confluencia.LOGGER.error("Failed to run findGameVersionsByGameSlugAndVersions games database script.", e);
         }
         return gameVersions;
+    }
+
+    public long countAllProjectTypes () {
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(COUNT_ALL_PROJECT_TYPES)) {
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getLong(1);
+                }
+            }
+        }
+        catch (SQLException e) {
+            Confluencia.LOGGER.error("Failed to run countAllProjectTypes games database script.", e);
+        }
+        return 0;
     }
 }
