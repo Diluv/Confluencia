@@ -1,17 +1,22 @@
-INSERT INTO games(slug, name, url, default_project_type)
-VALUES ('minecraft-je', 'Minecraft Java Edition', 'https://www.minecraft.net', 'mods'),
-       ('minecraft-bedrock', 'Minecraft Bedrock Edition', 'https://www.minecraft.net', 'mods'),
-       ('minecraft-dungeons', 'Minecraft Dungeons', 'https://www.minecraftdungeons.net/', 'mods');
+INSERT INTO games(slug, name, url)
+VALUES ('minecraft-je', 'Minecraft Java Edition', 'https://www.minecraft.net'),
+       ('minecraft-bedrock', 'Minecraft Bedrock Edition', 'https://www.minecraft.net'),
+       ('minecraft-dungeons', 'Minecraft Dungeons', 'https://www.minecraftdungeons.net/');
 
 INSERT INTO project_types(game_slug, slug, name, max_file_size)
-VALUES ('minecraft-je', 'mods', 'Mods', 25000000),
+VALUES ('minecraft-je', 'forge-mods', 'Forge mods', 25000000),
        ('minecraft-je', 'maps', 'Maps', 25000000),
        ('minecraft-bedrock', 'mods', 'Mods', 25000000),
        ('minecraft-dungeons', 'mods', 'Mods', 25000000);
 
+INSERT INTO game_default_project_type(game_slug, project_type_slug)
+VALUES ('minecraft-je', 'forge-mods'),
+       ('minecraft-bedrock', 'mods'),
+       ('minecraft-dungeons', 'mods');
+
 INSERT INTO tags(game_slug, project_type_slug, slug, name)
-VALUES ('minecraft-je', 'mods', 'tech', 'Tech'),
-       ('minecraft-je', 'mods', 'magic', 'Magic'),
+VALUES ('minecraft-je', 'forge-mods', 'tech', 'Tech'),
+       ('minecraft-je', 'forge-mods', 'magic', 'Magic'),
        ('minecraft-bedrock', 'mods', 'magic', 'Magic');
 
 INSERT INTO game_versions(game_slug, version, type, released)
