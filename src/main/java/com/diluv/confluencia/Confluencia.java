@@ -9,6 +9,9 @@ import org.flywaydb.core.Flyway;
 
 import com.zaxxer.hikari.HikariDataSource;
 
+import static java.util.concurrent.TimeUnit.MINUTES;
+import static java.util.concurrent.TimeUnit.SECONDS;
+
 public class Confluencia {
 
     public static final Logger LOGGER = LogManager.getLogger("Confluencia");
@@ -20,7 +23,8 @@ public class Confluencia {
 
         ds = new HikariDataSource();
         ds.setJdbcUrl(url + "?useLegacyDatetimeCode=false&serverTimezone=UTC");
-        ds.setMaxLifetime(500000); // 500 seconds < 600 second (wait timeout)
+        ds.setIdleTimeout(SECONDS.toMillis(300));
+        ds.setMaxLifetime(SECONDS.toMillis(300));
         ds.setUsername(username);
         ds.setPassword(password);
         ds.addDataSourceProperty("rewriteBatchedStatements", "true");
