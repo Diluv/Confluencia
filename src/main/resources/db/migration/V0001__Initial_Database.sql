@@ -20,6 +20,7 @@ CREATE TABLE temp_users
 (
     id            BIGINT       NOT NULL AUTO_INCREMENT,
     username      VARCHAR(30)  NOT NULL UNIQUE,
+    display_name  VARCHAR(30)  NOT NULL,
     email         VARCHAR(255) NOT NULL UNIQUE,
     password      CHAR(60)     NOT NULL,
     password_type VARCHAR(30)  NOT NULL,

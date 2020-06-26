@@ -37,8 +37,10 @@ public class Confluencia {
 
     public static Connection connection () throws SQLException {
 
-        if (connection == null || connection.isClosed())
-            connection = ds.getConnection();
+        if (connection != null) {
+            connection.close();
+        }
+        connection = ds.getConnection();
         return connection;
     }
 }

@@ -16,14 +16,6 @@ public class TestUserDatabase extends ConfluenciaTest {
     }
 
     @Test
-    public void existsUserByEmail () {
-
-        Assertions.assertFalse(ConfluenciaTest.USER.existsUserByEmail("invalid@example.com"));
-        Assertions.assertTrue(ConfluenciaTest.USER.existsUserByEmail("darkhax@diluv.com"));
-        Assertions.assertTrue(ConfluenciaTest.USER.existsUserByEmail("jaredlll08@diluv.com"));
-    }
-
-    @Test
     public void existsUserByUsername () {
 
         Assertions.assertFalse(ConfluenciaTest.USER.existsUserByUsername("invalid"));
@@ -48,28 +40,9 @@ public class TestUserDatabase extends ConfluenciaTest {
     }
 
     @Test
-    public void insertUser () {
-
-        // Duplicate
-        Assertions.assertFalse(ConfluenciaTest.USER.insertUser("darkhax@diluv.com", "darkhax", "darkhax", "", "", new Timestamp(System.currentTimeMillis())));
-        Assertions.assertFalse(ConfluenciaTest.USER.insertUser("jaredlll08@diluv.com", "jaredlll08", "jaredlll08", "", "", new Timestamp(System.currentTimeMillis())));
-
-        // Valid
-        Assertions.assertTrue(ConfluenciaTest.USER.insertUser("test4@example.com", "test4", "Test4", "", "", new Timestamp(System.currentTimeMillis())));
-    }
-
-    @Test
     public void updateUserPasswordByUserId () {
 
         Assertions.assertTrue(ConfluenciaTest.USER.updateUserPasswordByUserId(2, "password"));
-    }
-
-    @Test
-    public void existsTempUserByEmail () {
-
-        Assertions.assertFalse(ConfluenciaTest.USER.existsTempUserByEmail("invalid@diluv.com"));
-        Assertions.assertTrue(ConfluenciaTest.USER.existsTempUserByEmail("tempuser@diluv.com"));
-        Assertions.assertTrue(ConfluenciaTest.USER.existsTempUserByEmail("tempuser2@diluv.com"));
     }
 
     @Test
@@ -89,25 +62,9 @@ public class TestUserDatabase extends ConfluenciaTest {
         Assertions.assertNotNull(ConfluenciaTest.USER.findTempUserByEmailAndUsername("tempuser2@diluv.com", "tempuser2"));
     }
 
-
     @Test
-    public void findTempUserByEmailAndCode () {
+    public void deleteTempUser () {
 
-        Assertions.assertNull(ConfluenciaTest.USER.findTempUserByEmailAndCode("invalid@diluv.com", "71447782"));
-        Assertions.assertNotNull(ConfluenciaTest.USER.findTempUserByEmailAndCode("tempuser@diluv.com", "26757111"));
-        Assertions.assertNotNull(ConfluenciaTest.USER.findTempUserByEmailAndCode("tempuser2@diluv.com", "10931681"));
-    }
-
-    @Test
-    public void insertAndDeleteTempUser () {
-
-        Assertions.assertTrue(ConfluenciaTest.USER.insertTempUser("itempuser@example.com", "itempuser", "", "", "82936354"));
-        Assertions.assertFalse(ConfluenciaTest.USER.insertTempUser("itempuser@example.com", "itempuser2", "", "", "79073283"));
-        Assertions.assertFalse(ConfluenciaTest.USER.insertTempUser("itempuser2@example.com", "itempuser", "", "", "32568428"));
-
-        Assertions.assertTrue(ConfluenciaTest.USER.deleteTempUser("itempuser@example.com", "itempuser"));
-        Assertions.assertFalse(ConfluenciaTest.USER.deleteTempUser("itempuser2@example.com", "itempuser"));
-        Assertions.assertFalse(ConfluenciaTest.USER.deleteTempUser("itempuser@example.com", "itempuser2"));
         Assertions.assertFalse(ConfluenciaTest.USER.deleteTempUser("invalid@example.com", "invalid"));
     }
 
@@ -122,13 +79,6 @@ public class TestUserDatabase extends ConfluenciaTest {
     public void deleteAllRefreshTokensByUserId () {
 
         Assertions.assertTrue(ConfluenciaTest.USER.deleteAllRefreshTokensByUserId(3));
-    }
-
-    @Test
-    public void findAllUserRolesByUserId () {
-
-        Assertions.assertEquals(0, ConfluenciaTest.USER.findAllUserRolesByUserId(1).size());
-        Assertions.assertEquals(1, ConfluenciaTest.USER.findAllUserRolesByUserId(2).size());
     }
 
     @Test
