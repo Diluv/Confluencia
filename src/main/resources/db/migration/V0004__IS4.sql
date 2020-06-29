@@ -1,61 +1,65 @@
 CREATE TABLE ApiResources
 (
-    Id           INT          NOT NULL AUTO_INCREMENT,
-    Enabled      TINYINT(1)   NOT NULL DEFAULT TRUE,
-    Name         VARCHAR(200) NOT NULL,
-    DisplayName  VARCHAR(200),
-    Description  VARCHAR(1000),
-    Created      DATETIME     NOT NULL DEFAULT NOW(),
-    Updated      DATETIME,
-    LastAccessed DATETIME,
-    NonEditable  TINYINT(1)   NOT NULL DEFAULT TRUE,
+    Id                                  INT          NOT NULL AUTO_INCREMENT,
+    Enabled                             TINYINT(1)   NOT NULL DEFAULT TRUE,
+    Name                                VARCHAR(200) NOT NULL,
+    DisplayName                         VARCHAR(200),
+    Description                         VARCHAR(1000),
+    AllowedAccessTokenSigningAlgorithms VARCHAR(100) NULL,
+    ShowInDiscoveryDocument             TINYINT      NOT NULL DEFAULT FALSE,
+    Created                             DATETIME     NOT NULL DEFAULT NOW(),
+    Updated                             DATETIME,
+    LastAccessed                        DATETIME,
+    NonEditable                         TINYINT(1)   NOT NULL DEFAULT TRUE,
     PRIMARY KEY (Id)
 );
 
 CREATE TABLE Clients
 (
-    Id                                INT          NOT NULL AUTO_INCREMENT,
-    Enabled                           TINYINT(1)   NOT NULL DEFAULT TRUE,
-    ClientId                          VARCHAR(200) NOT NULL,
-    ProtocolType                      VARCHAR(200) NOT NULL DEFAULT 'oidc',
-    RequireClientSecret               TINYINT(1)   NOT NULL DEFAULT TRUE,
-    ClientName                        VARCHAR(200),
-    Description                       VARCHAR(1000),
-    ClientUri                         VARCHAR(2000),
-    LogoUri                           VARCHAR(2000),
-    RequireConsent                    TINYINT(1)   NOT NULL DEFAULT TRUE,
-    AllowRememberConsent              TINYINT(1)   NOT NULL DEFAULT TRUE,
-    AlwaysIncludeUserClaimsInIdToken  TINYINT(1)   NOT NULL DEFAULT FALSE,
-    RequirePkce                       TINYINT(1)   NOT NULL DEFAULT FALSE,
-    AllowPlainTextPkce                TINYINT(1)   NOT NULL DEFAULT FALSE,
-    AllowAccessTokensViaBrowser       TINYINT(1)   NOT NULL DEFAULT FALSE,
-    FrontChannelLogoutUri             VARCHAR(2000),
-    FrontChannelLogoutSessionRequired TINYINT(1)   NOT NULL DEFAULT TRUE,
-    BackChannelLogoutUri              VARCHAR(2000),
-    BackChannelLogoutSessionRequired  TINYINT(1)   NOT NULL DEFAULT TRUE,
-    AllowOfflineAccess                TINYINT(1)   NOT NULL DEFAULT FALSE,
-    IdentityTokenLifetime             INT          NOT NULL DEFAULT 300,
-    AccessTokenLifetime               INT          NOT NULL DEFAULT 3600,
-    AuthorizationCodeLifetime         INT          NOT NULL DEFAULT 300,
-    ConsentLifetime                   INT,
-    AbsoluteRefreshTokenLifetime      INT          NOT NULL DEFAULT 2592000,
-    SlidingRefreshTokenLifetime       INT          NOT NULL DEFAULT 1296000,
-    RefreshTokenUsage                 INT          NOT NULL DEFAULT 1,
-    UpdateAccessTokenClaimsOnRefresh  TINYINT(1)   NOT NULL DEFAULT FALSE,
-    RefreshTokenExpiration            INT          NOT NULL DEFAULT 1,
-    AccessTokenType                   INT          NOT NULL DEFAULT 0,
-    EnableLocalLogin                  TINYINT(1)   NOT NULL DEFAULT TRUE,
-    IncludeJwtId                      TINYINT(1)   NOT NULL DEFAULT FALSE,
-    AlwaysSendClientClaims            TINYINT(1)   NOT NULL DEFAULT FALSE,
-    ClientClaimsPrefix                VARCHAR(200),
-    PairWiseSubjectSalt               VARCHAR(200),
-    Created                           DATETIME     NOT NULL DEFAULT NOW(),
-    Updated                           DATETIME,
-    LastAccessed                      DATETIME,
-    UserSsoLifetime                   INT,
-    UserCodeType                      VARCHAR(100),
-    DeviceCodeLifetime                INT          NOT NULL DEFAULT 300,
-    NonEditable                       TINYINT(1)   NOT NULL DEFAULT FALSE,
+    Id                                    INT          NOT NULL AUTO_INCREMENT,
+    Enabled                               TINYINT(1)   NOT NULL DEFAULT TRUE,
+    ClientId                              VARCHAR(200) NOT NULL,
+    ProtocolType                          VARCHAR(200) NOT NULL DEFAULT 'oidc',
+    RequireClientSecret                   TINYINT(1)   NOT NULL DEFAULT TRUE,
+    ClientName                            VARCHAR(200),
+    Description                           VARCHAR(1000),
+    ClientUri                             VARCHAR(2000),
+    LogoUri                               VARCHAR(2000),
+    RequireConsent                        TINYINT(1)   NOT NULL DEFAULT TRUE,
+    AllowRememberConsent                  TINYINT(1)   NOT NULL DEFAULT TRUE,
+    AlwaysIncludeUserClaimsInIdToken      TINYINT(1)   NOT NULL DEFAULT FALSE,
+    RequirePkce                           TINYINT(1)   NOT NULL DEFAULT FALSE,
+    AllowPlainTextPkce                    TINYINT(1)   NOT NULL DEFAULT FALSE,
+    RequireRequestObject                  TINYINT(1)   NOT NULL DEFAULT FALSE,
+    AllowAccessTokensViaBrowser           TINYINT(1)   NOT NULL DEFAULT FALSE,
+    FrontChannelLogoutUri                 VARCHAR(2000),
+    FrontChannelLogoutSessionRequired     TINYINT(1)   NOT NULL DEFAULT TRUE,
+    BackChannelLogoutUri                  VARCHAR(2000),
+    BackChannelLogoutSessionRequired      TINYINT(1)   NOT NULL DEFAULT TRUE,
+    AllowOfflineAccess                    TINYINT(1)   NOT NULL DEFAULT FALSE,
+    IdentityTokenLifetime                 INT          NOT NULL DEFAULT 300,
+    AllowedIdentityTokenSigningAlgorithms VARCHAR(100) NULL,
+    AccessTokenLifetime                   INT          NOT NULL DEFAULT 3600,
+    AuthorizationCodeLifetime             INT          NOT NULL DEFAULT 300,
+    ConsentLifetime                       INT,
+    AbsoluteRefreshTokenLifetime          INT          NOT NULL DEFAULT 2592000,
+    SlidingRefreshTokenLifetime           INT          NOT NULL DEFAULT 1296000,
+    RefreshTokenUsage                     INT          NOT NULL DEFAULT 1,
+    UpdateAccessTokenClaimsOnRefresh      TINYINT(1)   NOT NULL DEFAULT FALSE,
+    RefreshTokenExpiration                INT          NOT NULL DEFAULT 1,
+    AccessTokenType                       INT          NOT NULL DEFAULT 0,
+    EnableLocalLogin                      TINYINT(1)   NOT NULL DEFAULT TRUE,
+    IncludeJwtId                          TINYINT(1)   NOT NULL DEFAULT FALSE,
+    AlwaysSendClientClaims                TINYINT(1)   NOT NULL DEFAULT FALSE,
+    ClientClaimsPrefix                    VARCHAR(200),
+    PairWiseSubjectSalt                   VARCHAR(200),
+    Created                               DATETIME     NOT NULL DEFAULT NOW(),
+    Updated                               DATETIME,
+    LastAccessed                          DATETIME,
+    UserSsoLifetime                       INT,
+    UserCodeType                          VARCHAR(100),
+    DeviceCodeLifetime                    INT          NOT NULL DEFAULT 300,
+    NonEditable                           TINYINT(1)   NOT NULL DEFAULT FALSE,
     PRIMARY KEY (Id)
 );
 
@@ -75,7 +79,7 @@ CREATE TABLE IdentityResources
     PRIMARY KEY (Id)
 );
 
-CREATE TABLE ApiClaims
+CREATE TABLE ApiResourceClaims
 (
     Id            INT          NOT NULL AUTO_INCREMENT,
     Type          VARCHAR(200) NOT NULL,
@@ -84,7 +88,7 @@ CREATE TABLE ApiClaims
     FOREIGN KEY (ApiResourceId) REFERENCES ApiResources (Id) ON DELETE CASCADE
 );
 
-CREATE TABLE ApiProperties
+CREATE TABLE ApiResourceProperties
 (
     Id            INT           NOT NULL AUTO_INCREMENT,
     `Key`         VARCHAR(250)  NOT NULL,
@@ -108,7 +112,16 @@ CREATE TABLE ApiScopes
     FOREIGN KEY (ApiResourceId) REFERENCES ApiResources (Id) ON DELETE CASCADE
 );
 
-CREATE TABLE ApiSecrets
+CREATE TABLE ApiResourceScopes
+(
+    Id            INT  NOT NULL AUTO_INCREMENT,
+    Scope         TEXT NOT NULL,
+    ApiResourceId INT  NOT NULL,
+    PRIMARY KEY (Id),
+    FOREIGN KEY (ApiResourceId) REFERENCES ApiResources (Id) ON DELETE CASCADE
+);
+
+CREATE TABLE ApiResourceSecrets
 (
     Id            INT           NOT NULL AUTO_INCREMENT,
     Description   VARCHAR(1000),
@@ -119,6 +132,16 @@ CREATE TABLE ApiSecrets
     ApiResourceId INT           NOT NULL,
     PRIMARY KEY (Id),
     FOREIGN KEY (ApiResourceId) REFERENCES ApiResources (Id) ON DELETE CASCADE
+);
+
+CREATE TABLE ApiScopeProperties
+(
+    Id      INTEGER       NOT NULL AUTO_INCREMENT,
+    `Key`   VARCHAR(250)  NOT NULL,
+    Value   VARCHAR(2000) NOT NULL,
+    ScopeId INTEGER       NOT NULL,
+    PRIMARY KEY (Id),
+    FOREIGN KEY (ScopeId) REFERENCES ApiScopes (Id) ON DELETE CASCADE
 );
 
 CREATE TABLE ClientClaims
@@ -208,7 +231,7 @@ CREATE TABLE ClientSecrets
     FOREIGN KEY (ClientId) REFERENCES Clients (Id) ON DELETE CASCADE
 );
 
-CREATE TABLE IdentityClaims
+CREATE TABLE IdentityResourceClaims
 (
     Id                 INT          NOT NULL AUTO_INCREMENT,
     Type               VARCHAR(200) NOT NULL,
@@ -217,7 +240,7 @@ CREATE TABLE IdentityClaims
     FOREIGN KEY (IdentityResourceId) REFERENCES IdentityResources (Id) ON DELETE CASCADE
 );
 
-CREATE TABLE IdentityProperties
+CREATE TABLE IdentityResourceProperties
 (
     Id                 INT           NOT NULL AUTO_INCREMENT,
     `Key`              VARCHAR(250)  NOT NULL,

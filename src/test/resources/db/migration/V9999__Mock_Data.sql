@@ -692,12 +692,12 @@ VALUES (1, 'openid'),
 
 INSERT INTO IdentityResources(Id, Name, DisplayName, Required)
 VALUES (1, 'openid', 'Your user identifier', TRUE);
-INSERT INTO IdentityClaims(IdentityResourceId, Type)
+INSERT INTO IdentityResourceClaims(IdentityResourceId, Type)
 VALUES (1, 'sub');
 
 INSERT INTO IdentityResources(Id, Name, DisplayName, Emphasize)
 VALUES (2, 'profile', 'User profile', TRUE);
-INSERT INTO IdentityClaims(IdentityResourceId, Type)
+INSERT INTO IdentityResourceClaims(IdentityResourceId, Type)
 VALUES (2, 'username'),
        (2, 'preferred_username'),
        (2, 'email');
