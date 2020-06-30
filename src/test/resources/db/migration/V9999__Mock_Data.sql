@@ -21,19 +21,17 @@ INSERT INTO projects(name, slug, summary, description, cached_downloads, review,
 VALUES ('Bookshelf', 'bookshelf',
         'An open source library for other mods!',
         'Bookshelf is a library mod which adds a lot of reusable code. The goal of bookshelf is to make writing complex mods much easier, while also expanding the capabilities of various systems within Minecraft and Forge. Bookshelf is used by many large mods and makes them easier to update and maintain.
-
-**Notice:** Alpha and Beta releases may contain breaking changes or world corrupting bugs. Please stick to Release versions unless you know what you\'re doing or working with someone else who does.
-
+:::warning NOTICE
+Alpha and Beta releases may contain breaking changes or world corrupting bugs. Please stick to release versions unless you know what you\'re doing or you\'re working with someone else who does. Always back up your worlds when changing your mods!
+:::
 ## Features
 - Lazy loaded registry for Vanilla and Forge registry entries.
 - Massive collection of utility functions.
 - Extensive additions to the Data Pack specification.
 - Weighted registries.
 - Markdown table generators.
-
 [![Nodecraft](https://nodecraft.com/assets/images/logo-dark.png)](https://nodecraft.com/r/darkhax)
 This project is sponsored by Nodecraft! Use code Darkhax for 30% off your first month of service!
-
 ## Data Pack Documentation
 - [Recipe Types](https://github.com/Darkhax-Minecraft/Bookshelf/wiki/Data-Packs#recipe-types)
   - [Shaped Damage Recipe](https://github.com/Darkhax-Minecraft/Bookshelf/wiki/Data-Packs#shaped-damage-recipe)
@@ -628,44 +626,89 @@ VALUES ('e4a291f7-740a-4b88-bc32-63e97e2d0812', 'test@diluv.com', 'test', NOW())
 
 INSERT INTO project_files(id, version, name, size, changelog, sha512, release_type, classifier, processing_status,
                           released, project_id, user_id)
-VALUES (1, '1.0.0', 'forge_mod.jar', 100, 'Project file changelog',
-        '5E96A9A98839D073C298BBD0AC73A510E1F13A64151E2C4895440ECDBCD6D483EDA994D2CD5E69C5C00A96783280F7BC1E933667B4A25C53CE3918007D5C77E3',
+VALUES (1, '1.0.4.187', 'Bookshelf-1.7.10-1.0.4.187.jar', 230589, '- Final RC for 1.7.10
+- Added Java Tuples from SAP Manager Pack.
+- Removed experimental rainbow utils.',
+        '0a8380d56025c978c8dc310447fa977686279da85df092c78b88a145927d7f7a8bde0cd2780caa64c6fe552fce0ccbabec778980a53b58bc16295627b5a098e2',
+        'release', 'binary', 2, TRUE, 1, 1),
+       (2, '1.1.2.207', 'Bookshelf-1.8.9-1.1.2.207.jar', 149936, '- Final RC for 1.8.9
+- Force RenderUtils to only load on the client.
+- Add a new EntityDiggingFX with public constructor.
+- Add functions for spawning different types of digging particles.',
+        '51f3402f731f13ca32e557bad1b422a1b517aab48e7937a299b1005cde2c26decb4314b6b5c156459c4dbb4ac020aaf4ca3c3a447afaf56f89d4dbd6d91e557d',
+        'release', 'binary', 2, TRUE, 1, 1),
+       (3, '1.2.3.279', 'Bookshelf-1.9.4-1.2.3.279.jar', 161197, '- Final RC for 1.9.4
+- Added Chinese language support. Thanks to 3TUSK
+- Added utils to check for player inventories.
+- Added ATs for working with inventories.',
+        'cd6bef2830dccdb9c3471195861d3b72827d733ba537466d19c4d99de072106e0b1e36761634809716083686df5e9e5721626dc81bad6b3a50f7dcc68c5e332b',
+        'release', 'binary', 2, TRUE, 1, 1),
+       (4, '1.4.4.348', 'Bookshelf-1.10.2-1.4.4.348.jar', 210212, '- Final RC for 1.10.2
+- Fixed supporters.json not being found.',
+        'ceaea82aa3aae3bbb991abdb0fddebe870b2bf31fbafe93afffcb8979e603c7b04a5ac446a5833ccca47167ce0a78ea72697c00bb575c3f1efc52ee6fdfaa255',
+        'release', 'binary', 2, TRUE, 1, 1),
+       (5, '2.0.0.388', 'Bookshelf-1.11.2-2.0.0.388.jar', 229669, '- Final RC for 1.11.2
+- Fixed ore dict entries being registered too early.',
+        '069c153f7273407caad0e61423978657483dd3f8b8a9c30ead7905f5d666af2b1dbc5a3db1abd7c8c517f99e65557581eed1c4543d4e8f8ec298ed57f7066070',
+        'release', 'binary', 2, TRUE, 1, 1),
+       (6, '2.3.590', 'Bookshelf-1.12.2-2.3.590.jar', 266636, '- Compiled against the latest Forge and MCP builds.',
+        'a3217d1072d98c9c3ff2d9190a7c37cc81aad390179ac72abea7edea3485c6f2851a6cc5f94f07c229d5ac1fd78db58f558b45a299ceaae11ccdfd1aa351fcd7',
+        'release', 'binary', 2, TRUE, 1, 1),
+       (7, '3.0.20', 'Bookshelf-1.13.2-3.0.20.jar', 81769, '- Final RC for 1.13.2
+- Implemented multiproject jenkins pipeline via Jenkinsfile.',
+        '50bbe431610cdedaa847eff47e02762f92796afdd9e3ab07edf624c0aabe5a6ffe60b52fcddb8c620658b8b93b98c2808520aa67cb8f7b2fc9bca94ed00c6d00',
+        'release', 'binary', 2, TRUE, 1, 1),
+       (8, '4.4.74', 'Bookshelf-1.14.4-4.4.74.jar', 124990, '- Removed unused example code.
+- Implemented Forge''s update checker.
+- Added Discord webhook to build script.',
+        '4b8d0e4ffc490cb91c2244810728bee1ea46c1f109a1981b5256f5af8359569ef5bff855ab7140ccb1d4f11fffb48377dfadc0cc78ae65d5bfbd3ee77b7fc230',
+        'release', 'binary', 2, TRUE, 1, 1),
+       (9, '5.6.40', 'Bookshelf-1.15.2-5.6.40.jar', 178961, '- Add modid based ItemPredicate
+- Add ingredient based ItemPredicate
+- Add modid ingredient.',
+        '4f4267d8d8f81795e73b7cff887c6ab7e5957b50afd2a007690bdfd1de0a8a8a68807901f49765c72a6b98ac34a2d20b88d7302bfdce52c6eb31cfcaf572cb09',
         'release', 'binary', 2, TRUE, 1, 1);
 
 INSERT INTO project_files(id, version, name, size, changelog, sha512, release_type, classifier, processing_status,
                           released, project_id, user_id)
-VALUES (2, '1.0.1', 'forge_mod_signed.jar', 101, 'Project file changelog',
+VALUES (10, '1.0.0', 'forge_mod.jar', 100, 'Project file changelog',
+        '5E96A9A98839D073C298BBD0AC73A510E1F13A64151E2C4895440ECDBCD6D483EDA994D2CD5E69C5C00A96783280F7BC1E933667B4A25C53CE3918007D5C77E3',
+        'release', 'binary', 2, FALSE, 1, 1);
+
+INSERT INTO project_files(id, version, name, size, changelog, sha512, release_type, classifier, processing_status,
+                          released, project_id, user_id)
+VALUES (11, '1.0.1', 'forge_mod_signed.jar', 101, 'Project file changelog',
         '5E96A9A98839D073C298BBD0AC73A510E1F13A64151E2C4895440ECDBCD6D483EDA994D2CD5E69C5C00A96783280F7BC1E933667B4A25C53CE3918007D5C77E3',
         'release', 'binary', 0, FALSE, 1, 1);
 
 INSERT INTO project_files(id, version, name, size, changelog, sha512, release_type, classifier, processing_status,
                           released, project_id, user_id)
-VALUES (3, '1.0.2', 'forge_mod_tampered.jar', 1000, 'Changing',
+VALUES (12, '1.0.2', 'forge_mod_tampered.jar', 1000, 'Changing',
         '5E96A9A98839D073C298BBD0AC73A510E1F13A64151E2C4895440ECDBCD6D483EDA994D2CD5E69C5C00A96783280F7BC1E933667B4A25C53CE3918007D5C77E3',
         'release', 'binary', 0, FALSE, 1, 1);
 
 INSERT INTO project_files(id, version, name, size, changelog, sha512, release_type, classifier, processing_status,
                           released, project_id, user_id)
-VALUES (4, '1.0.3', 'zip_archive.zip', 1000, 'Changing',
+VALUES (13, '1.0.3', 'zip_archive.zip', 1000, 'Changing',
         '5E96A9A98839D073C298BBD0AC73A510E1F13A64151E2C4895440ECDBCD6D483EDA994D2CD5E69C5C00A96783280F7BC1E933667B4A25C53CE3918007D5C77E3',
         'release', 'binary', 0, FALSE, 1, 1);
 
 INSERT INTO project_files(id, version, name, size, changelog, sha512, release_type, classifier, processing_status,
                           released, project_id, user_id)
-VALUES (5, '1.0.4', 'zip_archive.zip', 1000, 'Changing',
+VALUES (14, '1.0.4', 'zip_archive.zip', 1000, 'Changing',
         '5E96A9A98839D073C298BBD0AC73A510E1F13A64151E2C4895440ECDBCD6D483EDA994D2CD5E69C5C00A96783280F7BC1E933667B4A25C53CE3918007D5C77E3',
         'release', 'binary', 5, FALSE, 1, 1);
 
 INSERT INTO project_files(id, version, name, size, changelog, sha512, release_type, classifier, processing_status,
                           released, project_id, user_id)
-VALUES (6, '1.0.5', 'malware.txt', 1000, 'Changing',
+VALUES (15, '1.0.5', 'malware.txt', 1000, 'Changing',
         '5E96A9A98839D073C298BBD0AC73A510E1F13A64151E2C4895440ECDBCD6D483EDA994D2CD5E69C5C00A96783280F7BC1E933667B4A25C53CE3918007D5C77E3',
         'release', 'binary', 0, FALSE, 1, 1);
 
 INSERT INTO project_files(id, version, name, size, changelog, sha512, release_type, classifier, processing_status,
                           released,
                           project_id, user_id)
-VALUES (7, '1.0.6', 'non_existing_file.txt', 1000, 'Changing',
+VALUES (16, '1.0.6', 'non_existing_file.txt', 1000, 'Changing',
         '5E96A9A98839D073C298BBD0AC73A510E1F13A64151E2C4895440ECDBCD6D483EDA994D2CD5E69C5C00A96783280F7BC1E933667B4A25C53CE3918007D5C77E3',
         'release', 'binary', 0, FALSE, TRUE, 1);
 
