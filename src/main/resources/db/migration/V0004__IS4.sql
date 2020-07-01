@@ -101,6 +101,7 @@ CREATE TABLE ApiResourceProperties
 CREATE TABLE ApiScopes
 (
     Id                      INT          NOT NULL AUTO_INCREMENT,
+    Enabled                 TINYINT(1)   NOT NULL DEFAULT TRUE,
     Name                    VARCHAR(200) NOT NULL,
     DisplayName             VARCHAR(200),
     Description             VARCHAR(1000),
@@ -252,11 +253,11 @@ CREATE TABLE IdentityResourceProperties
 
 CREATE TABLE ApiScopeClaims
 (
-    Id         INT          NOT NULL AUTO_INCREMENT,
-    Type       VARCHAR(200) NOT NULL,
-    ApiScopeId INT          NOT NULL,
+    Id      INT          NOT NULL AUTO_INCREMENT,
+    Type    VARCHAR(200) NOT NULL,
+    ScopeId INT          NOT NULL,
     PRIMARY KEY (Id),
-    FOREIGN KEY (ApiScopeId) REFERENCES ApiScopes (Id) ON DELETE CASCADE
+    FOREIGN KEY (ScopeId) REFERENCES ApiScopes (Id) ON DELETE CASCADE
 );
 
 CREATE TABLE DeviceCodes
@@ -283,6 +284,7 @@ CREATE TABLE PersistedGrants
     Description  VARCHAR(200),
     CreationTime DATETIME     NOT NULL,
     Expiration   DATETIME,
+    ConsumedTime DATETIME,
     Data         LONGTEXT     NOT NULL,
     PRIMARY KEY (`Key`)
 );
