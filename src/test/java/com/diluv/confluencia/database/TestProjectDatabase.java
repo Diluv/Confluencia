@@ -39,9 +39,16 @@ public class TestProjectDatabase extends ConfluenciaTest {
     }
 
     @Test
+    public void countAllByUsername () {
+        Assertions.assertEquals(0, ConfluenciaTest.PROJECT.countAllByUsername("invalid", false));
+        Assertions.assertEquals(83, ConfluenciaTest.PROJECT.countAllByUsername("darkhax", false));
+        Assertions.assertEquals(46, ConfluenciaTest.PROJECT.countAllByUsername("jaredlll08", false));
+    }
+
+    @Test
     public void findAllByUsername () {
 
-//        Assertions.assertEquals(0, ConfluenciaTest.PROJECT.findAllByUsername("invalid", false, 1, 10, ProjectSort.NEW).size());
+        Assertions.assertEquals(0, ConfluenciaTest.PROJECT.findAllByUsername("invalid", false, 1, 10, ProjectSort.NEW).size());
         Assertions.assertEquals(10, ConfluenciaTest.PROJECT.findAllByUsername("darkhax", false, 1, 10, ProjectSort.NEW).size());
         Assertions.assertEquals(10, ConfluenciaTest.PROJECT.findAllByUsername("jaredlll08", false, 1, 10, ProjectSort.NEW).size());
     }

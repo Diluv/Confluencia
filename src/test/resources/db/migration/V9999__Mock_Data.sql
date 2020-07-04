@@ -592,8 +592,7 @@ VALUES (1, 'Patreon', 'https://www.patreon.com/diluv');
 
 INSERT INTO featured_games(slug)
 VALUES ('minecraft-je'),
-       ('minecraft-bedrock'),
-       ('minecraft-dungeons');
+       ('minecraft-bedrock');
 
 INSERT INTO featured_projects(project_id)
 VALUES (1),

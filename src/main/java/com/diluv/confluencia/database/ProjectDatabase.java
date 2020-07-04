@@ -21,6 +21,7 @@ public class ProjectDatabase {
     private static final String COUNT_ALL = SQLHandler.readFile("project/countAll");
     private static final String COUNT_ALL_BY_GAME_SLUG = SQLHandler.readFile("project/countAllByGameSlug");
     private static final String INSERT_PROJECT = SQLHandler.readFile("project/insertProject");
+    private static final String COUNT_ALL_BY_USERNAME = SQLHandler.readFile("project/countAllByUsername");
     private static final String FIND_ALL_BY_USERNAME = SQLHandler.readFile("project/findAllByUsername");
     private static final String FIND_ALL_BY_PROJECT_IDS = SQLHandler.readFile("project/findAllByProjectIds");
     private static final String FIND_ALL_BY_GAME_AND_PROJECTYPE = SQLHandler.readFile("project/findAllByGameAndProjectType");
@@ -135,6 +136,25 @@ public class ProjectDatabase {
         }
         return null;
     }
+
+    public long countAllByUsername (String username, boolean authorized) {
+
+        List<ProjectRecord> projects = new ArrayList<>();
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(COUNT_ALL_BY_USERNAME)) {
+            stmt.setString(1, username);
+            stmt.setBoolean(2, authorized);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getLong(1);
+                }
+            }
+        }
+        catch (SQLException e) {
+            Confluencia.LOGGER.error("Failed to run findAllByUsername database script for user {}.", username, e);
+        }
+        return 0;
+    }
+
 
     public List<ProjectRecord> findAllByUsername (String username, boolean authorized, long page, int limit, Sort sort) {
 
