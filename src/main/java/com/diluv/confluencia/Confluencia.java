@@ -9,7 +9,6 @@ import org.flywaydb.core.Flyway;
 
 import com.zaxxer.hikari.HikariDataSource;
 
-import static java.util.concurrent.TimeUnit.MINUTES;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class Confluencia {
@@ -19,7 +18,7 @@ public class Confluencia {
     private static HikariDataSource ds;
     private static Connection connection;
 
-    public static void init (String url, String username, String password, boolean clean) {
+    public static void init (String url, String username, String password) {
 
         ds = new HikariDataSource();
         ds.setJdbcUrl(url + "?useLegacyDatetimeCode=false&serverTimezone=UTC");
@@ -29,9 +28,6 @@ public class Confluencia {
         ds.setPassword(password);
         ds.addDataSourceProperty("rewriteBatchedStatements", "true");
         Flyway flyway = Flyway.configure().dataSource(ds).load();
-        if (clean) {
-            flyway.clean();
-        }
         flyway.migrate();
     }
 
