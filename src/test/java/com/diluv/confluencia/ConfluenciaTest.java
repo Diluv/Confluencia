@@ -34,7 +34,7 @@ public abstract class ConfluenciaTest {
     public static void testData () {
 
         if (!init) {
-            Confluencia.init(ConfluenciaTest.CONTAINER.getJdbcUrl(), ConfluenciaTest.CONTAINER.getUsername(), ConfluenciaTest.CONTAINER.getPassword(), true);
+            Confluencia.init(CONTAINER.getJdbcUrl(), CONTAINER.getUsername(), CONTAINER.getPassword());
             init = true;
         }
     }
