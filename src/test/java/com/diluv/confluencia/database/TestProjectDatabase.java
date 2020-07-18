@@ -137,4 +137,9 @@ public class TestProjectDatabase extends ConfluenciaTest {
 
         Assertions.assertTrue(ConfluenciaTest.PROJECT.insertProjectTags(25, Arrays.asList(1L, 2L)));
     }
+
+    @Test
+    public void updateProject(){
+        Assertions.assertTrue(ConfluenciaTest.PROJECT.updateProject(48, "Surge 2", "Surge 2 summary", "Surge Description Testing"));
+    }
 }

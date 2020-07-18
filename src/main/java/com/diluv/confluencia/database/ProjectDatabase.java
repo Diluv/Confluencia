@@ -21,6 +21,7 @@ public class ProjectDatabase {
     private static final String COUNT_ALL = SQLHandler.readFile("project/countAll");
     private static final String COUNT_ALL_BY_GAME_SLUG = SQLHandler.readFile("project/countAllByGameSlug");
     private static final String INSERT_PROJECT = SQLHandler.readFile("project/insertProject");
+    private static final String UPDATE_PROJECT = SQLHandler.readFile("project/updateProject");
     private static final String COUNT_ALL_BY_USERNAME = SQLHandler.readFile("project/countAllByUsername");
     private static final String FIND_ALL_BY_USERNAME = SQLHandler.readFile("project/findAllByUsername");
     private static final String FIND_ALL_BY_PROJECT_IDS = SQLHandler.readFile("project/findAllByProjectIds");
@@ -396,6 +397,27 @@ public class ProjectDatabase {
         }
         catch (SQLException e) {
             Confluencia.LOGGER.error("Failed to insertProjectTags.", e);
+        }
+        return false;
+    }
+
+    public boolean updateProject (long projectId, String name, String summary, String description) {
+
+        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(UPDATE_PROJECT)) {
+            stmt.setString(1, name);
+            stmt.setString(2, summary);
+            stmt.setString(3, description);
+            stmt.setLong(4, projectId);
+
+            int affectedRows = stmt.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Update project failed, no rows affected.");
+            }
+
+            return true;
+        }
+        catch (SQLException e) {
+            Confluencia.LOGGER.error("Failed to run updateProject script for project.", e);
         }
         return false;
     }
