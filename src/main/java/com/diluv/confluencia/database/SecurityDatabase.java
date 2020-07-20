@@ -1,111 +1,36 @@
 package com.diluv.confluencia.database;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.ParameterExpression;
+import javax.persistence.criteria.Root;
 
 import com.diluv.confluencia.Confluencia;
-import com.diluv.confluencia.database.record.CompromisedPasswordRecord;
-import com.diluv.confluencia.database.record.EmailSendRecord;
-import com.diluv.confluencia.database.record.ReferenceTokenRecord;
-import com.diluv.confluencia.utils.SQLHandler;
+import com.diluv.confluencia.database.record.PersistedGrantsEntity;
 
 public class SecurityDatabase {
 
-    private static final String INSERT_EMAIL_SENT = SQLHandler.readFile("email/insertEmailSent");
-    private static final String FIND_EMAIL_SENT_BY_EMAIL_AND_TYPE = SQLHandler.readFile("email/findEmailSentByEmailAndType");
+    public PersistedGrantsEntity findPersistedGrantByKeyAndType (String key, String type) {
 
-    private static final String INSERT_PASSWORD = SQLHandler.readFile("password/insertPassword");
-    private static final String FIND_PASSWORD_BY_HASH = SQLHandler.readFile("password/findPasswordByHash");
+        try {
+            return Confluencia.getQuery((session, cb) -> {
+                CriteriaQuery<PersistedGrantsEntity> q = cb.createQuery(PersistedGrantsEntity.class);
 
-    private static final String FIND_PERSISTED_GRANTS_BY_KEY_AND_TYPE = SQLHandler.readFile("persisted_grants/findPersistedGrantsByKeyAndType");
+                ParameterExpression<String> keyParam = cb.parameter(String.class);
+                ParameterExpression<String> typeParam = cb.parameter(String.class);
 
-    public boolean insertEmailSent (String messageId, String email, String type) {
+                Root<PersistedGrantsEntity> entity = q.from(PersistedGrantsEntity.class);
+                q.select(entity);
+                q.where(cb.and(cb.equal(entity.get("key"), keyParam), cb.equal(entity.get("type"), typeParam)));
 
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(INSERT_EMAIL_SENT)) {
-            stmt.setString(1, messageId);
-            stmt.setString(2, email);
-            stmt.setString(3, type);
-
-            return stmt.executeUpdate() == 1;
+                TypedQuery<PersistedGrantsEntity> query = session.createQuery(q);
+                query.setParameter(keyParam, key);
+                query.setParameter(typeParam, type);
+                return query.getSingleResult();
+            });
         }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to insert email sent.", e);
+        catch (Exception e) {
+            return null;
         }
-        return false;
-    }
-
-    public EmailSendRecord findEmailSentByEmailAndType (String email, String type) {
-
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_EMAIL_SENT_BY_EMAIL_AND_TYPE)) {
-            stmt.setString(1, email);
-            stmt.setString(2, type);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return new EmailSendRecord(rs);
-                }
-            }
-        }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to find email sent by email and type.", e);
-        }
-        return null;
-    }
-
-    public boolean insertPassword (Map<String, Long> hashOccurrences) {
-
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(INSERT_PASSWORD)) {
-            for (String hash : hashOccurrences.keySet()) {
-                stmt.setString(1, hash);
-                stmt.setLong(2, hashOccurrences.get(hash));
-                stmt.setLong(3, hashOccurrences.get(hash));
-                stmt.addBatch();
-            }
-            int[] s = stmt.executeBatch();
-            return true;
-        }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to find insertOrUpdatePassword.", e);
-        }
-        return false;
-    }
-
-    public CompromisedPasswordRecord findOnePasswordByHash (String hash) {
-
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_PASSWORD_BY_HASH)) {
-            stmt.setString(1, hash);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return new CompromisedPasswordRecord(rs);
-                }
-            }
-        }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to find compromised password.", e);
-        }
-        return null;
-    }
-
-    public ReferenceTokenRecord findPersistedGrantByKeyAndType (String key, String type) {
-
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_PERSISTED_GRANTS_BY_KEY_AND_TYPE)) {
-            stmt.setString(1, key);
-            stmt.setString(2, type);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return new ReferenceTokenRecord(rs);
-                }
-            }
-        }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to findPersistedGrantByKeyAndType.", e);
-        }
-        return null;
     }
 }
