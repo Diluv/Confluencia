@@ -1,15 +1,18 @@
 package com.diluv.confluencia.database.record;
 
-import org.hibernate.annotations.DynamicUpdate;
-
-import javax.persistence.*;
-
 import java.io.Serializable;
 
-@Entity
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
+@Entity
 @Table(name = "game_default_project_type")
 public class GameDefaultProjectTypeEntity implements Serializable {
+
     @Id
     @OneToOne
     @JoinColumn(name = "game_slug", referencedColumnName = "slug")

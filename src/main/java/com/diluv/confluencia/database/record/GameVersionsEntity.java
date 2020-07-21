@@ -1,22 +1,22 @@
 package com.diluv.confluencia.database.record;
 
 import java.sql.Timestamp;
-import java.util.Date;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;import javax.persistence.Entity;
-import org.hibernate.annotations.DynamicUpdate;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-
 @Table(name = "game_versions")
 public class GameVersionsEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private long id;
 
@@ -32,6 +32,16 @@ public class GameVersionsEntity {
     @ManyToOne
     @JoinColumn(name = "game_slug")
     private GamesEntity game;
+
+    public GameVersionsEntity () {
+
+    }
+
+    public GameVersionsEntity (GamesEntity game, String version) {
+
+        this.game = game;
+        this.version = version;
+    }
 
     public long getId () {
 

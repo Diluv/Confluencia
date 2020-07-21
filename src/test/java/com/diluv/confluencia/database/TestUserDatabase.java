@@ -1,9 +1,9 @@
 package com.diluv.confluencia.database;
 
-import com.diluv.confluencia.ConfluenciaTest;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import com.diluv.confluencia.ConfluenciaTest;
 
 public class TestUserDatabase extends ConfluenciaTest {
 

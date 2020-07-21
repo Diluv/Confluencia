@@ -1,5 +1,6 @@
 package com.diluv.confluencia.database;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -7,6 +8,7 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.CriteriaUpdate;
 import javax.persistence.criteria.ParameterExpression;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.hibernate.Session;
@@ -14,7 +16,11 @@ import org.hibernate.Transaction;
 
 import com.diluv.confluencia.Confluencia;
 import com.diluv.confluencia.database.record.FileProcessingStatus;
+import com.diluv.confluencia.database.record.GameVersionsEntity;
+import com.diluv.confluencia.database.record.GamesEntity;
+import com.diluv.confluencia.database.record.ProjectFileGameVersionsEntity;
 import com.diluv.confluencia.database.record.ProjectFilesEntity;
+import com.diluv.confluencia.database.record.ProjectsEntity;
 import com.diluv.confluencia.database.sort.Order;
 import com.diluv.confluencia.database.sort.Sort;
 
@@ -152,24 +158,34 @@ public class FileDatabase {
         }
     }
 
-    public List<ProjectFilesEntity> findAllByProjectId (long projectId, boolean authorized, long page, int limit, Sort sort, String version) {
+    public List<ProjectFilesEntity> findAllByProjectId (ProjectsEntity project, boolean authorized, long page, int limit, Sort sort, String gameVersion) {
 
         try {
+            System.out.println("AH");
             return Confluencia.getQuery((session, cb) -> {
                 CriteriaQuery<ProjectFilesEntity> q = cb.createQuery(ProjectFilesEntity.class);
                 Root<ProjectFilesEntity> entity = q.from(ProjectFilesEntity.class);
 
-                ParameterExpression<Long> projectIdParam = cb.parameter(Long.class);
+                ParameterExpression<ProjectsEntity> projectParam = cb.parameter(ProjectsEntity.class);
                 ParameterExpression<String> versionParam = cb.parameter(String.class);
+                ParameterExpression<GamesEntity> gameParam = cb.parameter(GamesEntity.class);
 
                 q.select(entity);
-                q.where(cb.equal(entity.get("project_id"), projectIdParam));
+                List<Predicate> predicates = new ArrayList<>();
+                predicates.add(cb.equal(entity.get("project"), projectParam));
                 if (!authorized) {
-                    q.where(cb.isTrue(entity.get("released")));
+                    predicates.add(cb.isTrue(entity.get("released")));
                 }
-                if (version != null) {
-                    q.where(cb.equal(entity.get("version"), versionParam));
+
+                if (gameVersion != null) {
+                    Root<ProjectFileGameVersionsEntity> entityProjectFileGameVersions = q.from(ProjectFileGameVersionsEntity.class);
+                    Root<GameVersionsEntity> entityGameVersions = q.from(GameVersionsEntity.class);
+                    predicates.add(cb.equal(entityProjectFileGameVersions.get("projectFile"), entity));
+                    predicates.add(cb.equal(entityProjectFileGameVersions.get("gameVersion"), entityGameVersions));
+                    predicates.add(cb.equal(entityGameVersions.get("game"), gameParam));
+                    predicates.add(cb.equal(entityGameVersions.get("version"), versionParam));
                 }
+                q.where(cb.and(predicates.toArray(new Predicate[0])));
                 if (sort.getOrder() == Order.ASC) {
                     q.orderBy(cb.asc(entity.get(sort.getColumn())));
                 }
@@ -178,9 +194,10 @@ public class FileDatabase {
                 }
 
                 TypedQuery<ProjectFilesEntity> query = session.createQuery(q);
-                query.setParameter(projectIdParam, projectId);
-                if (version != null) {
-                    query.setParameter(versionParam, version);
+                query.setParameter(projectParam, project);
+                if (gameVersion != null) {
+                    query.setParameter(gameParam, project.getGame());
+                    query.setParameter(versionParam, gameVersion);
                 }
                 query.setFirstResult((int) ((page - 1) * limit));
                 query.setMaxResults(limit);
@@ -192,26 +209,26 @@ public class FileDatabase {
         }
     }
 
-//    public boolean existsByProjectIdAndVersion (long projectId, String version) {
-//
-//        try {
-//            return Confluencia.getQuery(session -> {
-//                CriteriaBuilder cb = session.getCriteriaBuilder();
-//
-//                CriteriaQuery<ProjectFilesEntity> q = cb.createQuery(ProjectFilesEntity.class);
-//                Root<ProjectFilesEntity> entity = q.from(ProjectFilesEntity.class);
-//                ParameterExpression<Long> i = cb.parameter(Long.class);
-//                ParameterExpression<String> v = cb.parameter(String.class);
-//                q.select(news).where(cb.and(cb.equal(news.get("project_id"), i), cb.equal(news.get("version"), v)));
-//
-//                TypedQuery<ProjectFilesEntity> query = session.createQuery(q);
-//                query.setParameter(i, projectId);
-//                query.setParameter(v, version);
-//                return query.getSingleResult() != null;
-//            });
-//        }
-//        catch (Exception e) {
-//            return false;
-//        }
-//    }
+    public boolean existsByProjectIdAndVersion (long projectId, String version) {
+
+        try {
+            return Confluencia.getQuery((session, cb) -> {
+
+                CriteriaQuery<ProjectFilesEntity> q = cb.createQuery(ProjectFilesEntity.class);
+                Root<ProjectFilesEntity> entity = q.from(ProjectFilesEntity.class);
+                ParameterExpression<ProjectsEntity> projectParam = cb.parameter(ProjectsEntity.class);
+                ParameterExpression<String> versionParam = cb.parameter(String.class);
+                q.select(entity);
+                q.where(cb.and(cb.equal(entity.get("project"), projectParam), cb.equal(entity.get("version"), versionParam)));
+
+                TypedQuery<ProjectFilesEntity> query = session.createQuery(q);
+                query.setParameter(projectParam, new ProjectsEntity(projectId));
+                query.setParameter(versionParam, version);
+                return query.getSingleResult() != null;
+            });
+        }
+        catch (Exception e) {
+            return false;
+        }
+    }
 }

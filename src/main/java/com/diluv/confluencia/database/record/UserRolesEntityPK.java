@@ -2,34 +2,39 @@ package com.diluv.confluencia.database.record;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 public class UserRolesEntityPK implements Serializable {
-    private long userId;
-    private long roleId;
 
-    @Column(name = "user_id")
     @Id
-    public long getUserId () {
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UsersEntity user;
 
-        return this.userId;
-    }
-
-    public void setUserId (long userId) {
-
-        this.userId = userId;
-    }
-
-    @Column(name = "role_id")
     @Id
-    public long getRoleId () {
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private RolesEntity role;
 
-        return this.roleId;
+    public UsersEntity getUser () {
+
+        return this.user;
     }
 
-    public void setRoleId (long roleId) {
+    public void setUser (UsersEntity user) {
 
-        this.roleId = roleId;
+        this.user = user;
+    }
+
+    public RolesEntity getRole () {
+
+        return this.role;
+    }
+
+    public void setRole (RolesEntity role) {
+
+        this.role = role;
     }
 }

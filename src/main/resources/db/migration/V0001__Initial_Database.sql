@@ -82,8 +82,8 @@ CREATE TABLE project_types
 
 CREATE TABLE game_default_project_type
 (
-    game_slug VARCHAR(200) NOT NULL,
-    project_type_slug      VARCHAR(200) NOT NULL,
+    game_slug         VARCHAR(200) NOT NULL,
+    project_type_slug VARCHAR(200) NOT NULL,
 
     PRIMARY KEY (game_slug),
     FOREIGN KEY (game_slug) REFERENCES games (slug),

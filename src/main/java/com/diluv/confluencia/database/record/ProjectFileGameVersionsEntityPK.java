@@ -7,6 +7,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 public class ProjectFileGameVersionsEntityPK implements Serializable {
+
     @Id
     @ManyToOne
     @JoinColumn(name = "game_version_id")

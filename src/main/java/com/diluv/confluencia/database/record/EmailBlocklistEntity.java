@@ -1,14 +1,14 @@
 package com.diluv.confluencia.database.record;
 
-import javax.persistence.Column;import javax.persistence.Entity;
-import org.hibernate.annotations.DynamicUpdate;
+import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-
 @Table(name = "email_blocklist")
 public class EmailBlocklistEntity {
+
     @Id
     @Column(name = "email")
     private String email;

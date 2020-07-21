@@ -79,6 +79,7 @@ public class Confluencia {
             return r;
         }
         catch (Exception e) {
+            e.printStackTrace();
             if (transaction != null) {
                 transaction.rollback();
             }

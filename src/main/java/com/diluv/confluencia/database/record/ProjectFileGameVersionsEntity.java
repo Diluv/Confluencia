@@ -7,13 +7,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.DynamicUpdate;
-
 @Entity
-
 @Table(name = "project_file_game_versions")
 @IdClass(ProjectFileGameVersionsEntityPK.class)
 public class ProjectFileGameVersionsEntity {
+
     @Id
     @ManyToOne
     @JoinColumn(name = "game_version_id")

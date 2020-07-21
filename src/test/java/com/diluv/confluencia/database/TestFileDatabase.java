@@ -1,13 +1,15 @@
 package com.diluv.confluencia.database;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 import com.diluv.confluencia.ConfluenciaTest;
 import com.diluv.confluencia.database.record.FileProcessingStatus;
+import com.diluv.confluencia.database.record.GamesEntity;
 import com.diluv.confluencia.database.record.ProjectFilesEntity;
 import com.diluv.confluencia.database.record.ProjectsEntity;
 import com.diluv.confluencia.database.record.UsersEntity;
-
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import com.diluv.confluencia.database.sort.ProjectFileSort;
 
 public class TestFileDatabase extends ConfluenciaTest {
 
@@ -49,9 +51,26 @@ public class TestFileDatabase extends ConfluenciaTest {
     }
 
     @Test
-    public void findOneProjectFileQueueByFileId () {
+    public void findOneById () {
 
         Assertions.assertNotNull(ConfluenciaTest.FILE.findOneById(1));
         Assertions.assertNull(ConfluenciaTest.FILE.findOneById(100));
+    }
+
+    @Test
+    public void findAllByProjectId () {
+
+        ProjectsEntity project = new ProjectsEntity(1);
+        project.setGame(new GamesEntity("minecraft-je"));
+        Assertions.assertEquals(16, ConfluenciaTest.FILE.findAllByProjectId(project, true, 1, 25, ProjectFileSort.NEW, null).size());
+        Assertions.assertEquals(1, ConfluenciaTest.FILE.findAllByProjectId(project, true, 1, 25, ProjectFileSort.NEW, "1.12.2").size());
+        Assertions.assertEquals(0, ConfluenciaTest.FILE.findAllByProjectId(project, true, 1, 25, ProjectFileSort.NEW, "invalid").size());
+    }
+
+    @Test
+    public void existsByProjectIdAndVersion () {
+
+        Assertions.assertTrue(ConfluenciaTest.FILE.existsByProjectIdAndVersion(1, "1.0.0"));
+        Assertions.assertFalse(ConfluenciaTest.FILE.existsByProjectIdAndVersion(1, "invalid"));
     }
 }

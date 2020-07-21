@@ -7,6 +7,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 public class ProjectFileDependenciesEntityPK implements Serializable {
+
     @Id
     @ManyToOne
     @JoinColumn(name = "project_file_id")

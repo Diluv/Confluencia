@@ -2,13 +2,12 @@ package com.diluv.confluencia.database.record;
 
 import java.sql.Timestamp;
 
-import javax.persistence.Column;import javax.persistence.Entity;
-import org.hibernate.annotations.DynamicUpdate;
+import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-
 @Table(name = "email_bounce")
 public class EmailBounceEntity {
 

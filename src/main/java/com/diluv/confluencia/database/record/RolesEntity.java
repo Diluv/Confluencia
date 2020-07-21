@@ -1,20 +1,24 @@
 package com.diluv.confluencia.database.record;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;import javax.persistence.Entity;
-import org.hibernate.annotations.DynamicUpdate;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-
 @Table(name = "roles")
 public class RolesEntity {
-    private long id;
-    private String name;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
+    private long id;
+
+    @Column(name = "name")
+    private String name;
+
     public long getId () {
 
         return this.id;
@@ -25,8 +29,6 @@ public class RolesEntity {
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "name")
     public String getName () {
 
         return this.name;

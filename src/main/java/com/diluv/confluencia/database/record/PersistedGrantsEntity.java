@@ -1,30 +1,44 @@
 package com.diluv.confluencia.database.record;
 
 import java.sql.Timestamp;
-import java.util.Date;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;import javax.persistence.Entity;
-import org.hibernate.annotations.DynamicUpdate;
+import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-
 @Table(name = "PersistedGrants")
 public class PersistedGrantsEntity {
-    private String key;
-    private String type;
-    private String subjectId;
-    private String sessionId;
-    private String clientId;
-    private String description;
-    private Timestamp creationTime;
-    private Timestamp expiration;
-    private String data;
 
     @Id
     @Column(name = "Key")
+    private String key;
+
+    @Column(name = "Type")
+    private String type;
+
+    @Column(name = "SubjectId")
+    private String subjectId;
+
+    @Column(name = "SessionId")
+    private String sessionId;
+
+    @Column(name = "ClientId")
+    private String clientId;
+
+    @Column(name = "Description")
+    private String description;
+
+    @Column(name = "CreationTime")
+    private Timestamp creationTime;
+
+    @Column(name = "Expiration")
+    private Timestamp expiration;
+
+    @Column(name = "Data")
+    private String data;
+
     public String getKey () {
 
         return this.key;
@@ -35,8 +49,6 @@ public class PersistedGrantsEntity {
         this.key = key;
     }
 
-    @Basic
-    @Column(name = "Type")
     public String getType () {
 
         return this.type;
@@ -47,8 +59,6 @@ public class PersistedGrantsEntity {
         this.type = type;
     }
 
-    @Basic
-    @Column(name = "SubjectId")
     public String getSubjectId () {
 
         return this.subjectId;
@@ -59,8 +69,6 @@ public class PersistedGrantsEntity {
         this.subjectId = subjectId;
     }
 
-    @Basic
-    @Column(name = "SessionId")
     public String getSessionId () {
 
         return this.sessionId;
@@ -71,8 +79,6 @@ public class PersistedGrantsEntity {
         this.sessionId = sessionId;
     }
 
-    @Basic
-    @Column(name = "ClientId")
     public String getClientId () {
 
         return this.clientId;
@@ -83,8 +89,6 @@ public class PersistedGrantsEntity {
         this.clientId = clientId;
     }
 
-    @Basic
-    @Column(name = "Description")
     public String getDescription () {
 
         return this.description;
@@ -95,8 +99,6 @@ public class PersistedGrantsEntity {
         this.description = description;
     }
 
-    @Basic
-    @Column(name = "CreationTime")
     public Timestamp getCreationTime () {
 
         return this.creationTime;
@@ -107,8 +109,6 @@ public class PersistedGrantsEntity {
         this.creationTime = creationTime;
     }
 
-    @Basic
-    @Column(name = "Expiration")
     public Timestamp getExpiration () {
 
         return this.expiration;
@@ -119,8 +119,6 @@ public class PersistedGrantsEntity {
         this.expiration = expiration;
     }
 
-    @Basic
-    @Column(name = "Data")
     public String getData () {
 
         return this.data;

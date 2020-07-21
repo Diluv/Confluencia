@@ -1,7 +1,7 @@
 package com.diluv.confluencia.database.record;
 
-import javax.persistence.Column;import javax.persistence.Entity;
-import org.hibernate.annotations.DynamicUpdate;
+import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
@@ -9,9 +9,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-
 @Table(name = "tags")
 public class TagsEntity {
+
     @Id
     @Column(name = "id")
     private long id;

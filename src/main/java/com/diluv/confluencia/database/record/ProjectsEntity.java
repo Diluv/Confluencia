@@ -11,6 +11,7 @@ import org.hibernate.annotations.DynamicInsert;
 @DynamicInsert
 @Table(name = "projects")
 public class ProjectsEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -49,13 +50,14 @@ public class ProjectsEntity {
 
     @ManyToOne
     @JoinColumns({
-        @JoinColumn(name = "project_type_slug", referencedColumnName = "slug"),
-        @JoinColumn(name = "game_slug", referencedColumnName = "game_slug")
+        @JoinColumn(name = "project_type_slug"),
+        @JoinColumn(name = "game_slug")
     })
     private ProjectTypesEntity projectType;
 
-    @OneToMany(mappedBy = "project", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
-    private List<ProjectFilesEntity> projectFiles;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "game_slug", insertable = false, updatable = false)
+    private GamesEntity game;
 
     @OneToMany(mappedBy = "tag", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     private List<ProjectTagsEntity> tags;
@@ -65,6 +67,7 @@ public class ProjectsEntity {
 
     @OneToMany(mappedBy = "project", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     private List<ProjectAuthorsEntity> authors;
+
 
     public ProjectsEntity () {
 
@@ -195,16 +198,6 @@ public class ProjectsEntity {
         this.projectType = projectType;
     }
 
-    public List<ProjectFilesEntity> getProjectFiles () {
-
-        return this.projectFiles;
-    }
-
-    public void setProjectFiles (List<ProjectFilesEntity> projectFiles) {
-
-        this.projectFiles = projectFiles;
-    }
-
     public List<ProjectTagsEntity> getTags () {
 
         return this.tags;
@@ -237,6 +230,11 @@ public class ProjectsEntity {
 
     public GamesEntity getGame () {
 
-        return this.projectType.getGame();
+        return this.game;
+    }
+
+    public void setGame (GamesEntity game) {
+
+        this.game = game;
     }
 }

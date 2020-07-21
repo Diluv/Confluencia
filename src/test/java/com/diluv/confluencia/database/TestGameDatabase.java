@@ -1,12 +1,19 @@
 package com.diluv.confluencia.database;
 
-import com.diluv.confluencia.ConfluenciaTest;
-import com.diluv.confluencia.database.sort.GameSort;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import com.diluv.confluencia.ConfluenciaTest;
+import com.diluv.confluencia.database.sort.GameSort;
+
 public class TestGameDatabase extends ConfluenciaTest {
+
+    @Test
+    public void countAllBySearch () {
+
+        Assertions.assertEquals(2, ConfluenciaTest.GAME.countAllBySearch(""));
+        Assertions.assertEquals(1, ConfluenciaTest.GAME.countAllBySearch("bedrock"));
+    }
 
     @Test
     public void findOneBySlug () {
@@ -16,13 +23,6 @@ public class TestGameDatabase extends ConfluenciaTest {
 
         // Not found
         Assertions.assertNull(ConfluenciaTest.GAME.findOneBySlug("notfound"));
-    }
-
-    @Test
-    public void countAll () {
-
-        Assertions.assertEquals(2, ConfluenciaTest.GAME.countAllBySearch(""));
-        Assertions.assertEquals(1, ConfluenciaTest.GAME.countAllBySearch("bedrock"));
     }
 
     @Test

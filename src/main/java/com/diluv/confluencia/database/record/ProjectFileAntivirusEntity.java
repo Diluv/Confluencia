@@ -1,34 +1,36 @@
 package com.diluv.confluencia.database.record;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;import javax.persistence.Entity;
-import org.hibernate.annotations.DynamicUpdate;
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.DynamicUpdate;
-
 @Entity
-
 @Table(name = "project_file_antivirus")
-public class ProjectFileAntivirusEntity {
-    private long projectFileId;
-    private String malware;
+public class ProjectFileAntivirusEntity implements Serializable {
 
     @Id
-    @Column(name = "project_file_id")
-    public long getProjectFileId () {
+    @ManyToOne
+    @JoinColumn(name = "project_file_id")
+    private ProjectFilesEntity projectFile;
 
-        return this.projectFileId;
-    }
-
-    public void setProjectFileId (long projectFileId) {
-
-        this.projectFileId = projectFileId;
-    }
-
-    @Basic
     @Column(name = "malware")
+    private String malware;
+
+    public ProjectFilesEntity getProjectFile () {
+
+        return this.projectFile;
+    }
+
+    public void setProjectFile (ProjectFilesEntity projectFile) {
+
+        this.projectFile = projectFile;
+    }
+
     public String getMalware () {
 
         return this.malware;

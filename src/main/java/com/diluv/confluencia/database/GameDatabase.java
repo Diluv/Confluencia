@@ -12,7 +12,6 @@ import com.diluv.confluencia.Confluencia;
 import com.diluv.confluencia.database.record.FeaturedGamesEntity;
 import com.diluv.confluencia.database.record.GamesEntity;
 import com.diluv.confluencia.database.record.ProjectTypesEntity;
-import com.diluv.confluencia.database.record.ProjectsEntity;
 import com.diluv.confluencia.database.sort.Order;
 import com.diluv.confluencia.database.sort.Sort;
 
@@ -32,28 +31,6 @@ public class GameDatabase {
 
                 TypedQuery<Long> query = session.createQuery(q);
                 query.setParameter(s, "%" + search + "%");
-                return query.getSingleResult();
-            });
-        }
-        catch (Exception e) {
-            return 0;
-        }
-    }
-
-    public long countAllProjectsBySlug (String gameSlug) {
-
-        try {
-            return Confluencia.getQuery((session, cb) -> {
-                CriteriaQuery<Long> q = cb.createQuery(Long.class);
-
-                ParameterExpression<String> gameSlugParam = cb.parameter(String.class);
-
-                Root<ProjectsEntity> entity = q.from(ProjectsEntity.class);
-                q.select(cb.count(entity));
-                q.where(cb.like(entity.get("gameSlug"), gameSlugParam));
-
-                TypedQuery<Long> query = session.createQuery(q);
-                query.setParameter(gameSlugParam, gameSlug);
                 return query.getSingleResult();
             });
         }
@@ -105,7 +82,7 @@ public class GameDatabase {
                 q.where(cb.like(entity.get("slug"), s));
 
                 TypedQuery<GamesEntity> query = session.createQuery(q);
-                query.setParameter(s, slug);
+                query.setParameter(s, "%" + slug + "%");
                 return query.getSingleResult();
             });
         }

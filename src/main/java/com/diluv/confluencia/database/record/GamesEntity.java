@@ -3,8 +3,8 @@ package com.diluv.confluencia.database.record;
 import java.sql.Timestamp;
 import java.util.List;
 
-import javax.persistence.Column;import javax.persistence.Entity;
-import org.hibernate.annotations.DynamicUpdate;
+import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -12,9 +12,9 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
-
 @Table(name = "games")
 public class GamesEntity {
+
     @Id
     @Column(name = "slug")
     private String slug;

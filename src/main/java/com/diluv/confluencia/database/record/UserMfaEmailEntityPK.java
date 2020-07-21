@@ -4,25 +4,31 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 public class UserMfaEmailEntityPK implements Serializable {
-    private long userId;
+
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UsersEntity user;
+
+    @Id
+    @Column(name = "code")
     private String code;
 
-    @Column(name = "user_id")
-    @Id
-    public long getUserId () {
 
-        return this.userId;
+    public UsersEntity getUser () {
+
+        return this.user;
     }
 
-    public void setUserId (long userId) {
+    public void setUser (UsersEntity user) {
 
-        this.userId = userId;
+        this.user = user;
     }
 
-    @Column(name = "code")
-    @Id
     public String getCode () {
 
         return this.code;

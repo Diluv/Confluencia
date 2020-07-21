@@ -4,25 +4,30 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 public class RolePermissionsEntityPK implements Serializable {
-    private long roleId;
+
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private RolesEntity role;
+
+    @Id
+    @Column(name = "permission")
     private String permission;
 
-    @Column(name = "role_id")
-    @Id
-    public long getRoleId () {
+    public RolesEntity getRole () {
 
-        return this.roleId;
+        return this.role;
     }
 
-    public void setRoleId (long roleId) {
+    public void setRole (RolesEntity role) {
 
-        this.roleId = roleId;
+        this.role = role;
     }
 
-    @Column(name = "permission")
-    @Id
     public String getPermission () {
 
         return this.permission;

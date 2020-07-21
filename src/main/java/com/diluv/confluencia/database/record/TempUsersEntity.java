@@ -2,27 +2,43 @@ package com.diluv.confluencia.database.record;
 
 import java.sql.Timestamp;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;import javax.persistence.Entity;
-import org.hibernate.annotations.DynamicUpdate;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-
 @Table(name = "temp_users")
 public class TempUsersEntity {
-    private long id;
-    private String username;
-    private String displayName;
-    private String email;
-    private String password;
-    private String passwordType;
-    private Timestamp createdAt;
-    private String code;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
+    private long id;
+
+    @Column(name = "username")
+    private String username;
+
+    @Column(name = "display_name")
+    private String displayName;
+
+    @Column(name = "email")
+    private String email;
+
+    @Column(name = "password")
+    private String password;
+
+    @Column(name = "password_type")
+    private String passwordType;
+
+    @Column(name = "created_at")
+    private Timestamp createdAt;
+
+    @Column(name = "code")
+    private String code;
+
     public long getId () {
 
         return this.id;
@@ -33,8 +49,6 @@ public class TempUsersEntity {
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "username")
     public String getUsername () {
 
         return this.username;
@@ -45,8 +59,6 @@ public class TempUsersEntity {
         this.username = username;
     }
 
-    @Basic
-    @Column(name = "display_name")
     public String getDisplayName () {
 
         return this.displayName;
@@ -57,8 +69,6 @@ public class TempUsersEntity {
         this.displayName = displayName;
     }
 
-    @Basic
-    @Column(name = "email")
     public String getEmail () {
 
         return this.email;
@@ -69,8 +79,6 @@ public class TempUsersEntity {
         this.email = email;
     }
 
-    @Basic
-    @Column(name = "password")
     public String getPassword () {
 
         return this.password;
@@ -81,8 +89,6 @@ public class TempUsersEntity {
         this.password = password;
     }
 
-    @Basic
-    @Column(name = "password_type")
     public String getPasswordType () {
 
         return this.passwordType;
@@ -93,8 +99,6 @@ public class TempUsersEntity {
         this.passwordType = passwordType;
     }
 
-    @Basic
-    @Column(name = "created_at")
     public Timestamp getCreatedAt () {
 
         return this.createdAt;
@@ -105,8 +109,6 @@ public class TempUsersEntity {
         this.createdAt = createdAt;
     }
 
-    @Basic
-    @Column(name = "code")
     public String getCode () {
 
         return this.code;

@@ -8,9 +8,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 public class ProjectAuthorPermissionsEntityPK implements Serializable {
+
     @Id
     @ManyToOne
-    @JoinColumn(name = "project_author_id"  )
+    @JoinColumn(name = "project_author_id")
     private ProjectAuthorsEntity author;
 
     @Id

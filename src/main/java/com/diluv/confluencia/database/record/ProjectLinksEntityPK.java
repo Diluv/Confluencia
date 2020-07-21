@@ -8,6 +8,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 public class ProjectLinksEntityPK implements Serializable {
+
     @Id
     @ManyToOne
     @JoinColumn(name = "project_id")

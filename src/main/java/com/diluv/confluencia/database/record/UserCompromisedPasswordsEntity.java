@@ -2,22 +2,25 @@ package com.diluv.confluencia.database.record;
 
 import java.sql.Timestamp;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;import javax.persistence.Entity;
-import org.hibernate.annotations.DynamicUpdate;
+import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-
 @Table(name = "user_compromised_passwords")
 public class UserCompromisedPasswordsEntity {
-    private String passwordHash;
-    private long occurrences;
-    private Timestamp lastUpdated;
 
     @Id
     @Column(name = "password_hash")
+    private String passwordHash;
+
+    @Column(name = "occurrences")
+    private long occurrences;
+
+    @Column(name = "last_updated")
+    private Timestamp lastUpdated;
+
     public String getPasswordHash () {
 
         return this.passwordHash;
@@ -28,8 +31,6 @@ public class UserCompromisedPasswordsEntity {
         this.passwordHash = passwordHash;
     }
 
-    @Basic
-    @Column(name = "occurrences")
     public long getOccurrences () {
 
         return this.occurrences;
@@ -40,8 +41,6 @@ public class UserCompromisedPasswordsEntity {
         this.occurrences = occurrences;
     }
 
-    @Basic
-    @Column(name = "last_updated")
     public Timestamp getLastUpdated () {
 
         return this.lastUpdated;
