@@ -11,10 +11,10 @@ VALUES (1, 'darkhax', 'Darkhax', 'darkhax@diluv.com',
 INSERT INTO user_roles(user_id, role_id)
 VALUES (2, 1);
 
-INSERT INTO temp_users(id, username,  display_name, email, password, password_type, created_at, code)
+INSERT INTO temp_users(id, username, display_name, email, password, password_type, created_at, code)
 VALUES (1, 'tempuser', 'TestUser', 'tempuser@diluv.com', '', '', NOW(), '26757111'),
-       (2, 'tempuser2', 'TempUSER2','tempuser2@diluv.com', '', '', NOW(), '10931681'),
-       (3, 'tempuser3', 'TEMPUSER3','tempuser3@diluv.com', '', '', NOW(), '51601365');
+       (2, 'tempuser2', 'TempUSER2', 'tempuser2@diluv.com', '', '', NOW(), '10931681'),
+       (3, 'tempuser3', 'TEMPUSER3', 'tempuser3@diluv.com', '', '', NOW(), '51601365');
 
 INSERT INTO projects(name, slug, summary, description, cached_downloads, review, released, created_at, updated_at,
                      user_id, game_slug, project_type_slug)
@@ -571,11 +571,9 @@ VALUES (94, 1, 'Coauthor'),
        (44, 2, 'Coauthor'),
        (48, 2, 'Coauthor'),
        (60, 2, 'Coauthor'),
-       (6, 2, 'Coauthor');
-
-INSERT INTO project_authors(id, project_id, user_id, role)
-VALUES (6, 1, 2, 'Testing'),
-       (7, 1, 3, 'Testing');
+       (6, 2, 'Coauthor'),
+       (1, 2, 'Testing'),
+       (1, 3, 'Testing');
 
 INSERT INTO project_author_permissions(project_author_id, permission)
 VALUES (6, 'project.upload'),
@@ -716,7 +714,15 @@ VALUES (1, 2),
        (1, 3);
 
 INSERT INTO project_file_game_versions(project_file_id, game_version_id)
-VALUES (1, 6);
+VALUES (1, 341),
+       (2, 241),
+       (3, 210),
+       (4, 202),
+       (5, 183),
+       (6, 158),
+       (7, 94),
+       (8, 34),
+       (9, 6);
 
 # IS4
 

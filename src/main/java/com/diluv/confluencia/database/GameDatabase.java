@@ -1,167 +1,130 @@
 package com.diluv.confluencia.database;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.StringJoiner;
+
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.ParameterExpression;
+import javax.persistence.criteria.Root;
 
 import com.diluv.confluencia.Confluencia;
-import com.diluv.confluencia.database.record.GameRecord;
-import com.diluv.confluencia.database.record.GameVersionRecord;
+import com.diluv.confluencia.database.record.FeaturedGamesEntity;
+import com.diluv.confluencia.database.record.GamesEntity;
+import com.diluv.confluencia.database.record.ProjectTypesEntity;
+import com.diluv.confluencia.database.sort.Order;
 import com.diluv.confluencia.database.sort.Sort;
-import com.diluv.confluencia.utils.SQLHandler;
 
 public class GameDatabase {
 
-    private static final String COUNT_ALL = SQLHandler.readFile("game/countAll");
-    private static final String COUNT_ALL_SEARCH = SQLHandler.readFile("game/countAllSearch");
-    private static final String FIND_ALL = SQLHandler.readFile("game/findAll");
-    private static final String FIND_ONE_BY_SLUG = SQLHandler.readFile("game/findOneBySlug");
+    public long countAllBySearch (String search) {
 
-    private static final String FIND_FEATURED_GAMES = SQLHandler.readFile("game/findFeaturedGames");
+        try {
+            return Confluencia.getQuery((session, cb) -> {
+                CriteriaQuery<Long> q = cb.createQuery(Long.class);
 
-    private static final String FIND_ALL_GAME_VERSIONS_BY_GAMESLUG = SQLHandler.readFile("game/findAllGameVersionsByGameSlug");
-    private static final String FIND_GAME_VERSIONS_BY_GAME_SLUG_AND_VERSIONS = SQLHandler.readFile("game/findGameVersionsByGameSlugAndVersions");
+                ParameterExpression<String> s = cb.parameter(String.class);
 
-    private static final String COUNT_ALL_PROJECT_TYPES = SQLHandler.readFile("project_types/countAll");
+                Root<GamesEntity> entity = q.from(GamesEntity.class);
+                q.select(cb.count(entity));
+                q.where(cb.like(entity.get("name"), s));
 
-    public long countAll () {
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(COUNT_ALL)) {
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getLong(1);
-                }
-            }
+                TypedQuery<Long> query = session.createQuery(q);
+                query.setParameter(s, "%" + search + "%");
+                return query.getSingleResult();
+            });
         }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to run countAll games database script.", e);
+        catch (Exception e) {
+            return 0;
         }
-        return 0;
     }
 
-    public long countAll (String search) {
+    public List<GamesEntity> findAll (long page, int limit, Sort sort, String search) {
 
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(COUNT_ALL_SEARCH)) {
-            stmt.setString(1, "%" + search + "%");
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getLong(1);
+        try {
+            return Confluencia.getQuery((session, cb) -> {
+                CriteriaQuery<GamesEntity> q = cb.createQuery(GamesEntity.class);
+                Root<GamesEntity> entity = q.from(GamesEntity.class);
+
+                ParameterExpression<String> s = cb.parameter(String.class);
+
+                q.select(entity);
+                q.where(cb.like(entity.get("name"), s));
+                if (sort.getOrder() == Order.ASC) {
+                    q.orderBy(cb.asc(entity.get(sort.getColumn())));
                 }
-            }
+                else {
+                    q.orderBy(cb.desc(entity.get(sort.getColumn())));
+                }
+
+                TypedQuery<GamesEntity> query = session.createQuery(q);
+                query.setParameter(s, "%" + search + "%");
+                query.setFirstResult((int) ((page - 1) * limit));
+                query.setMaxResults(limit);
+                return query.getResultList();
+            });
         }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to run countAll games database script.", e);
+        catch (Exception e) {
+            return Collections.emptyList();
         }
-        return 0;
     }
 
-    public List<GameRecord> findAll (long page, int limit, Sort sort, String search) {
+    public GamesEntity findOneBySlug (String slug) {
 
-        List<GameRecord> gameRecords = new ArrayList<>();
-        try (PreparedStatement stmt = sort.getQuery(FIND_ALL)) {
-            stmt.setString(1, "%" + search + "%");
-            stmt.setLong(2, (page - 1) * limit);
-            stmt.setLong(3, limit);
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    gameRecords.add(new GameRecord(rs));
-                }
-            }
+        try {
+            return Confluencia.getQuery((session, cb) -> {
+                CriteriaQuery<GamesEntity> q = cb.createQuery(GamesEntity.class);
+
+                ParameterExpression<String> s = cb.parameter(String.class);
+
+                Root<GamesEntity> entity = q.from(GamesEntity.class);
+                q.select(entity);
+                q.where(cb.like(entity.get("slug"), s));
+
+                TypedQuery<GamesEntity> query = session.createQuery(q);
+                query.setParameter(s, "%" + slug + "%");
+                return query.getSingleResult();
+            });
         }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to run findAll games database script.", e);
+        catch (Exception e) {
+            return null;
         }
-        return gameRecords;
     }
 
-    public GameRecord findOneBySlug (String name) {
+    public List<FeaturedGamesEntity> findFeaturedGames () {
 
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ONE_BY_SLUG)) {
-            stmt.setString(1, name);
+        try {
+            return Confluencia.getQuery((session, cb) -> {
+                CriteriaQuery<FeaturedGamesEntity> q = cb.createQuery(FeaturedGamesEntity.class);
 
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return new GameRecord(rs);
-                }
-            }
-        }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to run findOneBySlug game database script with game {}.", name, e);
-        }
-        return null;
-    }
+                Root<FeaturedGamesEntity> entity = q.from(FeaturedGamesEntity.class);
 
-    public List<GameRecord> findFeaturedGames () {
+                q.select(entity);
 
-        List<GameRecord> gameRecords = new ArrayList<>();
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_FEATURED_GAMES)) {
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    gameRecords.add(new GameRecord(rs));
-                }
-            }
+                TypedQuery<FeaturedGamesEntity> query = session.createQuery(q);
+                return query.getResultList();
+            });
         }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to run findAll games database script.", e);
+        catch (Exception e) {
+            return Collections.emptyList();
         }
-        return gameRecords;
-    }
-
-    public List<GameVersionRecord> findAllGameVersionsByGameSlug (String gameSlug) {
-
-        List<GameVersionRecord> gameVersions = new ArrayList<>();
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL_GAME_VERSIONS_BY_GAMESLUG)) {
-            stmt.setString(1, gameSlug);
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    gameVersions.add(new GameVersionRecord(rs));
-                }
-            }
-        }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to run findAllGameVersionsByGameSlug games database script.", e);
-        }
-        return gameVersions;
-    }
-
-    public List<GameVersionRecord> findGameVersionsByGameSlugAndVersions (String gameSlug, String[] versions) {
-
-        StringJoiner b = new StringJoiner(",");
-        for (int i = 0; i < versions.length; i++) {
-            b.add("?");
-        }
-        List<GameVersionRecord> gameVersions = new ArrayList<>();
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_GAME_VERSIONS_BY_GAME_SLUG_AND_VERSIONS.replace("(?)", "(" + b.toString() + ")"))) {
-
-            stmt.setString(1, gameSlug);
-            for (int i = 0; i < versions.length; i++) {
-                stmt.setString(i + 2, versions[i]);
-            }
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    gameVersions.add(new GameVersionRecord(rs));
-                }
-            }
-        }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to run findGameVersionsByGameSlugAndVersions games database script.", e);
-        }
-        return gameVersions;
     }
 
     public long countAllProjectTypes () {
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(COUNT_ALL_PROJECT_TYPES)) {
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getLong(1);
-                }
-            }
+
+        try {
+            return Confluencia.getQuery((session, cb) -> {
+                CriteriaQuery<Long> q = cb.createQuery(Long.class);
+
+                Root<ProjectTypesEntity> entity = q.from(ProjectTypesEntity.class);
+                q.select(cb.count(entity));
+
+                TypedQuery<Long> query = session.createQuery(q);
+                return query.getSingleResult();
+            });
         }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to run countAllProjectTypes games database script.", e);
+        catch (Exception e) {
+            return 0;
         }
-        return 0;
     }
 }

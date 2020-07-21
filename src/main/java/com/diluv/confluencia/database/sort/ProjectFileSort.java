@@ -7,8 +7,8 @@ public class ProjectFileSort {
 
     public static final List<Sort> LIST = new ArrayList<>();
 
-    public static final Sort OLD = addSort(new Sort("old", "Oldest", "created_at", Order.ASC));
-    public static final Sort NEW = addSort(new Sort("new", "Newest", "created_at", Order.DESC));
+    public static final Sort OLD = addSort(new Sort("old", "Oldest", "createdAt", Order.ASC));
+    public static final Sort NEW = addSort(new Sort("new", "Newest", "createdAt", Order.DESC));
 
     private static Sort addSort (Sort sort) {
 

@@ -1,238 +1,74 @@
 package com.diluv.confluencia.database;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.ParameterExpression;
+import javax.persistence.criteria.Root;
 
 import com.diluv.confluencia.Confluencia;
-import com.diluv.confluencia.database.record.PasswordResetRecord;
-import com.diluv.confluencia.database.record.TempUserRecord;
-import com.diluv.confluencia.database.record.UserRecord;
-import com.diluv.confluencia.database.record.UserRoleRecord;
-import com.diluv.confluencia.utils.SQLHandler;
+import com.diluv.confluencia.database.record.UsersEntity;
 
 public class UserDatabase {
 
-    private static final String COUNT_ALL = SQLHandler.readFile("user/countAll");
-
-    private static final String EXISTS_USER_BY_USERNAME = SQLHandler.readFile("user/existsUserByUsername");
-    private static final String FIND_USER_BY_USERNAME = SQLHandler.readFile("user/findUserByUsername");
-    private static final String FIND_USER_BY_USER_ID = SQLHandler.readFile("user/findUserByUserId");
-    private static final String UPDATE_PASSWORD_BY_USERID = SQLHandler.readFile("user/updatePasswordByUserId");
-
-    private static final String EXISTS_TEMPUSER_BY_USERNAME = SQLHandler.readFile("temp_user/existsTempUserByUsername");
-    private static final String UPDATE_TEMPUSER = SQLHandler.readFile("temp_user/updateTempUser");
-    private static final String FIND_TEMPUSER_BY_EMAIL_AND_USERNAME = SQLHandler.readFile("temp_user/findTempUserByEmailAndUsername");
-    private static final String DELETE_TEMPUSER = SQLHandler.readFile("temp_user/deleteTempUser");
-
-    private static final String DELETE_ALL_REFRESH_TOKENS_BY_USERID = SQLHandler.readFile("refresh_token/deleteRefreshTokenByUserId");
-
-    private static final String INSERT_PASSWORD_RESET = SQLHandler.readFile("user_reset/insertPasswordReset");
-    private static final String DELETE_PASSWORD_RESET = SQLHandler.readFile("user_reset/deletePasswordReset");
-    private static final String FIND_ONE_PASSWORD_RESET_BY_EMAIL_AND_CODE = SQLHandler.readFile("user_reset/findOnePasswordResetByEmailAndCode");
-
     public long countAll () {
 
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(COUNT_ALL)) {
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getLong(1);
-                }
-            }
+        try {
+            return Confluencia.getQuery((session, cb) -> {
+                CriteriaQuery<Long> q = cb.createQuery(Long.class);
+
+                Root<UsersEntity> entity = q.from(UsersEntity.class);
+                q.select(cb.count(entity));
+
+                TypedQuery<Long> query = session.createQuery(q);
+                return query.getSingleResult();
+            });
         }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to run countAll.", e);
+        catch (Exception e) {
+            return 0;
         }
-        return 0;
     }
 
-    public boolean existsUserByUsername (String username) {
+    public UsersEntity findOneByUsername (String username) {
 
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(EXISTS_USER_BY_USERNAME)) {
-            stmt.setString(1, username);
+        try {
+            return Confluencia.getQuery((session, cb) -> {
+                CriteriaQuery<UsersEntity> q = cb.createQuery(UsersEntity.class);
 
-            try (ResultSet rs = stmt.executeQuery()) {
-                return rs.next();
-            }
+                ParameterExpression<String> userParam = cb.parameter(String.class);
+
+                Root<UsersEntity> entity = q.from(UsersEntity.class);
+                q.select(entity);
+                q.where(cb.equal(entity.get("username"), userParam));
+
+                TypedQuery<UsersEntity> query = session.createQuery(q);
+                query.setParameter(userParam, username);
+                return query.getSingleResult();
+            });
         }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to find user by username.");
+        catch (Exception e) {
+            return null;
         }
-        return false;
     }
 
-    public UserRecord findOneByUsername (String username) {
+    public UsersEntity findOneByUserId (long userId) {
 
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_USER_BY_USERNAME)) {
-            stmt.setString(1, username);
+        try {
+            return Confluencia.getQuery((session, cb) -> {
+                CriteriaQuery<UsersEntity> q = cb.createQuery(UsersEntity.class);
 
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return new UserRecord(rs);
-                }
-            }
+                ParameterExpression<Long> userParam = cb.parameter(Long.class);
+
+                Root<UsersEntity> entity = q.from(UsersEntity.class);
+                q.select(entity);
+                q.where(cb.equal(entity.get("id"), userParam));
+
+                TypedQuery<UsersEntity> query = session.createQuery(q);
+                query.setParameter(userParam, userId);
+                return query.getSingleResult();
+            });
         }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to find user by username.", e);
+        catch (Exception e) {
+            return null;
         }
-        return null;
-    }
-
-    public UserRecord findOneByUserId (long userId) {
-
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_USER_BY_USER_ID)) {
-            stmt.setLong(1, userId);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return new UserRecord(rs);
-                }
-            }
-        }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to find user by id.", e);
-        }
-        return null;
-    }
-
-    public boolean updateUserPasswordByUserId (long userId, String password) {
-
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(UPDATE_PASSWORD_BY_USERID)) {
-            stmt.setString(1, password);
-            stmt.setLong(2, userId);
-
-            return stmt.executeUpdate() == 1;
-        }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to updateUserPassword.", e);
-        }
-        return false;
-    }
-
-    public boolean existsTempUserByUsername (String username) {
-
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(EXISTS_TEMPUSER_BY_USERNAME)) {
-            stmt.setString(1, username);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                return rs.next();
-            }
-        }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to check existTempUserByUsername.", e);
-        }
-        return true;
-    }
-
-    public boolean updateTempUser (String email, String username, String code) {
-
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(UPDATE_TEMPUSER)) {
-            stmt.setString(1, code);
-            stmt.setString(2, email);
-            stmt.setString(3, username);
-
-            return stmt.executeUpdate() == 1;
-        }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to updateTempUser.", e);
-        }
-        return false;
-    }
-
-    public TempUserRecord findTempUserByEmailAndUsername (String email, String username) {
-
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_TEMPUSER_BY_EMAIL_AND_USERNAME)) {
-            stmt.setString(1, email);
-            stmt.setString(2, username);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return new TempUserRecord(rs);
-                }
-            }
-        }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to findTempUserByEmailAndUsername.", e);
-        }
-        return null;
-    }
-
-    public boolean deleteTempUser (String email, String username) {
-
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(DELETE_TEMPUSER)) {
-            stmt.setString(1, email);
-            stmt.setString(2, username);
-
-            return stmt.executeUpdate() == 1;
-        }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to deleteTempUser.", e);
-        }
-        return false;
-    }
-
-    public boolean deleteAllRefreshTokensByUserId (long userId) {
-
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(DELETE_ALL_REFRESH_TOKENS_BY_USERID)) {
-            stmt.setLong(1, userId);
-
-            return stmt.executeUpdate() >= 0;
-
-        }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to deleteAllRefreshTokensByUserId.", e);
-        }
-        return false;
-    }
-
-    public boolean insertPasswordReset (long userId, String code) {
-
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(INSERT_PASSWORD_RESET)) {
-
-            stmt.setLong(1, userId);
-            stmt.setString(2, code);
-
-            return stmt.executeUpdate() == 1;
-        }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to insertPasswordReset.", e);
-        }
-        return false;
-    }
-
-    public boolean deletePasswordReset (long userId, String code) {
-
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(DELETE_PASSWORD_RESET)) {
-
-            stmt.setLong(1, userId);
-            stmt.setString(2, code);
-
-            return stmt.executeUpdate() == 1;
-        }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to deletePasswordReset.", e);
-        }
-        return false;
-    }
-
-    public PasswordResetRecord findOnePasswordResetByEmailAndCode (String email, String code) {
-
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ONE_PASSWORD_RESET_BY_EMAIL_AND_CODE)) {
-            stmt.setString(1, email);
-            stmt.setString(2, code);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return new PasswordResetRecord(rs);
-                }
-            }
-        }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to findOnePasswordResetByEmailAndCode.", e);
-        }
-        return null;
     }
 }

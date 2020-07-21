@@ -1,424 +1,422 @@
 package com.diluv.confluencia.database;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringJoiner;
-
 import com.diluv.confluencia.Confluencia;
-import com.diluv.confluencia.database.record.ProjectAuthorRecord;
-import com.diluv.confluencia.database.record.ProjectLinkRecord;
-import com.diluv.confluencia.database.record.ProjectRecord;
-import com.diluv.confluencia.database.record.ProjectTypeRecord;
-import com.diluv.confluencia.database.record.TagRecord;
+import com.diluv.confluencia.database.record.*;
+import com.diluv.confluencia.database.sort.Order;
 import com.diluv.confluencia.database.sort.Sort;
-import com.diluv.confluencia.utils.SQLHandler;
+
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.*;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 public class ProjectDatabase {
 
-    private static final String COUNT_ALL = SQLHandler.readFile("project/countAll");
-    private static final String COUNT_ALL_BY_GAME_SLUG = SQLHandler.readFile("project/countAllByGameSlug");
-    private static final String INSERT_PROJECT = SQLHandler.readFile("project/insertProject");
-    private static final String UPDATE_PROJECT = SQLHandler.readFile("project/updateProject");
-    private static final String COUNT_ALL_BY_USERNAME = SQLHandler.readFile("project/countAllByUsername");
-    private static final String FIND_ALL_BY_USERNAME = SQLHandler.readFile("project/findAllByUsername");
-    private static final String FIND_ALL_BY_PROJECT_IDS = SQLHandler.readFile("project/findAllByProjectIds");
-    private static final String FIND_ALL_BY_GAME_AND_PROJECTYPE = SQLHandler.readFile("project/findAllByGameAndProjectType");
-    private static final String FIND_ONE_BY_GAMESLUG_AND_PROJECTYPESLUG_AND_PROJECTSLUG = SQLHandler.readFile("project/findOneByGameSlugAndProjectTypeSlugAndProjectSlug");
-    private static final String FIND_ONE_BY_PROJECTID = SQLHandler.readFile("project/findOneByProjectId");
-    private static final String FIND_ALL_LINKS_BY_PROJECTID = SQLHandler.readFile("project/findAllLinksByProjectId");
-
-    private static final String FIND_FEATURED_PROJECTS = SQLHandler.readFile("project/findFeaturedProjects");
-
-    private static final String FIND_ALL_PROJECT_AUTHORS_BY_PROJECT_ID = SQLHandler.readFile("project_author/findAllByProjectId");
-
-    private static final String FIND_ALL_PROJECTTYPES_BY_GAMESLUG = SQLHandler.readFile("project_types/findAllByGameSlug");
-    private static final String FIND_ONE_PROJECTTYPES_BY_GAMESLUG_AND_PROJECTYPESLUG = SQLHandler.readFile("project_types/findOneByGameSlugAndProjectTypeSlug");
-    private static final String FIND_ALL_TAGS_BY_GAMESLUG_AND_PROJECTYPESLUG = SQLHandler.readFile("tags/findAllTagsByGameSlugAndProjectTypeSlug");
-    private static final String FIND_ALL_TAGS_BY_PROJECT_ID = SQLHandler.readFile("tags/findAllTagsByProjectId");
-    private static final String INSERT_PROJECT_TAG = SQLHandler.readFile("tags/insertProjectTags");
-
-    public long countAll () {
-
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(COUNT_ALL)) {
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getLong(1);
-                }
-            }
-        }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to run countAll.", e);
-        }
-        return 0;
-    }
-
     public long countAllByGameSlug (String gameSlug) {
 
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(COUNT_ALL_BY_GAME_SLUG)) {
-            stmt.setString(1, gameSlug);
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getLong(1);
-                }
-            }
+        try {
+            return Confluencia.getQuery((session, cb) -> {
+
+                CriteriaQuery<Long> q = cb.createQuery(Long.class);
+                ParameterExpression<String> gameSlugParam = cb.parameter(String.class);
+
+                Root<ProjectsEntity> entity = q.from(ProjectsEntity.class);
+                Root<GamesEntity> entityGame = q.from(GamesEntity.class);
+
+                q.select(cb.count(entity));
+
+                q.where(cb.like(entityGame.get("slug"), gameSlugParam));
+
+                TypedQuery<Long> query = session.createQuery(q);
+                query.setParameter(gameSlugParam, "%" + gameSlug + "%");
+                return query.getSingleResult();
+            });
         }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to run countAllByGameSlug.", e);
+        catch (Exception e) {
+            return 0;
         }
-        return 0;
     }
 
-    public Long insertProject (String slug, String name, String summary, String description, long userId, String gameSlug, String projectTypeSlug) {
+    public long countAllByGameSlugAndProjectTypeSlug (String gameSlug, String projectTypeSlug) {
 
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(INSERT_PROJECT, new String[]{"id"})) {
-            stmt.setString(1, slug);
-            stmt.setString(2, name);
-            stmt.setString(3, summary);
-            stmt.setString(4, description);
-            stmt.setLong(5, userId);
-            stmt.setString(6, gameSlug);
-            stmt.setString(7, projectTypeSlug);
+        try {
+            return Confluencia.getQuery((session, cb) -> {
+                CriteriaQuery<Long> q = cb.createQuery(Long.class);
 
-            int affectedRows = stmt.executeUpdate();
-            if (affectedRows == 0) {
-                throw new SQLException("Creating project file failed, no rows affected.");
-            }
+                ParameterExpression<ProjectTypesEntity> projectTypeSlugParam = cb.parameter(ProjectTypesEntity.class);
 
-            try (ResultSet rs = stmt.getGeneratedKeys()) {
-                if (rs.next()) {
-                    return rs.getLong(1);
-                }
-                else {
-                    throw new SQLException("Creating project file failed, no ID obtained.");
-                }
-            }
+                Root<ProjectsEntity> entity = q.from(ProjectsEntity.class);
+                q.select(cb.count(entity));
+                q.where(cb.equal(entity.get("projectType"), projectTypeSlugParam));
+
+                TypedQuery<Long> query = session.createQuery(q);
+                query.setParameter(projectTypeSlugParam, new ProjectTypesEntity(new GamesEntity(gameSlug), projectTypeSlug));
+                return query.getSingleResult();
+            });
         }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to run insertProject script for project {} with name {} by {}.", slug, name, userId, e);
+        catch (Exception e) {
+            return 0;
         }
-        return null;
     }
 
-    public ProjectRecord findOneProjectByProjectId (long id) {
+    public ProjectsEntity findOneProjectByProjectId (long id) {
 
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ONE_BY_PROJECTID)) {
-            stmt.setLong(1, id);
+        try {
+            return Confluencia.getQuery((session, cb) -> {
+                CriteriaQuery<ProjectsEntity> q = cb.createQuery(ProjectsEntity.class);
 
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return new ProjectRecord(rs);
-                }
-            }
+                ParameterExpression<Long> idParam = cb.parameter(Long.class);
+
+                Root<ProjectsEntity> entity = q.from(ProjectsEntity.class);
+                q.select(entity);
+                q.where(cb.equal(entity.get("id"), idParam));
+
+                TypedQuery<ProjectsEntity> query = session.createQuery(q);
+                query.setParameter(idParam, id);
+                return query.getSingleResult();
+            });
         }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to run findOneProjectByProjectId script for id {}.", id, e);
+        catch (Exception e) {
+            return null;
         }
-        return null;
     }
 
-    public ProjectRecord findOneProjectByGameSlugAndProjectTypeSlugAndProjectSlug (String gameSlug, String projectTypeSlug, String projectSlug) {
+    public ProjectsEntity findOneProjectByGameSlugAndProjectTypeSlugAndProjectSlug (String gameSlug, String projectTypeSlug, String projectSlug) {
 
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ONE_BY_GAMESLUG_AND_PROJECTYPESLUG_AND_PROJECTSLUG)) {
-            stmt.setString(1, gameSlug);
-            stmt.setString(2, projectTypeSlug);
-            stmt.setString(3, projectSlug);
+        try {
+            return Confluencia.getQuery((session, cb) -> {
+                CriteriaQuery<ProjectsEntity> q = cb.createQuery(ProjectsEntity.class);
 
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return new ProjectRecord(rs);
-                }
-            }
+                ParameterExpression<ProjectTypesEntity> projectTypeSlugParam = cb.parameter(ProjectTypesEntity.class);
+                ParameterExpression<String> projectSlugParam = cb.parameter(String.class);
+
+                Root<ProjectsEntity> entity = q.from(ProjectsEntity.class);
+                q.select(entity);
+                q.where(cb.and(cb.equal(entity.get("projectType"), projectTypeSlugParam),
+                    cb.equal(entity.get("slug"), projectSlugParam)));
+
+                TypedQuery<ProjectsEntity> query = session.createQuery(q);
+                GamesEntity game = new GamesEntity(gameSlug);
+                query.setParameter(projectTypeSlugParam, new ProjectTypesEntity(game, projectTypeSlug));
+                query.setParameter(projectSlugParam, projectSlug);
+                return query.getSingleResult();
+            });
         }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to run findOneProjectByGameSlugAndProjectTypeSlugAndProjectSlug script for game {}, type {}, and project {}.", gameSlug, projectTypeSlug, projectSlug, e);
+        catch (Exception e) {
+            return null;
         }
-        return null;
+    }
+
+    public ProjectTypesEntity findOneProjectTypeByGameSlugAndProjectTypeSlug (String gameSlug, String projectTypeSlug) {
+
+        try {
+            return Confluencia.getQuery((session, cb) -> {
+                CriteriaQuery<ProjectTypesEntity> q = cb.createQuery(ProjectTypesEntity.class);
+
+                ParameterExpression<GamesEntity> gameSlugParam = cb.parameter(GamesEntity.class);
+                ParameterExpression<String> projectTypeSlugParam = cb.parameter(String.class);
+
+                Root<ProjectTypesEntity> entity = q.from(ProjectTypesEntity.class);
+                q.select(entity);
+                q.where(cb.and(cb.equal(entity.get("game"), gameSlugParam),
+                    cb.equal(entity.get("slug"), projectTypeSlugParam)));
+
+                TypedQuery<ProjectTypesEntity> query = session.createQuery(q);
+                query.setParameter(gameSlugParam, new GamesEntity(gameSlug));
+                query.setParameter(projectTypeSlugParam, projectTypeSlug);
+                return query.getSingleResult();
+            });
+        }
+        catch (Exception e) {
+            return null;
+        }
     }
 
     public long countAllByUsername (String username, boolean authorized) {
 
-        List<ProjectRecord> projects = new ArrayList<>();
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(COUNT_ALL_BY_USERNAME)) {
-            stmt.setString(1, username);
-            stmt.setBoolean(2, authorized);
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getLong(1);
+        try {
+            return Confluencia.getQuery((session, cb) -> {
+                CriteriaQuery<Long> q = cb.createQuery(Long.class);
+                Root<ProjectsEntity> entity = q.from(ProjectsEntity.class);
+
+                ParameterExpression<String> usernameParam = cb.parameter(String.class);
+                List<Predicate> predicates = new ArrayList<>();
+
+                q.select(cb.count(entity));
+
+                Subquery<UsersEntity> usersSubQuery = q.subquery(UsersEntity.class);
+                Root<UsersEntity> entityUsers = usersSubQuery.from(UsersEntity.class);
+                usersSubQuery.select(entityUsers.get("id"));
+                usersSubQuery.where(cb.equal(entityUsers.get("username"), usernameParam));
+
+                Subquery<ProjectsEntity> projectAuthorsSubQuery = q.subquery(ProjectsEntity.class);
+                Root<ProjectAuthorsEntity> entityProjectAuthors = projectAuthorsSubQuery.from(ProjectAuthorsEntity.class);
+                projectAuthorsSubQuery.select(entityProjectAuthors.get("project"));
+                projectAuthorsSubQuery.where(cb.in(entityProjectAuthors.get("user")).value(usersSubQuery));
+
+                predicates.add(
+                    cb.or(
+                        cb.and(cb.in(entity.get("user")).value(usersSubQuery)),
+                        cb.and(cb.in(entity).value(projectAuthorsSubQuery))
+                    )
+                );
+                if (!authorized) {
+                    predicates.add(cb.isTrue(entity.get("released")));
                 }
-            }
+
+                q.where(cb.and(predicates.toArray(new Predicate[0])));
+
+                TypedQuery<Long> query = session.createQuery(q);
+                query.setParameter(usernameParam, username);
+                return query.getSingleResult();
+            });
         }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to run findAllByUsername database script for user {}.", username, e);
+        catch (Exception e) {
+            return 0;
         }
-        return 0;
     }
 
+    public List<ProjectsEntity> findAllByUsername (String username, boolean authorized, long page, int limit, Sort sort) {
 
-    public List<ProjectRecord> findAllByUsername (String username, boolean authorized, long page, int limit, Sort sort) {
+        try {
+            return Confluencia.getQuery((session, cb) -> {
+                CriteriaQuery<ProjectsEntity> q = cb.createQuery(ProjectsEntity.class);
+                Root<ProjectsEntity> entity = q.from(ProjectsEntity.class);
 
-        List<ProjectRecord> projects = new ArrayList<>();
-        try (PreparedStatement stmt = sort.getQuery(FIND_ALL_BY_USERNAME)) {
-            stmt.setString(1, username);
-            stmt.setBoolean(2, authorized);
-            stmt.setLong(3, (page - 1) * limit);
-            stmt.setLong(4, limit);
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    projects.add(new ProjectRecord(rs));
+                ParameterExpression<String> usernameParam = cb.parameter(String.class);
+
+                List<Predicate> predicates = new ArrayList<>();
+
+                q.select(entity);
+                Subquery<UsersEntity> usersSubQuery = q.subquery(UsersEntity.class);
+                Root<UsersEntity> entityUsers = usersSubQuery.from(UsersEntity.class);
+                usersSubQuery.select(entityUsers.get("id"));
+                usersSubQuery.where(cb.equal(entityUsers.get("username"), usernameParam));
+
+                Subquery<ProjectsEntity> projectAuthorsSubQuery = q.subquery(ProjectsEntity.class);
+                Root<ProjectAuthorsEntity> entityProjectAuthors = projectAuthorsSubQuery.from(ProjectAuthorsEntity.class);
+                projectAuthorsSubQuery.select(entityProjectAuthors.get("project"));
+                projectAuthorsSubQuery.where(cb.in(entityProjectAuthors.get("user")).value(usersSubQuery));
+
+                predicates.add(
+                    cb.or(
+                        cb.and(cb.in(entity.get("user")).value(usersSubQuery)),
+                        cb.and(cb.in(entity).value(projectAuthorsSubQuery))
+                    )
+                );
+                if (!authorized) {
+                    predicates.add(cb.isTrue(entity.get("released")));
                 }
-            }
+
+                q.where(cb.and(predicates.toArray(new Predicate[0])));
+
+                if (sort.getOrder() == Order.ASC) {
+                    q.orderBy(cb.asc(entity.get(sort.getColumn())));
+                }
+                else {
+                    q.orderBy(cb.desc(entity.get(sort.getColumn())));
+                }
+
+                TypedQuery<ProjectsEntity> query = session.createQuery(q);
+                query.setParameter(usernameParam, username);
+                query.setFirstResult((int) ((page - 1) * limit));
+                query.setMaxResults(limit);
+                return query.getResultList();
+            });
         }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to run findAllByUsername database script for user {}.", username, e);
+        catch (Exception e) {
+            return Collections.emptyList();
         }
-        return projects;
     }
 
-    public List<ProjectRecord> findAllProjectsByProjectIds (long[] projectIds) {
+    public List<ProjectsEntity> findAllProjectsByProjectIds (long[] projectIds) {
 
-        StringJoiner b = new StringJoiner(",");
-        for (int i = 0; i < projectIds.length; i++) {
-            b.add("?");
-        }
-        List<ProjectRecord> projects = new ArrayList<>();
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL_BY_PROJECT_IDS.replace("(?)", "(" + b.toString() + ")"))) {
+        try {
+            return Confluencia.getQuery((session, cb) -> {
+                CriteriaQuery<ProjectsEntity> q = cb.createQuery(ProjectsEntity.class);
 
-            for (int i = 0; i < projectIds.length; i++) {
-                stmt.setLong(i + 1, projectIds[i]);
-            }
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    projects.add(new ProjectRecord(rs));
+                Root<ProjectsEntity> entity = q.from(ProjectsEntity.class);
+                q.select(entity);
+
+                List<ParameterExpression<Long>> params = new LinkedList<>();
+                List<Predicate> idk = new LinkedList<>();
+                for (int i = 0; i < projectIds.length; i++) {
+                    ParameterExpression<Long> param = cb.parameter(Long.class);
+                    params.add(param);
+                    idk.add(cb.equal(entity.get("id"), param));
                 }
-            }
+                q.where(cb.or(idk.toArray(new Predicate[0])));
+
+                TypedQuery<ProjectsEntity> query = session.createQuery(q);
+                for (int i = 0; i < projectIds.length; i++) {
+                    long id = projectIds[i];
+                    ParameterExpression<Long> param = params.get(i);
+                    query.setParameter(param, id);
+                }
+                return query.getResultList();
+            });
         }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to run findGameVersionsByGameSlugAndVersions games database script.", e);
+        catch (Exception e) {
+            return Collections.emptyList();
         }
-        return projects;
     }
 
-    public List<ProjectRecord> findAllByGameAndProjectType (String gameSlug, String projectTypeSlug,
-                                                            String search, long page, int limit, Sort sort) {
+    public List<ProjectsEntity> findAllByGameAndProjectType (String gameSlug, String projectTypeSlug,
+                                                             String search, long page, int limit, Sort sort) {
 
         return this.findAllByGameAndProjectType(gameSlug, projectTypeSlug, search, page, limit, sort, null, null);
     }
 
-    public List<ProjectRecord> findAllByGameAndProjectType (String gameSlug, String projectTypeSlug,
-                                                            String search, long page, int limit,
-                                                            Sort sort, String version, String[] tags) {
+    public List<ProjectsEntity> findAllByGameAndProjectType (String gameSlug, String projectTypeSlug,
+                                                             String search, long page, int limit,
+                                                             Sort sort, String gameVersion, String[] tags) {
 
+        try {
+            return Confluencia.getQuery((session, cb) -> {
+                CriteriaQuery<ProjectsEntity> q = cb.createQuery(ProjectsEntity.class);
+                Root<ProjectsEntity> entity = q.from(ProjectsEntity.class);
 
-        int tagLength = 0;
-        final boolean hasNoTags = tags == null || tags.length == 0;
-        String query = FIND_ALL_BY_GAME_AND_PROJECTYPE;
-        if (!hasNoTags) {
-            StringJoiner b = new StringJoiner(",");
-            for (int i = 0; i < tags.length; i++) {
-                b.add("?");
-            }
-            query = query.replace("(?)", "(" + b.toString() + ")");
-            tagLength = tags.length;
-        }
-        List<ProjectRecord> projects = new ArrayList<>();
+                ParameterExpression<ProjectTypesEntity> projectTypeSlugParam = cb.parameter(ProjectTypesEntity.class);
+                ParameterExpression<String> nameParam = cb.parameter(String.class);
+                ParameterExpression<String> gameVersionParam = cb.parameter(String.class);
+                List<ParameterExpression<String>> tagParams = new LinkedList<>();
+                ParameterExpression<Long> tagLengthParam = cb.parameter(Long.class);
 
-        try (PreparedStatement stmt = sort.getQuery(query)) {
-            int i = 1;
-            stmt.setString(i++, gameSlug);
-            stmt.setString(i++, projectTypeSlug);
-            stmt.setBoolean(i++, version == null);
-            stmt.setString(i++, version);
-            stmt.setBoolean(i++, hasNoTags);
-            if (hasNoTags) {
-                stmt.setString(i++, null);
-            }
-            else {
-                for (String tag : tags) {
-                    stmt.setString(i++, tag);
+                q.select(entity);
+                List<Predicate> predicates = new ArrayList<>();
+                predicates.add(cb.like(entity.get("name"), nameParam));
+                predicates.add(cb.equal(entity.get("projectType"), projectTypeSlugParam));
+
+                if (tags != null && tags.length > 0) {
+
+                    Subquery<ProjectsEntity> projectTagsSubQuery = q.subquery(ProjectsEntity.class);
+                    Root<ProjectTagsEntity> entityProjectTags = projectTagsSubQuery.from(ProjectTagsEntity.class);
+                    Root<TagsEntity> entityTag = projectTagsSubQuery.from(TagsEntity.class);
+
+                    CriteriaBuilder.In<Object> in = cb.in(entityTag.get("slug"));
+                    for (int i = 0; i < tags.length; i++) {
+                        ParameterExpression<String> tagParam = cb.parameter(String.class);
+                        tagParams.add(tagParam);
+                        in.value(tagParam);
+                    }
+
+                    projectTagsSubQuery.select(entityProjectTags.get("project"));
+                    projectTagsSubQuery.where(cb.and(
+                        cb.equal(entityProjectTags.get("tag"), entityTag),
+                        in,
+                        cb.equal(entityTag.get("projectType"), projectTypeSlugParam))
+                    );
+                    projectTagsSubQuery.groupBy(entityProjectTags.get("project"));
+                    projectTagsSubQuery.having(cb.equal(cb.count(entityProjectTags.get("project")), tagLengthParam));
+                    predicates.add(cb.in(entity).value(projectTagsSubQuery));
                 }
-            }
-            stmt.setInt(i++, tagLength);
-            stmt.setString(i++, "%" + search + "%");
-            stmt.setLong(i++, (page - 1) * limit);
-            stmt.setLong(i++, limit);
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    projects.add(new ProjectRecord(rs));
+                if (gameVersion != null) {
+                    Subquery<ProjectsEntity> projectSubQuery = q.subquery(ProjectsEntity.class);
+                    Root<ProjectFilesEntity> entityProjectFiles = projectSubQuery.from(ProjectFilesEntity.class);
+                    Root<ProjectFileGameVersionsEntity> entityProjectFilesGameVersion = projectSubQuery.from(ProjectFileGameVersionsEntity.class);
+                    Root<GameVersionsEntity> entityGameVersion = projectSubQuery.from(GameVersionsEntity.class);
+
+                    projectSubQuery.select(entityProjectFiles.get("project"));
+                    projectSubQuery.where(cb.and(
+                        cb.equal(entityProjectFiles, entityProjectFilesGameVersion.get("projectFile"))),
+                        cb.equal(entityProjectFilesGameVersion.get("gameVersion"), entityGameVersion),
+                        cb.equal(entityGameVersion.get("version"), gameVersionParam)
+                    );
+                    predicates.add(cb.in(entity).value(projectSubQuery));
                 }
-            }
+
+                q.where(cb.and(predicates.toArray(new Predicate[0])));
+                if (sort.getOrder() == Order.ASC) {
+                    q.orderBy(cb.asc(entity.get(sort.getColumn())));
+                }
+                else {
+                    q.orderBy(cb.desc(entity.get(sort.getColumn())));
+                }
+
+                TypedQuery<ProjectsEntity> query = session.createQuery(q);
+                query.setParameter(projectTypeSlugParam, new ProjectTypesEntity(new GamesEntity(gameSlug), projectTypeSlug));
+                query.setParameter(nameParam, "%" + search + "%");
+                if (tags != null && tags.length > 0) {
+                    for (int i = 0; i < tags.length; i++) {
+                        ParameterExpression<String> tagParam = tagParams.get(i);
+                        query.setParameter(tagParam, tags[i]);
+                    }
+                    query.setParameter(tagLengthParam, (long) tags.length);
+                }
+                if (gameVersion != null) {
+                    query.setParameter(gameVersionParam, gameVersion);
+                }
+                query.setFirstResult((int) ((page - 1) * limit));
+                query.setMaxResults(limit);
+                return query.getResultList();
+            });
         }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to run findAllProjectsByGameSlugAndProjectTypeAndVersion script for game {} and type {}.", gameSlug, projectTypeSlug, e);
+        catch (Exception e) {
+            return Collections.emptyList();
         }
-        return projects;
     }
 
-    public List<ProjectRecord> findFeaturedProjects () {
+    public List<FeaturedProjectsEntity> findFeaturedProjects () {
 
-        List<ProjectRecord> projects = new ArrayList<>();
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_FEATURED_PROJECTS)) {
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    projects.add(new ProjectRecord(rs));
-                }
-            }
+        try {
+            return Confluencia.getQuery((session, cb) -> {
+                CriteriaQuery<FeaturedProjectsEntity> q = cb.createQuery(FeaturedProjectsEntity.class);
+
+                q.select(q.from(FeaturedProjectsEntity.class));
+
+                TypedQuery<FeaturedProjectsEntity> query = session.createQuery(q);
+                query.setMaxResults(4);
+                return query.getResultList();
+            });
         }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to run findFeaturedProjects script.", e);
+        catch (Exception e) {
+            return Collections.emptyList();
         }
-        return projects;
     }
 
-    public List<ProjectAuthorRecord> findAllProjectAuthorsByProjectId (long projectId) {
+    public boolean insertProject (ProjectsEntity projectsEntity) {
 
-        List<ProjectAuthorRecord> projectAuthors = new ArrayList<>();
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL_PROJECT_AUTHORS_BY_PROJECT_ID)) {
-            stmt.setLong(1, projectId);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    projectAuthors.add(new ProjectAuthorRecord(rs));
-                }
-            }
-        }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to run findAllByProjectId script for project id {}.", projectId, e);
-        }
-        return projectAuthors;
-    }
-
-    public List<ProjectTypeRecord> findAllProjectTypesByGameSlug (String gameSlug) {
-
-        List<ProjectTypeRecord> projects = new ArrayList<>();
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL_PROJECTTYPES_BY_GAMESLUG)) {
-            stmt.setString(1, gameSlug);
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    projects.add(new ProjectTypeRecord(rs));
-                }
-            }
-        }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to run findAllProjectTypesByGameSlug database script for game slug {}.", gameSlug, e);
-        }
-        return projects;
-    }
-
-    public ProjectTypeRecord findOneProjectTypeByGameSlugAndProjectTypeSlug (String gameSlug, String projectTypeSlug) {
-
-        return findOneProjectTypeByGameSlugAndProjectTypeSlug(gameSlug, projectTypeSlug, "");
-    }
-
-    public ProjectTypeRecord findOneProjectTypeByGameSlugAndProjectTypeSlug (String gameSlug, String projectTypeSlug, String search) {
-
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ONE_PROJECTTYPES_BY_GAMESLUG_AND_PROJECTYPESLUG)) {
-            stmt.setString(1, "%" + search + "%");
-            stmt.setString(2, gameSlug);
-            stmt.setString(3, projectTypeSlug);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return new ProjectTypeRecord(rs);
-                }
-            }
-        }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to run findOneProjectTypeByGameSlugAndProjectTypeSlug script for game {} and type {}.", gameSlug, projectTypeSlug, e);
-        }
-        return null;
-    }
-
-    public List<TagRecord> findAllTagsByGameSlugAndProjectTypeSlug (String gameSlug, String projectTypeSlug) {
-
-        List<TagRecord> tags = new ArrayList<>();
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL_TAGS_BY_GAMESLUG_AND_PROJECTYPESLUG)) {
-            stmt.setString(1, gameSlug);
-            stmt.setString(2, projectTypeSlug);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    tags.add(new TagRecord(rs));
-                }
-            }
-        }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to run findAllTagsByGameSlugAndProjectTypeSlug database script for game slug {}.", gameSlug, e);
-        }
-        return tags;
-    }
-
-    public List<TagRecord> findAllTagsByProjectId (long projectId) {
-
-        List<TagRecord> tags = new ArrayList<>();
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL_TAGS_BY_PROJECT_ID)) {
-            stmt.setLong(1, projectId);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    tags.add(new TagRecord(rs));
-                }
-            }
-        }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to run findAllTagsByProjectId database script for project id {}.", projectId, e);
-        }
-        return tags;
-    }
-
-    public List<ProjectLinkRecord> findAllLinksByProjectId (long id) {
-
-        List<ProjectLinkRecord> projectLinks = new ArrayList<>();
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL_LINKS_BY_PROJECTID)) {
-            stmt.setLong(1, id);
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    projectLinks.add(new ProjectLinkRecord(rs));
-                }
-            }
-        }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to run findAllLinksByProjectId database script for projectId {}.", id, e);
-        }
-        return projectLinks;
-    }
-
-    public boolean insertProjectTags (long projectId, List<Long> tags) {
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(INSERT_PROJECT_TAG)) {
-            for (long tagId : tags) {
-                stmt.setLong(1, projectId);
-                stmt.setLong(2, tagId);
-                stmt.addBatch();
-            }
-            stmt.executeBatch();
+        Transaction transaction = null;
+        try (Session session = Confluencia.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.save(projectsEntity);
+            transaction.commit();
             return true;
         }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to insertProjectTags.", e);
+        catch (Exception e) {
+            e.printStackTrace();
+            if (transaction != null) {
+                transaction.rollback();
+            }
         }
+
         return false;
     }
 
-    public boolean updateProject (long projectId, String name, String summary, String description) {
+    public boolean updateProject (ProjectsEntity project) {
 
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(UPDATE_PROJECT)) {
-            stmt.setString(1, name);
-            stmt.setString(2, summary);
-            stmt.setString(3, description);
-            stmt.setLong(4, projectId);
 
-            int affectedRows = stmt.executeUpdate();
-            if (affectedRows == 0) {
-                throw new SQLException("Update project failed, no rows affected.");
-            }
-
+        Transaction transaction = null;
+        try (Session session = Confluencia.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.update(project);
+            transaction.commit();
             return true;
         }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to run updateProject script for project.", e);
+        catch (Exception e) {
+            e.printStackTrace();
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
         }
+
         return false;
     }
 }

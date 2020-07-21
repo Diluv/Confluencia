@@ -1,307 +1,234 @@
 package com.diluv.confluencia.database;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.CriteriaUpdate;
+import javax.persistence.criteria.ParameterExpression;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import com.diluv.confluencia.Confluencia;
 import com.diluv.confluencia.database.record.FileProcessingStatus;
-import com.diluv.confluencia.database.record.GameVersionRecord;
-import com.diluv.confluencia.database.record.ProjectFileRecord;
+import com.diluv.confluencia.database.record.GameVersionsEntity;
+import com.diluv.confluencia.database.record.GamesEntity;
+import com.diluv.confluencia.database.record.ProjectFileGameVersionsEntity;
+import com.diluv.confluencia.database.record.ProjectFilesEntity;
+import com.diluv.confluencia.database.record.ProjectsEntity;
+import com.diluv.confluencia.database.sort.Order;
 import com.diluv.confluencia.database.sort.Sort;
-import com.diluv.confluencia.utils.SQLHandler;
 
 public class FileDatabase {
 
-    private static final String INSERT_PROJECT_FILE = SQLHandler.readFile("project_files/insertProjectFile");
-    private static final String UPDATE_STATUS_BY_ID = SQLHandler.readFile("project_files/updateStatusById");
-    private static final String UPDATE_STATUS_BY_STATUS = SQLHandler.readFile("project_files/updateStatusByStatus");
-    private static final String FIND_ALL_WHERE_STATUS_AND_LIMIT = SQLHandler.readFile("project_files/findAllWhereStatusAndLimit");
-    private static final String FIND_ONE_PROJECT_FILE_QUEUE_BY_FILE_ID = SQLHandler.readFile("project_files/findOneByFileId");
-    private static final String FIND_ALL_BY_PROJECT_ID = SQLHandler.readFile("project_files/findAllByProjectId");
-    private static final String FIND_ALL_BY_PROJECT_ID_AND_VERSION = SQLHandler.readFile("project_files/findAllByProjectIdAndVersion");
+    public boolean updateStatusById (FileProcessingStatus status, long id) {
 
-    private static final String INSERT_PROJECT_FILE_ANTIVIRUS = SQLHandler.readFile("project_files/insertProjectFileAntivirus");
+        try {
+            return Confluencia.getQuery((session, cb) -> {
+                CriteriaUpdate<ProjectFilesEntity> q = cb.createCriteriaUpdate(ProjectFilesEntity.class);
+                Root<ProjectFilesEntity> entity = q.from(ProjectFilesEntity.class);
 
-    private static final String INSERT_PROJECT_FILE_DEPENDENCIES = SQLHandler.readFile("project_files/insertProjectFileDependencies");
-    private static final String INSERT_PROJECT_FILE_GAME_VERSION = SQLHandler.readFile("project_files/insertProjectFileGameVersions");
-    private static final String FIND_ALL_DEPENDENCIES_BY_ID = SQLHandler.readFile("project_files/findAllDependenciesById");
-    private static final String FIND_ALL_GAME_VERSIONS_BY_ID = SQLHandler.readFile("project_files/findAllGameVersionsById");
+                q.set(entity.get("processingStatus"), status.ordinal());
+                q.where(cb.equal(entity.get("id"), id));
 
-    private static final String EXISTS_BY_PROJECT_ID_AND_VERSION = SQLHandler.readFile("project_files/existsByProjectIdAndVersion");
-
-    public boolean updateStatusById (FileProcessingStatus status, long id) throws SQLException {
-
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(UPDATE_STATUS_BY_ID)) {
-            stmt.setLong(1, status.ordinal());
-            stmt.setLong(2, id);
-            if (stmt.executeUpdate() == 1) {
-                return true;
-            }
+                return session.createQuery(q).executeUpdate() == 1;
+            });
         }
-        return false;
+        catch (Exception e) {
+            return false;
+        }
     }
 
     public boolean updateStatusByStatus (FileProcessingStatus set, FileProcessingStatus where) {
 
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(UPDATE_STATUS_BY_STATUS)) {
-            stmt.setLong(1, set.ordinal());
-            stmt.setLong(2, where.ordinal());
-            stmt.executeUpdate();
+        try {
+            return Confluencia.getQuery((session, cb) -> {
+                CriteriaUpdate<ProjectFilesEntity> q = cb.createCriteriaUpdate(ProjectFilesEntity.class);
+                Root<ProjectFilesEntity> entity = q.from(ProjectFilesEntity.class);
+
+                q.set(entity.get("processingStatus"), set.ordinal());
+                q.where(cb.equal(entity.get("processingStatus"), where.ordinal()));
+
+                session.createQuery(q).executeUpdate();
+                return true;
+            });
+        }
+        catch (Exception e) {
+            return false;
+        }
+    }
+
+    public List<ProjectFilesEntity> findAllWhereStatusAndLimit (FileProcessingStatus status, int amount) {
+
+        try {
+            return Confluencia.getQuery((session, cb) -> {
+                CriteriaQuery<ProjectFilesEntity> q = cb.createQuery(ProjectFilesEntity.class);
+                Root<ProjectFilesEntity> entity = q.from(ProjectFilesEntity.class);
+
+                ParameterExpression<FileProcessingStatus> s = cb.parameter(FileProcessingStatus.class);
+
+                q.select(entity);
+                q.where(cb.equal(entity.get("processingStatus"), s));
+                q.orderBy(cb.asc(entity.get("createdAt")));
+
+                TypedQuery<ProjectFilesEntity> query = session.createQuery(q);
+                query.setParameter(s, status);
+                query.setMaxResults(amount);
+                return query.getResultList();
+            });
+        }
+        catch (Exception e) {
+            return Collections.emptyList();
+        }
+    }
+
+//    public List<ProjectFilesEntity> getLatestFiles (int amount) throws SQLException {
+//
+//        List<ProjectFilesEntity> fileQueueEntity;
+//        final Connection connection = Confluencia.connection();
+//        final int previousIsolationLevel = connection.getTransactionIsolation();
+//        try {
+//            connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+//            connection.setAutoCommit(false);
+//
+//            fileQueueRecord = this.findAllWhereStatusAndLimit(FileProcessingStatus.PENDING, amount);
+//
+//            if (fileQueueRecord.isEmpty()) {
+//                return fileQueueEntity;
+//            }
+//
+//            final Long[] idList = fileQueueRecord.stream().map(ProjectFilesEntity::getId).toArray(Long[]::new);
+//            for (final Long id : idList) {
+//                if (!this.updateStatusById(FileProcessingStatus.RUNNING, id)) {
+//                    // TODO didn't work but didnt throw an exception
+//                }
+//            }
+//            connection.commit();
+//        } finally {
+//            connection.setAutoCommit(true);
+//            connection.setTransactionIsolation(previousIsolationLevel);
+//        }
+//        return fileQueueEntity;
+//    }
+
+    public boolean insertProjectFile (ProjectFilesEntity projectFile) {
+
+        Transaction transaction = null;
+        try (Session session = Confluencia.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.save(projectFile);
+            transaction.commit();
             return true;
         }
-        catch (final SQLException e) {
+        catch (Exception e) {
+            e.printStackTrace();
+            if (transaction != null) {
+                transaction.rollback();
+            }
             e.printStackTrace();
         }
 
         return false;
     }
 
-    public List<ProjectFileRecord> findAllWhereStatusAndLimit (FileProcessingStatus status, int amount) {
+    public ProjectFilesEntity findOneById (long fileId) {
 
-        final List<ProjectFileRecord> fileQueueRecord = new ArrayList<>();
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL_WHERE_STATUS_AND_LIMIT)) {
-            stmt.setInt(1, status.ordinal());
-            stmt.setInt(2, amount);
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    fileQueueRecord.add(new ProjectFileRecord(rs));
-                }
-            }
-        }
-        catch (final SQLException e) {
-            e.printStackTrace();
-        }
-        return fileQueueRecord;
-    }
-
-    public List<ProjectFileRecord> getLatestFiles (int amount) throws SQLException {
-
-        List<ProjectFileRecord> fileQueueRecord;
-        final Connection connection = Confluencia.connection();
-        final int previousIsolationLevel = connection.getTransactionIsolation();
         try {
-            connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
-            connection.setAutoCommit(false);
+            return Confluencia.getQuery((session, cb) -> {
+                CriteriaQuery<ProjectFilesEntity> q = cb.createQuery(ProjectFilesEntity.class);
+                Root<ProjectFilesEntity> entity = q.from(ProjectFilesEntity.class);
 
-            fileQueueRecord = this.findAllWhereStatusAndLimit(FileProcessingStatus.PENDING, amount);
+                ParameterExpression<Long> projectIdParam = cb.parameter(Long.class);
 
-            if (fileQueueRecord.isEmpty()) {
-                return fileQueueRecord;
-            }
+                q.select(entity);
+                q.where(cb.equal(entity.get("id"), projectIdParam));
 
-            final Long[] idList = fileQueueRecord.stream().map(ProjectFileRecord::getId).toArray(Long[]::new);
-            for (final Long id : idList) {
-                if (!this.updateStatusById(FileProcessingStatus.RUNNING, id)) {
-                    // TODO didn't work but didnt throw an exception
-                }
-            }
-            connection.commit();
-        } finally {
-            connection.setAutoCommit(true);
-            connection.setTransactionIsolation(previousIsolationLevel);
+                TypedQuery<ProjectFilesEntity> query = session.createQuery(q);
+                query.setParameter(projectIdParam, fileId);
+                return query.getSingleResult();
+            });
         }
-        return fileQueueRecord;
+        catch (Exception e) {
+            return null;
+        }
     }
 
-    public Long insertProjectFile (String name, String version, long size, String changelog, String sha512, String releaseType, String classifier, long projectId, long userId) {
+    public List<ProjectFilesEntity> findAllByProjectId (ProjectsEntity project, boolean authorized, long page, int limit, Sort sort, String gameVersion) {
 
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(INSERT_PROJECT_FILE, new String[]{"id"})) {
-            stmt.setString(1, name);
-            stmt.setString(2, version);
-            stmt.setLong(3, size);
-            stmt.setString(4, changelog);
-            stmt.setString(5, sha512);
-            stmt.setString(6, releaseType);
-            stmt.setString(7, classifier);
-            stmt.setLong(8, projectId);
-            stmt.setLong(9, userId);
+        try {
+            System.out.println("AH");
+            return Confluencia.getQuery((session, cb) -> {
+                CriteriaQuery<ProjectFilesEntity> q = cb.createQuery(ProjectFilesEntity.class);
+                Root<ProjectFilesEntity> entity = q.from(ProjectFilesEntity.class);
 
-            int affectedRows = stmt.executeUpdate();
-            if (affectedRows == 0) {
-                throw new SQLException("Creating project file failed, no rows affected.");
-            }
+                ParameterExpression<ProjectsEntity> projectParam = cb.parameter(ProjectsEntity.class);
+                ParameterExpression<String> versionParam = cb.parameter(String.class);
+                ParameterExpression<GamesEntity> gameParam = cb.parameter(GamesEntity.class);
 
-            try (ResultSet rs = stmt.getGeneratedKeys()) {
-                if (rs.next()) {
-                    return rs.getLong(1);
+                q.select(entity);
+                List<Predicate> predicates = new ArrayList<>();
+                predicates.add(cb.equal(entity.get("project"), projectParam));
+                if (!authorized) {
+                    predicates.add(cb.isTrue(entity.get("released")));
+                }
+
+                if (gameVersion != null) {
+                    Root<ProjectFileGameVersionsEntity> entityProjectFileGameVersions = q.from(ProjectFileGameVersionsEntity.class);
+                    Root<GameVersionsEntity> entityGameVersions = q.from(GameVersionsEntity.class);
+                    predicates.add(cb.equal(entityProjectFileGameVersions.get("projectFile"), entity));
+                    predicates.add(cb.equal(entityProjectFileGameVersions.get("gameVersion"), entityGameVersions));
+                    predicates.add(cb.equal(entityGameVersions.get("game"), gameParam));
+                    predicates.add(cb.equal(entityGameVersions.get("version"), versionParam));
+                }
+                q.where(cb.and(predicates.toArray(new Predicate[0])));
+                if (sort.getOrder() == Order.ASC) {
+                    q.orderBy(cb.asc(entity.get(sort.getColumn())));
                 }
                 else {
-                    throw new SQLException("Creating project file failed, no ID obtained.");
+                    q.orderBy(cb.desc(entity.get(sort.getColumn())));
                 }
-            }
-        }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to insert project file {}.", e);
-        }
-        return null;
-    }
 
-    public ProjectFileRecord findOneProjectFileQueueByFileId (long fileId) {
-
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ONE_PROJECT_FILE_QUEUE_BY_FILE_ID)) {
-            stmt.setLong(1, fileId);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return new ProjectFileRecord(rs);
+                TypedQuery<ProjectFilesEntity> query = session.createQuery(q);
+                query.setParameter(projectParam, project);
+                if (gameVersion != null) {
+                    query.setParameter(gameParam, project.getGame());
+                    query.setParameter(versionParam, gameVersion);
                 }
-            }
+                query.setFirstResult((int) ((page - 1) * limit));
+                query.setMaxResults(limit);
+                return query.getResultList();
+            });
         }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to project file queue by id.", e);
+        catch (Exception e) {
+            return Collections.emptyList();
         }
-        return null;
-    }
-
-    public List<ProjectFileRecord> findAllByProjectId (long projectId, boolean authorized, long page, int limit, Sort sort) {
-
-        List<ProjectFileRecord> projects = new ArrayList<>();
-
-        try (PreparedStatement stmt = sort.getQuery(FIND_ALL_BY_PROJECT_ID)) {
-            stmt.setLong(1, projectId);
-            stmt.setBoolean(2, authorized);
-            stmt.setLong(3, (page - 1) * limit);
-            stmt.setLong(4, limit);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    projects.add(new ProjectFileRecord(rs));
-                }
-            }
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return projects;
-    }
-
-    public List<ProjectFileRecord> findAllByProjectIdWhereVersion (long projectId, boolean authorized, long page, int limit, Sort sort, String version) {
-
-        List<ProjectFileRecord> projects = new ArrayList<>();
-
-        try (PreparedStatement stmt = sort.getQuery(FIND_ALL_BY_PROJECT_ID_AND_VERSION)) {
-            stmt.setLong(1, projectId);
-            stmt.setBoolean(2, authorized);
-            stmt.setString(3, version);
-            stmt.setLong(4, (page - 1) * limit);
-            stmt.setLong(5, limit);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    projects.add(new ProjectFileRecord(rs));
-                }
-            }
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return projects;
-    }
-
-    public boolean insertProjectFileAntivirus (long projectFileId, String malware) {
-
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(INSERT_PROJECT_FILE_ANTIVIRUS)) {
-            stmt.setLong(1, projectFileId);
-            stmt.setString(2, malware);
-            if (stmt.executeUpdate() == 1) {
-                return true;
-            }
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    public List<Long> findAllProjectDependenciesById (long projectFileId) {
-
-        List<Long> projectId = new ArrayList<>();
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL_DEPENDENCIES_BY_ID)) {
-            stmt.setLong(1, projectFileId);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    projectId.add(rs.getLong(1));
-                }
-            }
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return projectId;
-    }
-
-    public List<GameVersionRecord> findAllGameVersionsById (long projectFileId) {
-
-        List<GameVersionRecord> gameVersions = new ArrayList<>();
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ALL_GAME_VERSIONS_BY_ID)) {
-            stmt.setLong(1, projectFileId);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    gameVersions.add(new GameVersionRecord(rs));
-                }
-            }
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return gameVersions;
-    }
-
-    public boolean insertProjectFileDependency (long projectFileId, List<Long> dependencyIds) {
-
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(INSERT_PROJECT_FILE_DEPENDENCIES)) {
-            for (Long dependency : dependencyIds) {
-                stmt.setLong(1, projectFileId);
-                stmt.setLong(2, dependency);
-                stmt.addBatch();
-            }
-            stmt.executeBatch();
-            return true;
-        }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to insertProjectFileDependency.", e);
-        }
-        return false;
-    }
-
-    public boolean insertProjectFileGameVersions (long projectFileId, List<Long> versionIds) {
-
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(INSERT_PROJECT_FILE_GAME_VERSION)) {
-            for (Long version : versionIds) {
-                stmt.setLong(1, projectFileId);
-                stmt.setLong(2, version);
-                stmt.addBatch();
-            }
-            stmt.executeBatch();
-            return true;
-        }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to insertProjectFileGameVersions.", e);
-        }
-        return false;
     }
 
     public boolean existsByProjectIdAndVersion (long projectId, String version) {
 
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(EXISTS_BY_PROJECT_ID_AND_VERSION)) {
-            stmt.setLong(1, projectId);
-            stmt.setString(2, version);
+        try {
+            return Confluencia.getQuery((session, cb) -> {
 
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getInt(1) > 0;
-                }
-            }
+                CriteriaQuery<ProjectFilesEntity> q = cb.createQuery(ProjectFilesEntity.class);
+                Root<ProjectFilesEntity> entity = q.from(ProjectFilesEntity.class);
+                ParameterExpression<ProjectsEntity> projectParam = cb.parameter(ProjectsEntity.class);
+                ParameterExpression<String> versionParam = cb.parameter(String.class);
+                q.select(entity);
+                q.where(cb.and(cb.equal(entity.get("project"), projectParam), cb.equal(entity.get("version"), versionParam)));
+
+                TypedQuery<ProjectFilesEntity> query = session.createQuery(q);
+                query.setParameter(projectParam, new ProjectsEntity(projectId));
+                query.setParameter(versionParam, version);
+                return query.getSingleResult() != null;
+            });
         }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to existsByProjectIdAndVersion.", e);
+        catch (Exception e) {
+            return false;
         }
-        return false;
     }
 }

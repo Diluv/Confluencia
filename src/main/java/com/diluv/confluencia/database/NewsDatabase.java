@@ -1,53 +1,66 @@
 package com.diluv.confluencia.database;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.ParameterExpression;
+import javax.persistence.criteria.Root;
+
 import com.diluv.confluencia.Confluencia;
-import com.diluv.confluencia.database.record.NewsRecord;
+import com.diluv.confluencia.database.record.NewsEntity;
+import com.diluv.confluencia.database.sort.Order;
 import com.diluv.confluencia.database.sort.Sort;
-import com.diluv.confluencia.utils.SQLHandler;
 
 public class NewsDatabase {
-    private static final String FIND_ALL = SQLHandler.readFile("news/findAll");
-    private static final String FIND_ONE_BY_SLUG = SQLHandler.readFile("news/findAllBySlug");
 
-    public List<NewsRecord> findAll (long page, int limit, Sort sort) {
+    public List<NewsEntity> findAll (long page, int limit, Sort sort) {
 
-        List<NewsRecord> news = new ArrayList<>();
+        try {
+            return Confluencia.getQuery((session, cb) -> {
+                CriteriaQuery<NewsEntity> q = cb.createQuery(NewsEntity.class);
+                Root<NewsEntity> entity = q.from(NewsEntity.class);
 
-        try (PreparedStatement stmt = sort.getQuery(FIND_ALL)) {
-            stmt.setLong(1, (page - 1) * limit);
-            stmt.setLong(2, limit);
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    news.add(new NewsRecord(rs));
+                q.select(entity);
+
+                if (sort.getOrder() == Order.ASC) {
+                    q.orderBy(cb.asc(entity.get(sort.getColumn())));
                 }
-            }
+                else {
+                    q.orderBy(cb.desc(entity.get(sort.getColumn())));
+                }
+
+                TypedQuery<NewsEntity> query = session.createQuery(q);
+                query.setFirstResult((int) ((page - 1) * limit));
+                query.setMaxResults(limit);
+                return query.getResultList();
+            });
         }
-        catch (SQLException e) {
-            e.printStackTrace();
+        catch (Exception e) {
+            return Collections.emptyList();
         }
-        return news;
     }
 
-    public NewsRecord findOneByNewsSlug (String slug) {
+    public NewsEntity findOneByNewsSlug (String slug) {
 
-        try (PreparedStatement stmt = Confluencia.connection().prepareStatement(FIND_ONE_BY_SLUG)) {
-            stmt.setString(1, slug);
+        try {
+            return Confluencia.getQuery((session, cb) -> {
 
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return new NewsRecord(rs);
-                }
-            }
+                CriteriaQuery<NewsEntity> q = cb.createQuery(NewsEntity.class);
+                Root<NewsEntity> entity = q.from(NewsEntity.class);
+
+                ParameterExpression<String> newsSlugParam = cb.parameter(String.class);
+                q.select(entity);
+                q.where(cb.equal(entity.get("slug"), newsSlugParam));
+
+                TypedQuery<NewsEntity> query = session.createQuery(q);
+                query.setParameter(newsSlugParam, slug);
+                return query.getSingleResult();
+            });
         }
-        catch (SQLException e) {
-            Confluencia.LOGGER.error("Failed to project file queue by id.", e);
+        catch (Exception e) {
+            return null;
         }
-        return null;
     }
 }

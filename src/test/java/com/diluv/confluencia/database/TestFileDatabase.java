@@ -1,16 +1,15 @@
 package com.diluv.confluencia.database;
 
-import java.sql.SQLException;
-import java.util.Arrays;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import com.diluv.confluencia.ConfluenciaTest;
 import com.diluv.confluencia.database.record.FileProcessingStatus;
-import com.diluv.confluencia.database.sort.Order;
+import com.diluv.confluencia.database.record.GamesEntity;
+import com.diluv.confluencia.database.record.ProjectFilesEntity;
+import com.diluv.confluencia.database.record.ProjectsEntity;
+import com.diluv.confluencia.database.record.UsersEntity;
 import com.diluv.confluencia.database.sort.ProjectFileSort;
-import com.diluv.confluencia.database.sort.Sort;
 
 public class TestFileDatabase extends ConfluenciaTest {
 
@@ -21,7 +20,7 @@ public class TestFileDatabase extends ConfluenciaTest {
     }
 
     @Test
-    public void updateStatusById () throws SQLException {
+    public void updateStatusById () {
 
         Assertions.assertTrue(ConfluenciaTest.FILE.updateStatusById(FileProcessingStatus.RUNNING, 1));
     }
@@ -34,75 +33,38 @@ public class TestFileDatabase extends ConfluenciaTest {
     }
 
     @Test
-    public void findAllByProjectId () {
-
-        Assertions.assertEquals(0, ConfluenciaTest.FILE.findAllByProjectId(0, false, 1, 1, ProjectFileSort.NEW).size());
-        Assertions.assertEquals(1, ConfluenciaTest.FILE.findAllByProjectId(1, false, 1, 1, ProjectFileSort.NEW).size());
-
-        Assertions.assertEquals(0, ConfluenciaTest.FILE.findAllByProjectId(2, false, 1, 1, ProjectFileSort.NEW).size());
-        Assertions.assertEquals(0, ConfluenciaTest.FILE.findAllByProjectId(2, true, 1, 1, ProjectFileSort.NEW).size());
-    }
-
-    @Test
-    public void findAllByProjectIdWhereVersion () {
-
-        Assertions.assertEquals(1, ConfluenciaTest.FILE.findAllByProjectIdWhereVersion(1, false, 1, 1, ProjectFileSort.NEW, "1.15.2").size());
-    }
-
-    @Test
     public void insertProjectFile () {
 
-        Long id = ConfluenciaTest.FILE.insertProjectFile("test.jar", "1.0.20", 10, "", "sha512", "release", "binary", 1, 1);
-        Assertions.assertNotNull(id);
-        Assertions.assertTrue(id > 1L);
+        ProjectFilesEntity projectFile = new ProjectFilesEntity();
+        projectFile.setName("test.jar");
+        projectFile.setVersion("1.0.20");
+        projectFile.setSize(10);
+        projectFile.setChangelog("");
+        projectFile.setSha512("sha512");
+        projectFile.setReleaseType("release");
+        projectFile.setClassifier("binary");
+        projectFile.setProject(new ProjectsEntity(1));
+        projectFile.setUser(new UsersEntity(1));
+
+        Assertions.assertTrue(ConfluenciaTest.FILE.insertProjectFile(projectFile));
+        Assertions.assertTrue(projectFile.getId() > 1L);
     }
 
     @Test
-    public void findOneProjectFileQueueByFileId () {
+    public void findOneById () {
 
-        Assertions.assertNotNull(ConfluenciaTest.FILE.findOneProjectFileQueueByFileId(1));
-        Assertions.assertNull(ConfluenciaTest.FILE.findOneProjectFileQueueByFileId(100));
+        Assertions.assertNotNull(ConfluenciaTest.FILE.findOneById(1));
+        Assertions.assertNull(ConfluenciaTest.FILE.findOneById(100));
     }
 
     @Test
-    public void insertProjectFileAntivirus () {
+    public void findAllByProjectId () {
 
-        Assertions.assertTrue(ConfluenciaTest.FILE.insertProjectFileAntivirus(5, "Java.Malware.Agent-5601374-0"));
-    }
-
-    @Test
-    public void getLatestFiles () {
-
-        try {
-            Assertions.assertEquals(1, ConfluenciaTest.FILE.getLatestFiles(1).size());
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Test
-    public void findAllProjectDependenciesById () {
-
-        Assertions.assertEquals(2, ConfluenciaTest.FILE.findAllProjectDependenciesById(1).size());
-    }
-
-    @Test
-    public void findAllGameVersionsById () {
-
-        Assertions.assertEquals(3, ConfluenciaTest.FILE.findAllGameVersionsById(1).size());
-    }
-
-    @Test
-    public void insertProjectFileDependency () {
-
-        Assertions.assertTrue(ConfluenciaTest.FILE.insertProjectFileDependency(2, Arrays.asList(2L, 3L)));
-    }
-
-    @Test
-    public void insertProjectFileGameVersions () {
-
-        Assertions.assertTrue(ConfluenciaTest.FILE.insertProjectFileGameVersions(1, Arrays.asList(1L, 2L)));
+        ProjectsEntity project = new ProjectsEntity(1);
+        project.setGame(new GamesEntity("minecraft-je"));
+        Assertions.assertEquals(16, ConfluenciaTest.FILE.findAllByProjectId(project, true, 1, 25, ProjectFileSort.NEW, null).size());
+        Assertions.assertEquals(1, ConfluenciaTest.FILE.findAllByProjectId(project, true, 1, 25, ProjectFileSort.NEW, "1.12.2").size());
+        Assertions.assertEquals(0, ConfluenciaTest.FILE.findAllByProjectId(project, true, 1, 25, ProjectFileSort.NEW, "invalid").size());
     }
 
     @Test

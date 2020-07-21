@@ -40,7 +40,7 @@ CREATE TABLE username_blocklist
     PRIMARY KEY (username)
 );
 
-CREATE TABLE contains_username_blist
+CREATE TABLE contains_username_blocklist
 (
     username VARCHAR(30) NOT NULL,
     PRIMARY KEY (username)
