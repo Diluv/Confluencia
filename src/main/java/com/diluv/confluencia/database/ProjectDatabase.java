@@ -1,25 +1,20 @@
 package com.diluv.confluencia.database;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.ParameterExpression;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Subquery;
-
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-
 import com.diluv.confluencia.Confluencia;
 import com.diluv.confluencia.database.record.*;
 import com.diluv.confluencia.database.sort.Order;
 import com.diluv.confluencia.database.sort.Sort;
+
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.*;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 public class ProjectDatabase {
 
@@ -391,6 +386,26 @@ public class ProjectDatabase {
         try (Session session = Confluencia.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
             session.save(projectsEntity);
+            transaction.commit();
+            return true;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        }
+
+        return false;
+    }
+
+    public boolean updateProject (ProjectsEntity project) {
+
+
+        Transaction transaction = null;
+        try (Session session = Confluencia.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.update(project);
             transaction.commit();
             return true;
         }

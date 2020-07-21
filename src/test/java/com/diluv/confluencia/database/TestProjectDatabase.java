@@ -1,8 +1,5 @@
 package com.diluv.confluencia.database;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import com.diluv.confluencia.ConfluenciaTest;
 import com.diluv.confluencia.database.record.GamesEntity;
 import com.diluv.confluencia.database.record.ProjectTypesEntity;
@@ -10,12 +7,15 @@ import com.diluv.confluencia.database.record.ProjectsEntity;
 import com.diluv.confluencia.database.record.UsersEntity;
 import com.diluv.confluencia.database.sort.ProjectSort;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 public class TestProjectDatabase extends ConfluenciaTest {
 
     @Test
     public void countAllProjectsBySlug () {
 
-        Assertions.assertEquals(129, ConfluenciaTest.PROJECT.countAllByGameSlug("minecraft-je"));
+        Assertions.assertEquals(130, ConfluenciaTest.PROJECT.countAllByGameSlug("minecraft-je"));
     }
 
     @Test
@@ -109,5 +109,14 @@ public class TestProjectDatabase extends ConfluenciaTest {
         project.setOwner(new UsersEntity(2));
         project.setProjectType(new ProjectTypesEntity(new GamesEntity("minecraft-je"), "forge-mods"));
         Assertions.assertTrue(ConfluenciaTest.PROJECT.insertProject(project));
+    }
+
+    @Test
+    public void updateProject () {
+
+        ProjectsEntity project = ConfluenciaTest.PROJECT.findOneProjectByProjectId(5);
+        project.setName("Testing");
+
+        Assertions.assertTrue(ConfluenciaTest.PROJECT.updateProject(project));
     }
 }

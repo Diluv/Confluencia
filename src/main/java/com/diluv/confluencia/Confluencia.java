@@ -36,7 +36,6 @@ public class Confluencia {
 
             Configuration configuration = new Configuration();
 
-            // Hibernate settings equivalent to hibernate.cfg.xml's properties
             Properties settings = new Properties();
             settings.put(Environment.DRIVER, "org.mariadb.jdbc.Driver");
             settings.put(Environment.URL, url + "?useLegacyDatetimeCode=false&serverTimezone=UTC");
@@ -87,10 +86,10 @@ public class Confluencia {
         }
     }
 
-    public static List<Class<?>> getEntityClassesFromPackage (String packageName) throws ClassNotFoundException, IOException, URISyntaxException {
+    public static List<Class<?>> getEntityClassesFromPackage (String packageName) throws ClassNotFoundException, URISyntaxException {
 
         List<String> classNames = getClassNamesFromPackage(packageName);
-        List<Class<?>> classes = new ArrayList<Class<?>>();
+        List<Class<?>> classes = new ArrayList<>();
         for (String className : classNames) {
             Class<?> cls = Class.forName(packageName + "." + className);
             Annotation[] annotations = cls.getAnnotations();
@@ -105,10 +104,10 @@ public class Confluencia {
         return classes;
     }
 
-    public static ArrayList<String> getClassNamesFromPackage (String packageName) throws IOException, URISyntaxException, ClassNotFoundException {
+    public static List<String> getClassNamesFromPackage (String packageName) throws URISyntaxException {
 
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        ArrayList<String> names = new ArrayList<String>();
+        ArrayList<String> names = new ArrayList<>();
 
         packageName = packageName.replace(".", "/");
         URL packageURL = classLoader.getResource(packageName);
@@ -118,7 +117,7 @@ public class Confluencia {
         File[] files = folder.listFiles();
         for (File file : files) {
             String name = file.getName();
-            name = name.substring(0, name.lastIndexOf('.'));  // remove ".class"
+            name = name.substring(0, name.lastIndexOf('.'));
             names.add(name);
         }
 
