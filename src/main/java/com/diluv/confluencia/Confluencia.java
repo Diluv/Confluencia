@@ -1,17 +1,7 @@
 package com.diluv.confluencia;
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.annotation.Annotation;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-import java.util.function.BiFunction;
-
-import javax.persistence.criteria.CriteriaBuilder;
+import com.diluv.confluencia.utils.FlywayConnectionProvider;
+import com.github.fluent.hibernate.cfg.scanner.EntityScanner;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,7 +13,11 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
 import org.hibernate.service.ServiceRegistry;
 
-import com.diluv.confluencia.utils.FlywayConnectionProvider;
+import javax.persistence.criteria.CriteriaBuilder;
+
+import java.util.List;
+import java.util.Properties;
+import java.util.function.BiFunction;
 
 public class Confluencia {
 
@@ -33,7 +27,6 @@ public class Confluencia {
     public static void init (String url, String username, String password) {
 
         try {
-
             Configuration configuration = new Configuration();
 
             Properties settings = new Properties();
@@ -46,8 +39,11 @@ public class Confluencia {
             settings.put(Environment.SHOW_SQL, true);
             settings.put(Environment.ENABLE_LAZY_LOAD_NO_TRANS, true);
             configuration.setProperties(settings);
-            for (Class cls : getEntityClassesFromPackage("com.diluv.confluencia.database.record")) {
-                configuration.addAnnotatedClass(cls);
+
+            List<Class<?>> classes = EntityScanner.scanPackages("com.diluv.confluencia.database.record").result();
+
+            for (Class<?> annotatedClass : classes) {
+                configuration.addAnnotatedClass(annotatedClass);
             }
 
             ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
@@ -58,7 +54,6 @@ public class Confluencia {
         catch (Exception e) {
 
             e.printStackTrace();
-
         }
     }
 
@@ -84,43 +79,5 @@ public class Confluencia {
             }
             throw new Exception(e);
         }
-    }
-
-    public static List<Class<?>> getEntityClassesFromPackage (String packageName) throws ClassNotFoundException, URISyntaxException {
-
-        List<String> classNames = getClassNamesFromPackage(packageName);
-        List<Class<?>> classes = new ArrayList<>();
-        for (String className : classNames) {
-            Class<?> cls = Class.forName(packageName + "." + className);
-            Annotation[] annotations = cls.getAnnotations();
-
-            for (Annotation annotation : annotations) {
-                if (annotation instanceof javax.persistence.Entity) {
-                    classes.add(cls);
-                }
-            }
-        }
-
-        return classes;
-    }
-
-    public static List<String> getClassNamesFromPackage (String packageName) throws URISyntaxException {
-
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        ArrayList<String> names = new ArrayList<>();
-
-        packageName = packageName.replace(".", "/");
-        URL packageURL = classLoader.getResource(packageName);
-
-        URI uri = new URI(packageURL.toString());
-        File folder = new File(uri.getPath());
-        File[] files = folder.listFiles();
-        for (File file : files) {
-            String name = file.getName();
-            name = name.substring(0, name.lastIndexOf('.'));
-            names.add(name);
-        }
-
-        return names;
     }
 }
