@@ -1,7 +1,10 @@
 package com.diluv.confluencia;
 
-import com.diluv.confluencia.utils.FlywayConnectionProvider;
-import com.github.fluent.hibernate.cfg.scanner.EntityScanner;
+import java.util.List;
+import java.util.Properties;
+import java.util.function.BiFunction;
+
+import javax.persistence.criteria.CriteriaBuilder;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,11 +16,8 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
 import org.hibernate.service.ServiceRegistry;
 
-import javax.persistence.criteria.CriteriaBuilder;
-
-import java.util.List;
-import java.util.Properties;
-import java.util.function.BiFunction;
+import com.diluv.confluencia.utils.FlywayConnectionProvider;
+import com.github.fluent.hibernate.cfg.scanner.EntityScanner;
 
 public class Confluencia {
 

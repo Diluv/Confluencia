@@ -1,14 +1,14 @@
 package com.diluv.confluencia.database;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 import com.diluv.confluencia.ConfluenciaTest;
 import com.diluv.confluencia.database.record.GamesEntity;
 import com.diluv.confluencia.database.record.ProjectTypesEntity;
 import com.diluv.confluencia.database.record.ProjectsEntity;
 import com.diluv.confluencia.database.record.UsersEntity;
 import com.diluv.confluencia.database.sort.ProjectSort;
-
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 
 public class TestProjectDatabase extends ConfluenciaTest {
 
@@ -118,5 +118,11 @@ public class TestProjectDatabase extends ConfluenciaTest {
         project.setName("Testing");
 
         Assertions.assertTrue(ConfluenciaTest.PROJECT.updateProject(project));
+    }
+
+    @Test
+    public void findProjectsByProjectFileHash () {
+
+        Assertions.assertEquals(1, ConfluenciaTest.PROJECT.findProjectsByProjectFileHash("5E96A9A98839D073C298BBD0AC73A510E1F13A64151E2C4895440ECDBCD6D483EDA994D2CD5E69C5C00A96783280F7BC1E933667B4A25C53CE3918007D5C77E3", 1, 10, ProjectSort.NEW).size());
     }
 }

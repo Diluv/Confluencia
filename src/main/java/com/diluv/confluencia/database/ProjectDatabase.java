@@ -1,20 +1,25 @@
 package com.diluv.confluencia.database;
 
-import com.diluv.confluencia.Confluencia;
-import com.diluv.confluencia.database.record.*;
-import com.diluv.confluencia.database.sort.Order;
-import com.diluv.confluencia.database.sort.Sort;
-
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.*;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.ParameterExpression;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
+
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+
+import com.diluv.confluencia.Confluencia;
+import com.diluv.confluencia.database.record.*;
+import com.diluv.confluencia.database.sort.Order;
+import com.diluv.confluencia.database.sort.Sort;
 
 public class ProjectDatabase {
 
@@ -418,5 +423,44 @@ public class ProjectDatabase {
         }
 
         return false;
+    }
+
+    public List<ProjectsEntity> findProjectsByProjectFileHash (String projectFileHash, long page, int limit, Sort sort) {
+
+        try {
+            return Confluencia.getQuery((session, cb) -> {
+                CriteriaQuery<ProjectsEntity> q = cb.createQuery(ProjectsEntity.class);
+                Root<ProjectsEntity> entity = q.from(ProjectsEntity.class);
+
+                ParameterExpression<String> hashParam = cb.parameter(String.class);
+
+                q.select(entity);
+                List<Predicate> predicates = new ArrayList<>();
+
+                Subquery<ProjectsEntity> projectSubQuery = q.subquery(ProjectsEntity.class);
+                Root<ProjectFilesEntity> entityProjectFiles = projectSubQuery.from(ProjectFilesEntity.class);
+
+                projectSubQuery.select(entityProjectFiles.get("project"));
+                projectSubQuery.where(cb.equal(entityProjectFiles.get("sha512"), hashParam));
+                predicates.add(cb.in(entity).value(projectSubQuery));
+
+                q.where(cb.and(predicates.toArray(new Predicate[0])));
+                if (sort.getOrder() == Order.ASC) {
+                    q.orderBy(cb.asc(entity.get(sort.getColumn())));
+                }
+                else {
+                    q.orderBy(cb.desc(entity.get(sort.getColumn())));
+                }
+
+                TypedQuery<ProjectsEntity> query = session.createQuery(q);
+                query.setParameter(hashParam, projectFileHash);
+                query.setFirstResult((int) ((page - 1) * limit));
+                query.setMaxResults(limit);
+                return query.getResultList();
+            });
+        }
+        catch (Exception e) {
+            return Collections.emptyList();
+        }
     }
 }
