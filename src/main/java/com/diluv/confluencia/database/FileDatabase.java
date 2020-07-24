@@ -158,10 +158,9 @@ public class FileDatabase {
         }
     }
 
-    public List<ProjectFilesEntity> findAllByProjectId (ProjectsEntity project, boolean authorized, long page, int limit, Sort sort, String gameVersion) {
+    public List<ProjectFilesEntity> findAllByProject (ProjectsEntity project, boolean authorized, long page, int limit, Sort sort, String gameVersion) {
 
         try {
-            System.out.println("AH");
             return Confluencia.getQuery((session, cb) -> {
                 CriteriaQuery<ProjectFilesEntity> q = cb.createQuery(ProjectFilesEntity.class);
                 Root<ProjectFilesEntity> entity = q.from(ProjectFilesEntity.class);

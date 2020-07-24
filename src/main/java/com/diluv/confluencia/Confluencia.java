@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.function.BiFunction;
 
+import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 
 import org.apache.logging.log4j.LogManager;
@@ -72,12 +73,15 @@ public class Confluencia {
             transaction.commit();
             return r;
         }
+        catch (NoResultException e) {
+            throw e;
+        }
         catch (Exception e) {
             e.printStackTrace();
             if (transaction != null) {
                 transaction.rollback();
             }
-            throw new Exception(e);
+            throw e;
         }
     }
 }

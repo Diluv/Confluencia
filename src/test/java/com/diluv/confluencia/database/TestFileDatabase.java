@@ -62,9 +62,9 @@ public class TestFileDatabase extends ConfluenciaTest {
 
         ProjectsEntity project = new ProjectsEntity(1);
         project.setGame(new GamesEntity("minecraft-je"));
-        Assertions.assertEquals(16, ConfluenciaTest.FILE.findAllByProjectId(project, true, 1, 25, ProjectFileSort.NEW, null).size());
-        Assertions.assertEquals(1, ConfluenciaTest.FILE.findAllByProjectId(project, true, 1, 25, ProjectFileSort.NEW, "1.12.2").size());
-        Assertions.assertEquals(0, ConfluenciaTest.FILE.findAllByProjectId(project, true, 1, 25, ProjectFileSort.NEW, "invalid").size());
+        Assertions.assertEquals(16, ConfluenciaTest.FILE.findAllByProject(project, true, 1, 25, ProjectFileSort.NEW, null).size());
+        Assertions.assertEquals(1, ConfluenciaTest.FILE.findAllByProject(project, true, 1, 25, ProjectFileSort.NEW, "1.12.2").size());
+        Assertions.assertEquals(0, ConfluenciaTest.FILE.findAllByProject(project, true, 1, 25, ProjectFileSort.NEW, "invalid").size());
     }
 
     @Test
