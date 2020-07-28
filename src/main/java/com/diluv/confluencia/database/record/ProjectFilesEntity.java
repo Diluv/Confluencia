@@ -67,6 +67,15 @@ public class ProjectFilesEntity {
     @OneToMany(mappedBy = "dependencyProject", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     private List<ProjectFileDependenciesEntity> dependencies;
 
+    public ProjectFilesEntity () {
+
+    }
+
+    public ProjectFilesEntity (long id) {
+
+        this.id = id;
+    }
+
     public long getId () {
 
         return this.id;

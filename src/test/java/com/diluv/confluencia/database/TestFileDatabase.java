@@ -1,22 +1,35 @@
 package com.diluv.confluencia.database;
 
+import com.diluv.confluencia.ConfluenciaTest;
+import com.diluv.confluencia.database.record.*;
+import com.diluv.confluencia.database.sort.ProjectFileSort;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import com.diluv.confluencia.ConfluenciaTest;
-import com.diluv.confluencia.database.record.FileProcessingStatus;
-import com.diluv.confluencia.database.record.GamesEntity;
-import com.diluv.confluencia.database.record.ProjectFilesEntity;
-import com.diluv.confluencia.database.record.ProjectsEntity;
-import com.diluv.confluencia.database.record.UsersEntity;
-import com.diluv.confluencia.database.sort.ProjectFileSort;
+import java.sql.SQLException;
 
 public class TestFileDatabase extends ConfluenciaTest {
+
+    @Test
+    public void insertProjectFileAntivirus () {
+
+        ProjectFileAntivirusEntity projectFileAntivirus = new ProjectFileAntivirusEntity();
+        projectFileAntivirus.setProjectFile(new ProjectFilesEntity(16));
+        projectFileAntivirus.setMalware("Testing malware");
+        Assertions.assertTrue(ConfluenciaTest.FILE.insertProjectFileAntivirus(projectFileAntivirus));
+    }
 
     @Test
     public void findAllWhereStatusAndLimit () {
 
         Assertions.assertEquals(5, ConfluenciaTest.FILE.findAllWhereStatusAndLimit(FileProcessingStatus.PENDING, 5).size());
+    }
+
+    @Test
+    public void getLatestFiles () {
+
+        Assertions.assertEquals(1, ConfluenciaTest.FILE.getLatestFiles(1).size());
     }
 
     @Test

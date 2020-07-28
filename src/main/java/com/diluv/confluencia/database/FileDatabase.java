@@ -1,30 +1,40 @@
 package com.diluv.confluencia.database;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.CriteriaUpdate;
-import javax.persistence.criteria.ParameterExpression;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import com.diluv.confluencia.Confluencia;
+import com.diluv.confluencia.database.record.*;
+import com.diluv.confluencia.database.sort.Order;
+import com.diluv.confluencia.database.sort.Sort;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import com.diluv.confluencia.Confluencia;
-import com.diluv.confluencia.database.record.FileProcessingStatus;
-import com.diluv.confluencia.database.record.GameVersionsEntity;
-import com.diluv.confluencia.database.record.GamesEntity;
-import com.diluv.confluencia.database.record.ProjectFileGameVersionsEntity;
-import com.diluv.confluencia.database.record.ProjectFilesEntity;
-import com.diluv.confluencia.database.record.ProjectsEntity;
-import com.diluv.confluencia.database.sort.Order;
-import com.diluv.confluencia.database.sort.Sort;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.*;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class FileDatabase {
+
+    public boolean insertProjectFileAntivirus (ProjectFileAntivirusEntity projectFileAntivirusEntity) {
+        Transaction transaction = null;
+        try (Session session = Confluencia.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.save(projectFileAntivirusEntity);
+            transaction.commit();
+            return true;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+
+        return false;
+    }
 
     public boolean updateStatusById (FileProcessingStatus status, long id) {
 
@@ -87,34 +97,39 @@ public class FileDatabase {
         }
     }
 
-//    public List<ProjectFilesEntity> getLatestFiles (int amount) throws SQLException {
-//
-//        List<ProjectFilesEntity> fileQueueEntity;
-//        final Connection connection = Confluencia.connection();
-//        final int previousIsolationLevel = connection.getTransactionIsolation();
-//        try {
-//            connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
-//            connection.setAutoCommit(false);
-//
-//            fileQueueRecord = this.findAllWhereStatusAndLimit(FileProcessingStatus.PENDING, amount);
-//
-//            if (fileQueueRecord.isEmpty()) {
-//                return fileQueueEntity;
-//            }
-//
-//            final Long[] idList = fileQueueRecord.stream().map(ProjectFilesEntity::getId).toArray(Long[]::new);
-//            for (final Long id : idList) {
-//                if (!this.updateStatusById(FileProcessingStatus.RUNNING, id)) {
-//                    // TODO didn't work but didnt throw an exception
-//                }
-//            }
-//            connection.commit();
-//        } finally {
-//            connection.setAutoCommit(true);
-//            connection.setTransactionIsolation(previousIsolationLevel);
-//        }
-//        return fileQueueEntity;
-//    }
+    public List<ProjectFilesEntity> getLatestFiles (int amount) {
+
+        try {
+            return Confluencia.getQuery((session, cb) -> {
+                CriteriaQuery<ProjectFilesEntity> q = cb.createQuery(ProjectFilesEntity.class);
+                Root<ProjectFilesEntity> entity = q.from(ProjectFilesEntity.class);
+
+                ParameterExpression<FileProcessingStatus> s = cb.parameter(FileProcessingStatus.class);
+
+                q.select(entity);
+                q.where(cb.equal(entity.get("processingStatus"), s));
+                q.orderBy(cb.asc(entity.get("createdAt")));
+
+                TypedQuery<ProjectFilesEntity> query = session.createQuery(q);
+                query.setParameter(s, FileProcessingStatus.PENDING);
+                query.setMaxResults(amount);
+
+                List<ProjectFilesEntity> fileQueue = query.getResultList();
+
+                final Long[] idList = fileQueue.stream().map(ProjectFilesEntity::getId).toArray(Long[]::new);
+                for (final Long id : idList) {
+                    if (!this.updateStatusById(FileProcessingStatus.RUNNING, id)) {
+                        throw new RuntimeException("Failed to update status");
+                    }
+                }
+
+                return fileQueue;
+            });
+        }
+        catch (Exception e) {
+            return Collections.emptyList();
+        }
+    }
 
     public boolean insertProjectFile (ProjectFilesEntity projectFile) {
 
