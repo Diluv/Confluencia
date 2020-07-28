@@ -8,6 +8,7 @@ import com.diluv.confluencia.database.sort.Sort;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import javax.persistence.LockModeType;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 
@@ -113,12 +114,19 @@ public class FileDatabase {
                 TypedQuery<ProjectFilesEntity> query = session.createQuery(q);
                 query.setParameter(s, FileProcessingStatus.PENDING);
                 query.setMaxResults(amount);
-
+                query.setLockMode(LockModeType.PESSIMISTIC_WRITE);
                 List<ProjectFilesEntity> fileQueue = query.getResultList();
 
                 final Long[] idList = fileQueue.stream().map(ProjectFilesEntity::getId).toArray(Long[]::new);
                 for (final Long id : idList) {
-                    if (!this.updateStatusById(FileProcessingStatus.RUNNING, id)) {
+
+                    CriteriaUpdate<ProjectFilesEntity> qU = cb.createCriteriaUpdate(ProjectFilesEntity.class);
+                    Root<ProjectFilesEntity> entityUpdate = qU.from(ProjectFilesEntity.class);
+
+                    qU.set(entityUpdate.get("processingStatus"), FileProcessingStatus.RUNNING.ordinal());
+                    qU.where(cb.equal(entityUpdate.get("id"), id));
+
+                    if (session.createQuery(qU).executeUpdate() != 1) {
                         throw new RuntimeException("Failed to update status");
                     }
                 }
