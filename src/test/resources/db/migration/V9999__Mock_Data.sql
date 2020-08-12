@@ -1,13 +1,15 @@
 INSERT INTO users(id, username, display_name, email, password, password_type, mfa, mfa_secret, created_at)
 VALUES (1, 'darkhax', 'Darkhax', 'darkhax@diluv.com',
-        '$2y$12$Y09/RQkc7icbiOonlBqTeegjtk9VYPKamMTJqkFVtfKDawRwifc8i', 'bcrypt', TRUE, NULL, NOW()),
+        '$2y$12$Y09/RQkc7icbiOonlBqTeegjtk9VYPKamMTJqkFVtfKDawRwifc8i', 'bcrypt', FALSE, NULL, NOW()),
        (2, 'jaredlll08', 'Jaredlll08', 'jaredlll08@diluv.com',
         '$2y$12$Y09/RQkc7icbiOonlBqTeegjtk9VYPKamMTJqkFVtfKDawRwifc8i', 'bcrypt', FALSE, NULL, NOW()),
        (3, 'lclc98', 'lclc98', 'lclc98@diluv.com',
-        '$2y$12$Y09/RQkc7icbiOonlBqTeegjtk9VYPKamMTJqkFVtfKDawRwifc8i', 'bcrypt', FALSE, NULL, NOW()),
+        '$2y$12$Y09/RQkc7icbiOonlBqTeegjtk9VYPKamMTJqkFVtfKDawRwifc8i', 'bcrypt', TRUE, '123456', NOW()),
        (4, 'noprojects', 'noprojects', 'abc@diluv.com',
         '$2y$12$Y09/RQkc7icbiOonlBqTeegjtk9VYPKamMTJqkFVtfKDawRwifc8i', 'bcrypt', FALSE, NULL, NOW());
 
+INSERT INTO user_mfa_recovery(user_id, code)
+VALUES (3, '22222222'), (3, '33333333');
 INSERT INTO user_roles(user_id, role_id)
 VALUES (2, 1);
 

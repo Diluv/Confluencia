@@ -63,7 +63,7 @@ public class Confluencia {
         return sessionFactory;
     }
 
-    public static <R> R getQuery (BiFunction<Session, CriteriaBuilder, R> call)  {
+    public static <R> R getQuery (BiFunction<Session, CriteriaBuilder, R> call) {
 
         Transaction transaction = null;
         try (Session session = Confluencia.getSessionFactory().openSession()) {

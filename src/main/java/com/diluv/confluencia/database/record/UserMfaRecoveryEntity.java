@@ -25,6 +25,16 @@ public class UserMfaRecoveryEntity {
     @Column(name = "valid")
     private boolean valid;
 
+    public UserMfaRecoveryEntity () {
+
+    }
+
+    public UserMfaRecoveryEntity (UsersEntity user, String code) {
+
+        this.user = user;
+        this.code = code;
+    }
+
     public UsersEntity getUser () {
 
         return this.user;

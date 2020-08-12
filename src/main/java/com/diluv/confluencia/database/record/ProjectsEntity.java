@@ -68,7 +68,6 @@ public class ProjectsEntity {
     @OneToMany(mappedBy = "project", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     private List<ProjectAuthorsEntity> authors;
 
-
     public ProjectsEntity () {
 
     }

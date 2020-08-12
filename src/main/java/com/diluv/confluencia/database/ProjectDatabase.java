@@ -406,7 +406,6 @@ public class ProjectDatabase {
 
     public boolean updateProject (ProjectsEntity project) {
 
-
         Transaction transaction = null;
         try (Session session = Confluencia.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();

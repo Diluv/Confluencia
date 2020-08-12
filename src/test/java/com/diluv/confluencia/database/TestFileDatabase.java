@@ -1,13 +1,16 @@
 package com.diluv.confluencia.database;
 
-import com.diluv.confluencia.ConfluenciaTest;
-import com.diluv.confluencia.database.record.*;
-import com.diluv.confluencia.database.sort.ProjectFileSort;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.sql.SQLException;
+import com.diluv.confluencia.ConfluenciaTest;
+import com.diluv.confluencia.database.record.FileProcessingStatus;
+import com.diluv.confluencia.database.record.GamesEntity;
+import com.diluv.confluencia.database.record.ProjectFileAntivirusEntity;
+import com.diluv.confluencia.database.record.ProjectFilesEntity;
+import com.diluv.confluencia.database.record.ProjectsEntity;
+import com.diluv.confluencia.database.record.UsersEntity;
+import com.diluv.confluencia.database.sort.ProjectFileSort;
 
 public class TestFileDatabase extends ConfluenciaTest {
 

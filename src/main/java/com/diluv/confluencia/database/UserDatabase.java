@@ -1,11 +1,20 @@
 package com.diluv.confluencia.database;
 
+import java.util.Collections;
+import java.util.List;
+
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Root;
 
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+
 import com.diluv.confluencia.Confluencia;
+import com.diluv.confluencia.database.record.UserMfaRecoveryEntity;
 import com.diluv.confluencia.database.record.UsersEntity;
 
 public class UserDatabase {
@@ -69,6 +78,88 @@ public class UserDatabase {
         }
         catch (Exception e) {
             return null;
+        }
+    }
+
+    public boolean updateUser (UsersEntity user) {
+
+        Transaction transaction = null;
+        try (Session session = Confluencia.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.update(user);
+            transaction.commit();
+            return true;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public boolean insertUserMFARecovery (List<UserMfaRecoveryEntity> entities) {
+
+        Transaction transaction = null;
+        try (Session session = Confluencia.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            for (UserMfaRecoveryEntity entity : entities) {
+                session.save(entity);
+            }
+            transaction.commit();
+            return true;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public boolean deleteUserMFARecovery (UsersEntity user) {
+
+        try {
+            return Confluencia.getQuery((session, cb) -> {
+                CriteriaDelete<UserMfaRecoveryEntity> q = cb.createCriteriaDelete(UserMfaRecoveryEntity.class);
+
+                Root<UserMfaRecoveryEntity> entity = q.from(UserMfaRecoveryEntity.class);
+                q.where(cb.equal(entity.get("user"), user));
+
+                Query query = session.createQuery(q);
+                return query.executeUpdate() >= 0;
+            });
+        }
+        catch (Exception e) {
+            return false;
+        }
+    }
+
+    public List<UserMfaRecoveryEntity> findAllUserMfaRecoveryByUser (UsersEntity user) {
+
+        try {
+            return Confluencia.getQuery((session, cb) -> {
+                CriteriaQuery<UserMfaRecoveryEntity> q = cb.createQuery(UserMfaRecoveryEntity.class);
+                Root<UserMfaRecoveryEntity> entity = q.from(UserMfaRecoveryEntity.class);
+
+                ParameterExpression<UsersEntity> s = cb.parameter(UsersEntity.class);
+
+                q.select(entity);
+                q.where(cb.equal(entity.get("user"), s));
+
+                TypedQuery<UserMfaRecoveryEntity> query = session.createQuery(q);
+                query.setParameter(s, user);
+                return query.getResultList();
+            });
+        }
+        catch (Exception e) {
+            return Collections.emptyList();
         }
     }
 }

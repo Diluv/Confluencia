@@ -1,24 +1,35 @@
 package com.diluv.confluencia.database;
 
-import com.diluv.confluencia.Confluencia;
-import com.diluv.confluencia.database.record.*;
-import com.diluv.confluencia.database.sort.Order;
-import com.diluv.confluencia.database.sort.Sort;
-
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-
-import javax.persistence.LockModeType;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.*;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.persistence.LockModeType;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.CriteriaUpdate;
+import javax.persistence.criteria.ParameterExpression;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+
+import com.diluv.confluencia.Confluencia;
+import com.diluv.confluencia.database.record.FileProcessingStatus;
+import com.diluv.confluencia.database.record.GameVersionsEntity;
+import com.diluv.confluencia.database.record.GamesEntity;
+import com.diluv.confluencia.database.record.ProjectFileAntivirusEntity;
+import com.diluv.confluencia.database.record.ProjectFileGameVersionsEntity;
+import com.diluv.confluencia.database.record.ProjectFilesEntity;
+import com.diluv.confluencia.database.record.ProjectsEntity;
+import com.diluv.confluencia.database.sort.Order;
+import com.diluv.confluencia.database.sort.Sort;
+
 public class FileDatabase {
 
     public boolean insertProjectFileAntivirus (ProjectFileAntivirusEntity projectFileAntivirusEntity) {
+
         Transaction transaction = null;
         try (Session session = Confluencia.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
