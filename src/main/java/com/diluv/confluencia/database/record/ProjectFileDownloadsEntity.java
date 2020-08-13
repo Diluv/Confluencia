@@ -1,7 +1,5 @@
 package com.diluv.confluencia.database.record;
 
-import org.hibernate.annotations.SQLInsert;
-
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
@@ -9,10 +7,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.SQLInsert;
+
 @Entity
 @Table(name = "project_file_downloads")
 @IdClass(ProjectFileDownloadsEntityPK.class)
-@SQLInsert(sql = "INSERT IGNORE INTO project_file_downloads(project_file_id, ip) VALUES (?, ?)" )
+@SQLInsert(sql = "INSERT IGNORE INTO project_file_downloads(project_file_id, ip) VALUES (?, ?)")
 public class ProjectFileDownloadsEntity {
 
     @Id

@@ -12,8 +12,6 @@ import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import com.diluv.confluencia.database.record.ProjectFileDownloadsEntity;
-
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -22,6 +20,7 @@ import com.diluv.confluencia.database.record.FileProcessingStatus;
 import com.diluv.confluencia.database.record.GameVersionsEntity;
 import com.diluv.confluencia.database.record.GamesEntity;
 import com.diluv.confluencia.database.record.ProjectFileAntivirusEntity;
+import com.diluv.confluencia.database.record.ProjectFileDownloadsEntity;
 import com.diluv.confluencia.database.record.ProjectFileGameVersionsEntity;
 import com.diluv.confluencia.database.record.ProjectFilesEntity;
 import com.diluv.confluencia.database.record.ProjectsEntity;
@@ -268,6 +267,7 @@ public class FileDatabase {
     }
 
     public boolean insertProjectFileDownloads (ProjectFileDownloadsEntity entity) {
+
         Transaction transaction = null;
         try (Session session = Confluencia.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
