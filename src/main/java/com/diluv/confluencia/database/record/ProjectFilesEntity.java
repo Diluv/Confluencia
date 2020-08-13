@@ -29,6 +29,9 @@ public class ProjectFilesEntity {
     @Column(name = "sha512")
     private String sha512;
 
+    @Column(name = "downloads")
+    private long downloads;
+
     @Column(name = "changelog")
     private String changelog;
 
@@ -124,6 +127,16 @@ public class ProjectFilesEntity {
     public void setSha512 (String sha512) {
 
         this.sha512 = sha512;
+    }
+
+    public long getDownloads () {
+
+        return this.downloads;
+    }
+
+    public void setDownloads (long downloads) {
+
+        this.downloads = downloads;
     }
 
     public String getChangelog () {

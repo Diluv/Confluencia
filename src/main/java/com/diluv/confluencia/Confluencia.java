@@ -37,7 +37,7 @@ public class Confluencia {
             settings.put(Environment.PASS, password);
             settings.put(Environment.DIALECT, "org.hibernate.dialect.MariaDB103Dialect");
             settings.put(Environment.CONNECTION_PROVIDER, FlywayConnectionProvider.class.getName());
-            settings.put(Environment.SHOW_SQL, true);
+            settings.put(Environment.SHOW_SQL, false);
             settings.put(Environment.ENABLE_LAZY_LOAD_NO_TRANS, true);
             configuration.setProperties(settings);
 
