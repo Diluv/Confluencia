@@ -9,7 +9,8 @@ VALUES (1, 'darkhax', 'Darkhax', 'darkhax@diluv.com',
         '$2y$12$Y09/RQkc7icbiOonlBqTeegjtk9VYPKamMTJqkFVtfKDawRwifc8i', 'bcrypt', FALSE, NULL, NOW());
 
 INSERT INTO user_mfa_recovery(user_id, code)
-VALUES (3, '22222222'), (3, '33333333');
+VALUES (3, '22222222'),
+       (3, '33333333');
 INSERT INTO user_roles(user_id, role_id)
 VALUES (2, 1);
 
@@ -759,3 +760,7 @@ VALUES ('w36TSM/IUyxY5P2pA1WaE3bWW8aI8YV43ne+Up2K2w4=', 'reference_token', '1', 
        ('u/lvMINQ0CqNfZQOaK342mxeIaRvRe3x+5pIzi3i4GE=', 'reference_token', '2', 'DILUV_WEBSITE', NOW(),
         NOW() + INTERVAL 1 DAY,
         '{"Audiences":[],"Issuer":"http://localhost:5000","CreationTime":"2020-04-29T03:38:37Z","Lifetime":3600,"Type":"access_token","ClientId":"DILUV_WEBSITE","AccessTokenType":1,"Claims":[{"Type":"client_id","Value":"DILUV_WEBSITE","ValueType":"http://www.w3.org/2001/XMLSchema#string"},{"Type":"scope","Value":"openid","ValueType":"http://www.w3.org/2001/XMLSchema#string"},{"Type":"scope","Value":"profile","ValueType":"http://www.w3.org/2001/XMLSchema#string"},{"Type":"scope","Value":"offline_access","ValueType":"http://www.w3.org/2001/XMLSchema#string"},{"Type": "sub","Value":"2","ValueType":"http://www.w3.org/2001/XMLSchema#string"},{"Type":"auth_time","Value":"1587912601","ValueType":"http://www.w3.org/2001/XMLSchema#integer64"},{"Type":"idp","Value":"local","ValueType":"http://www.w3.org/2001/XMLSchema#string"},{"Type":"amr","Value":"pwd","ValueType":"http://www.w3.org/2001/XMLSchema#string"}],"Version":4}');
+
+
+INSERT INTO nodecdn_commits(hash)
+VALUES ('d9f5bb5b-22af-4f58-bb15-f6c8a373aae9')
