@@ -1,5 +1,7 @@
 package com.diluv.confluencia.database;
 
+import java.sql.Timestamp;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -98,5 +100,11 @@ public class TestFileDatabase extends ConfluenciaTest {
         ProjectFileDownloadsEntity entity = new ProjectFileDownloadsEntity(new ProjectFilesEntity(1), "811a90e1c8e86c7b4c0eef5b2c0bf0ec1b19c4b1b5a242e6455be93787cb473cb7bc9b0fdeb960d00d5c6881c2094dd63c5c900ce9057255e2a4e271fc25fef1");
         Assertions.assertTrue(Confluencia.FILE.insertProjectFileDownloads(entity));
         Assertions.assertTrue(Confluencia.FILE.insertProjectFileDownloads(entity));
+    }
+
+    @Test
+    public void updateAllForRelease () {
+
+        Assertions.assertTrue(Confluencia.FILE.updateAllForRelease(new Timestamp(System.currentTimeMillis())));
     }
 }

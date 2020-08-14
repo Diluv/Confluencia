@@ -1,5 +1,6 @@
 package com.diluv.confluencia.database;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -57,6 +58,7 @@ public class FileDatabase {
                 Root<ProjectFilesEntity> entity = q.from(ProjectFilesEntity.class);
 
                 q.set(entity.get("processingStatus"), status.ordinal());
+                q.set(entity.get("processingStatusChanged"), new Timestamp(System.currentTimeMillis()));
                 q.where(cb.equal(entity.get("id"), id));
 
                 return session.createQuery(q).executeUpdate() == 1;
@@ -75,6 +77,7 @@ public class FileDatabase {
                 Root<ProjectFilesEntity> entity = q.from(ProjectFilesEntity.class);
 
                 q.set(entity.get("processingStatus"), set.ordinal());
+                q.set(entity.get("processingStatusChanged"), new Timestamp(System.currentTimeMillis()));
                 q.where(cb.equal(entity.get("processingStatus"), where.ordinal()));
 
                 session.createQuery(q).executeUpdate();
@@ -284,5 +287,28 @@ public class FileDatabase {
         }
 
         return false;
+    }
+
+    public boolean updateAllForRelease (Timestamp time) {
+
+        try {
+            return Confluencia.getQuery((session, cb) -> {
+                CriteriaUpdate<ProjectFilesEntity> q = cb.createCriteriaUpdate(ProjectFilesEntity.class);
+                Root<ProjectFilesEntity> entity = q.from(ProjectFilesEntity.class);
+
+                q.set(entity.get("released"), true);
+                q.where(cb.and(
+                    cb.isFalse(entity.get("released")),
+                    cb.equal(entity.get("processingStatus"), FileProcessingStatus.SUCCESS)),
+                    cb.lessThanOrEqualTo(entity.get("processingStatusChanged"), time)
+                );
+
+                session.createQuery(q).executeUpdate();
+                return true;
+            });
+        }
+        catch (Exception e) {
+            return false;
+        }
     }
 }

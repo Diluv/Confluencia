@@ -22,7 +22,13 @@ public class TestSecurityDatabase extends ConfluenciaTest {
     @Test
     public void findAllNodeCDNCommits () {
 
-        Assertions.assertNotNull(Confluencia.SECURITY.findAllNodeCDNCommits());
+        Assertions.assertNotNull(Confluencia.SECURITY.findOneNodeCDNCommits());
+    }
+
+    @Test
+    public void findOneNodeCDNCommitsByHash () {
+
+        Assertions.assertNotNull(Confluencia.SECURITY.findOneNodeCDNCommitsByHash("d9f5bb5b-22af-4f58-bb15-f6c8a373aae9"));
     }
 
     @Test
@@ -35,7 +41,7 @@ public class TestSecurityDatabase extends ConfluenciaTest {
 
     @Test
     public void updateNodeCDNCommits () {
-
-        Assertions.assertTrue(Confluencia.SECURITY.updateNodeCDNCommits(1));
+        NodeCDNCommitsEntity entity = Confluencia.SECURITY.findOneNodeCDNCommitsByHash("d9f5bb5b-22af-4f58-bb15-f6c8a373aae9");
+        Assertions.assertTrue(Confluencia.SECURITY.updateNodeCDNCommits(entity));
     }
 }
