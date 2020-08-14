@@ -7,6 +7,13 @@ import java.util.function.BiFunction;
 import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 
+import com.diluv.confluencia.database.FileDatabase;
+import com.diluv.confluencia.database.GameDatabase;
+import com.diluv.confluencia.database.NewsDatabase;
+import com.diluv.confluencia.database.ProjectDatabase;
+import com.diluv.confluencia.database.SecurityDatabase;
+import com.diluv.confluencia.database.UserDatabase;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
@@ -21,6 +28,13 @@ import com.diluv.confluencia.utils.FlywayConnectionProvider;
 import com.github.fluent.hibernate.cfg.scanner.EntityScanner;
 
 public class Confluencia {
+
+    public static final SecurityDatabase SECURITY = new SecurityDatabase();
+    public static final FileDatabase FILE = new FileDatabase();
+    public static final GameDatabase GAME = new GameDatabase();
+    public static final ProjectDatabase PROJECT = new ProjectDatabase();
+    public static final UserDatabase USER = new UserDatabase();
+    public static final NewsDatabase NEWS = new NewsDatabase();
 
     public static final Logger LOGGER = LogManager.getLogger("Confluencia");
     private static SessionFactory sessionFactory;
