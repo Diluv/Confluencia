@@ -48,7 +48,7 @@ public class SecurityDatabase {
 
                 Root<NodeCDNCommitsEntity> entity = q.from(NodeCDNCommitsEntity.class);
                 q.select(entity);
-                q.where(cb.and(cb.isFalse(entity.get("released")), cb.equal(entity.get("hash"), hashParam)));
+                q.where(cb.and(cb.isFalse(entity.get("completed")), cb.equal(entity.get("hash"), hashParam)));
 
                 TypedQuery<NodeCDNCommitsEntity> query = session.createQuery(q);
                 query.setParameter(hashParam, hash);
