@@ -1,5 +1,7 @@
 package com.diluv.confluencia.database.record;
 
+import java.util.Objects;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
@@ -40,5 +42,21 @@ public class ProjectFileDependenciesEntity {
     public void setDependencyProject (ProjectsEntity dependencyProject) {
 
         this.dependencyProject = dependencyProject;
+    }
+
+    @Override
+    public boolean equals (Object o) {
+
+        if (this == o) return true;
+        if (!(o instanceof ProjectFileDependenciesEntity)) return false;
+        ProjectFileDependenciesEntity that = (ProjectFileDependenciesEntity) o;
+        return Objects.equals(getProjectFile(), that.getProjectFile()) &&
+            Objects.equals(getDependencyProject(), that.getDependencyProject());
+    }
+
+    @Override
+    public int hashCode () {
+
+        return Objects.hash(getProjectFile(), getDependencyProject());
     }
 }

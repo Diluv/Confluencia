@@ -1,6 +1,7 @@
 package com.diluv.confluencia.database.record;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
@@ -36,5 +37,21 @@ public class ProjectAuthorPermissionsEntityPK implements Serializable {
     public void setPermission (String permission) {
 
         this.permission = permission;
+    }
+
+    @Override
+    public boolean equals (Object o) {
+
+        if (this == o) return true;
+        if (!(o instanceof ProjectAuthorPermissionsEntityPK)) return false;
+        ProjectAuthorPermissionsEntityPK that = (ProjectAuthorPermissionsEntityPK) o;
+        return Objects.equals(getAuthor(), that.getAuthor()) &&
+            Objects.equals(getPermission(), that.getPermission());
+    }
+
+    @Override
+    public int hashCode () {
+
+        return Objects.hash(getAuthor(), getPermission());
     }
 }

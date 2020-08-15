@@ -1,5 +1,7 @@
 package com.diluv.confluencia.database.record;
 
+import java.util.Objects;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -40,5 +42,21 @@ public class FeaturedGamesEntity {
     public void setGame (GamesEntity game) {
 
         this.game = game;
+    }
+
+    @Override
+    public boolean equals (Object o) {
+
+        if (this == o) return true;
+        if (!(o instanceof FeaturedGamesEntity)) return false;
+        FeaturedGamesEntity that = (FeaturedGamesEntity) o;
+        return getId() == that.getId() &&
+            Objects.equals(getGame(), that.getGame());
+    }
+
+    @Override
+    public int hashCode () {
+
+        return Objects.hash(getId(), getGame());
     }
 }

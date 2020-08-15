@@ -1,6 +1,7 @@
 package com.diluv.confluencia.database.record;
 
 import java.sql.Timestamp;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -91,5 +92,24 @@ public class GameVersionsEntity {
     public void setGame (GamesEntity game) {
 
         this.game = game;
+    }
+
+    @Override
+    public boolean equals (Object o) {
+
+        if (this == o) return true;
+        if (!(o instanceof GameVersionsEntity)) return false;
+        GameVersionsEntity that = (GameVersionsEntity) o;
+        return getId() == that.getId() &&
+            Objects.equals(getVersion(), that.getVersion()) &&
+            Objects.equals(getType(), that.getType()) &&
+            Objects.equals(getReleasedAt(), that.getReleasedAt()) &&
+            Objects.equals(getGame(), that.getGame());
+    }
+
+    @Override
+    public int hashCode () {
+
+        return Objects.hash(getId(), getVersion(), getType(), getReleasedAt(), getGame());
     }
 }

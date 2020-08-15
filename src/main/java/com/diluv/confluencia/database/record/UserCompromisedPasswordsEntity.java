@@ -1,6 +1,7 @@
 package com.diluv.confluencia.database.record;
 
 import java.sql.Timestamp;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -49,5 +50,22 @@ public class UserCompromisedPasswordsEntity {
     public void setLastUpdated (Timestamp lastUpdated) {
 
         this.lastUpdated = lastUpdated;
+    }
+
+    @Override
+    public boolean equals (Object o) {
+
+        if (this == o) return true;
+        if (!(o instanceof UserCompromisedPasswordsEntity)) return false;
+        UserCompromisedPasswordsEntity that = (UserCompromisedPasswordsEntity) o;
+        return getOccurrences() == that.getOccurrences() &&
+            Objects.equals(getPasswordHash(), that.getPasswordHash()) &&
+            Objects.equals(getLastUpdated(), that.getLastUpdated());
+    }
+
+    @Override
+    public int hashCode () {
+
+        return Objects.hash(getPasswordHash(), getOccurrences(), getLastUpdated());
     }
 }

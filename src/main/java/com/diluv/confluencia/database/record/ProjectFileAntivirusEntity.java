@@ -1,6 +1,7 @@
 package com.diluv.confluencia.database.record;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -39,5 +40,21 @@ public class ProjectFileAntivirusEntity implements Serializable {
     public void setMalware (String malware) {
 
         this.malware = malware;
+    }
+
+    @Override
+    public boolean equals (Object o) {
+
+        if (this == o) return true;
+        if (!(o instanceof ProjectFileAntivirusEntity)) return false;
+        ProjectFileAntivirusEntity that = (ProjectFileAntivirusEntity) o;
+        return Objects.equals(getProjectFile(), that.getProjectFile()) &&
+            Objects.equals(getMalware(), that.getMalware());
+    }
+
+    @Override
+    public int hashCode () {
+
+        return Objects.hash(getProjectFile(), getMalware());
     }
 }

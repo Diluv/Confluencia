@@ -1,6 +1,7 @@
 package com.diluv.confluencia.database.record;
 
 import java.sql.Timestamp;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -62,5 +63,23 @@ public class EmailBounceEntity {
     public void setBouncedAt (Timestamp bouncedAt) {
 
         this.bouncedAt = bouncedAt;
+    }
+
+    @Override
+    public boolean equals (Object o) {
+
+        if (this == o) return true;
+        if (!(o instanceof EmailBounceEntity)) return false;
+        EmailBounceEntity that = (EmailBounceEntity) o;
+        return Objects.equals(getMessageId(), that.getMessageId()) &&
+            Objects.equals(getBounceType(), that.getBounceType()) &&
+            Objects.equals(getDescription(), that.getDescription()) &&
+            Objects.equals(getBouncedAt(), that.getBouncedAt());
+    }
+
+    @Override
+    public int hashCode () {
+
+        return Objects.hash(getMessageId(), getBounceType(), getDescription(), getBouncedAt());
     }
 }

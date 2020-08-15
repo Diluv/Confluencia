@@ -1,5 +1,7 @@
 package com.diluv.confluencia.database.record;
 
+import java.util.Objects;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -37,5 +39,21 @@ public class RolesEntity {
     public void setName (String name) {
 
         this.name = name;
+    }
+
+    @Override
+    public boolean equals (Object o) {
+
+        if (this == o) return true;
+        if (!(o instanceof RolesEntity)) return false;
+        RolesEntity that = (RolesEntity) o;
+        return getId() == that.getId() &&
+            Objects.equals(getName(), that.getName());
+    }
+
+    @Override
+    public int hashCode () {
+
+        return Objects.hash(getId(), getName());
     }
 }

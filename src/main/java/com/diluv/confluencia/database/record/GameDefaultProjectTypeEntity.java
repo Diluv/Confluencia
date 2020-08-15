@@ -1,6 +1,7 @@
 package com.diluv.confluencia.database.record;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -43,5 +44,21 @@ public class GameDefaultProjectTypeEntity implements Serializable {
     public void setProjectType (ProjectTypesEntity projectType) {
 
         this.projectType = projectType;
+    }
+
+    @Override
+    public boolean equals (Object o) {
+
+        if (this == o) return true;
+        if (!(o instanceof GameDefaultProjectTypeEntity)) return false;
+        GameDefaultProjectTypeEntity that = (GameDefaultProjectTypeEntity) o;
+        return Objects.equals(getGame(), that.getGame()) &&
+            Objects.equals(getProjectType(), that.getProjectType());
+    }
+
+    @Override
+    public int hashCode () {
+
+        return Objects.hash(getGame(), getProjectType());
     }
 }

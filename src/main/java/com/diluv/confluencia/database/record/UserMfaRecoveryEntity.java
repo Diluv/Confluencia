@@ -1,5 +1,7 @@
 package com.diluv.confluencia.database.record;
 
+import java.util.Objects;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -63,5 +65,22 @@ public class UserMfaRecoveryEntity {
     public void setValid (boolean valid) {
 
         this.valid = valid;
+    }
+
+    @Override
+    public boolean equals (Object o) {
+
+        if (this == o) return true;
+        if (!(o instanceof UserMfaRecoveryEntity)) return false;
+        UserMfaRecoveryEntity entity = (UserMfaRecoveryEntity) o;
+        return isValid() == entity.isValid() &&
+            Objects.equals(getUser(), entity.getUser()) &&
+            Objects.equals(getCode(), entity.getCode());
+    }
+
+    @Override
+    public int hashCode () {
+
+        return Objects.hash(getUser(), getCode(), isValid());
     }
 }

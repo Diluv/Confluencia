@@ -2,6 +2,7 @@ package com.diluv.confluencia.database.record;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.*;
 
@@ -235,5 +236,35 @@ public class ProjectsEntity {
     public void setGame (GamesEntity game) {
 
         this.game = game;
+    }
+
+    @Override
+    public boolean equals (Object o) {
+
+        if (this == o) return true;
+        if (!(o instanceof ProjectsEntity)) return false;
+        ProjectsEntity that = (ProjectsEntity) o;
+        return getId() == that.getId() &&
+            getCachedDownloads() == that.getCachedDownloads() &&
+            isReview() == that.isReview() &&
+            isReleased() == that.isReleased() &&
+            Objects.equals(getName(), that.getName()) &&
+            Objects.equals(getSlug(), that.getSlug()) &&
+            Objects.equals(getSummary(), that.getSummary()) &&
+            Objects.equals(getDescription(), that.getDescription()) &&
+            Objects.equals(getCreatedAt(), that.getCreatedAt()) &&
+            Objects.equals(getUpdatedAt(), that.getUpdatedAt()) &&
+            Objects.equals(user, that.user) &&
+            Objects.equals(getProjectType(), that.getProjectType()) &&
+            Objects.equals(getGame(), that.getGame()) &&
+            Objects.equals(getTags(), that.getTags()) &&
+            Objects.equals(getLinks(), that.getLinks()) &&
+            Objects.equals(getAuthors(), that.getAuthors());
+    }
+
+    @Override
+    public int hashCode () {
+
+        return Objects.hash(getId(), getName(), getSlug(), getSummary(), getDescription(), getCachedDownloads(), isReview(), isReleased(), getCreatedAt(), getUpdatedAt(), user, getProjectType(), getGame(), getTags(), getLinks(), getAuthors());
     }
 }

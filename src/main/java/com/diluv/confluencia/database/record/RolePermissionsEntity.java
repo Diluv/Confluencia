@@ -1,5 +1,7 @@
 package com.diluv.confluencia.database.record;
 
+import java.util.Objects;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -40,5 +42,21 @@ public class RolePermissionsEntity {
     public void setPermission (String permission) {
 
         this.permission = permission;
+    }
+
+    @Override
+    public boolean equals (Object o) {
+
+        if (this == o) return true;
+        if (!(o instanceof RolePermissionsEntity)) return false;
+        RolePermissionsEntity that = (RolePermissionsEntity) o;
+        return Objects.equals(getRole(), that.getRole()) &&
+            Objects.equals(getPermission(), that.getPermission());
+    }
+
+    @Override
+    public int hashCode () {
+
+        return Objects.hash(getRole(), getPermission());
     }
 }

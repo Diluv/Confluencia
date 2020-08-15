@@ -1,5 +1,7 @@
 package com.diluv.confluencia.database.record;
 
+import java.util.Objects;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -21,5 +23,20 @@ public class UsernameBlocklistEntity {
     public void setUsername (String username) {
 
         this.username = username;
+    }
+
+    @Override
+    public boolean equals (Object o) {
+
+        if (this == o) return true;
+        if (!(o instanceof UsernameBlocklistEntity)) return false;
+        UsernameBlocklistEntity that = (UsernameBlocklistEntity) o;
+        return Objects.equals(getUsername(), that.getUsername());
+    }
+
+    @Override
+    public int hashCode () {
+
+        return Objects.hash(getUsername());
     }
 }

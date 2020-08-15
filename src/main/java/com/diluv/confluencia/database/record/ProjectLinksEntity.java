@@ -1,5 +1,7 @@
 package com.diluv.confluencia.database.record;
 
+import java.util.Objects;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -53,5 +55,22 @@ public class ProjectLinksEntity {
     public void setUrl (String url) {
 
         this.url = url;
+    }
+
+    @Override
+    public boolean equals (Object o) {
+
+        if (this == o) return true;
+        if (!(o instanceof ProjectLinksEntity)) return false;
+        ProjectLinksEntity that = (ProjectLinksEntity) o;
+        return Objects.equals(getProject(), that.getProject()) &&
+            Objects.equals(getType(), that.getType()) &&
+            Objects.equals(getUrl(), that.getUrl());
+    }
+
+    @Override
+    public int hashCode () {
+
+        return Objects.hash(getProject(), getType(), getUrl());
     }
 }

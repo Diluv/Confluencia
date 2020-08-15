@@ -1,6 +1,7 @@
 package com.diluv.confluencia.database.record;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -36,5 +37,21 @@ public class UserRolesEntityPK implements Serializable {
     public void setRole (RolesEntity role) {
 
         this.role = role;
+    }
+
+    @Override
+    public boolean equals (Object o) {
+
+        if (this == o) return true;
+        if (!(o instanceof UserRolesEntityPK)) return false;
+        UserRolesEntityPK that = (UserRolesEntityPK) o;
+        return Objects.equals(getUser(), that.getUser()) &&
+            Objects.equals(getRole(), that.getRole());
+    }
+
+    @Override
+    public int hashCode () {
+
+        return Objects.hash(getUser(), getRole());
     }
 }

@@ -1,5 +1,7 @@
 package com.diluv.confluencia.database.record;
 
+import java.util.Objects;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
@@ -40,5 +42,21 @@ public class ProjectTagsEntity {
     public void setTag (TagsEntity tag) {
 
         this.tag = tag;
+    }
+
+    @Override
+    public boolean equals (Object o) {
+
+        if (this == o) return true;
+        if (!(o instanceof ProjectTagsEntity)) return false;
+        ProjectTagsEntity that = (ProjectTagsEntity) o;
+        return Objects.equals(getProject(), that.getProject()) &&
+            Objects.equals(getTag(), that.getTag());
+    }
+
+    @Override
+    public int hashCode () {
+
+        return Objects.hash(getProject(), getTag());
     }
 }

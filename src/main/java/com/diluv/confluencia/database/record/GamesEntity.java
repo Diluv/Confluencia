@@ -2,6 +2,7 @@ package com.diluv.confluencia.database.record;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -114,5 +115,26 @@ public class GamesEntity {
     public void setDefaultProjectTypeEntity (GameDefaultProjectTypeEntity defaultProjectTypeEntity) {
 
         this.defaultProjectTypeEntity = defaultProjectTypeEntity;
+    }
+
+    @Override
+    public boolean equals (Object o) {
+
+        if (this == o) return true;
+        if (!(o instanceof GamesEntity)) return false;
+        GamesEntity that = (GamesEntity) o;
+        return Objects.equals(getSlug(), that.getSlug()) &&
+            Objects.equals(getName(), that.getName()) &&
+            Objects.equals(getUrl(), that.getUrl()) &&
+            Objects.equals(getCreatedAt(), that.getCreatedAt()) &&
+            Objects.equals(getProjectTypes(), that.getProjectTypes()) &&
+            Objects.equals(getGameVersions(), that.getGameVersions()) &&
+            Objects.equals(getDefaultProjectTypeEntity(), that.getDefaultProjectTypeEntity());
+    }
+
+    @Override
+    public int hashCode () {
+
+        return Objects.hash(getSlug(), getName(), getUrl(), getCreatedAt(), getProjectTypes(), getGameVersions(), getDefaultProjectTypeEntity());
     }
 }

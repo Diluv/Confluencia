@@ -1,6 +1,7 @@
 package com.diluv.confluencia.database.record;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -35,5 +36,21 @@ public class ProjectFileDownloadsEntityPK implements Serializable {
     public void setIp (String ip) {
 
         this.ip = ip;
+    }
+
+    @Override
+    public boolean equals (Object o) {
+
+        if (this == o) return true;
+        if (!(o instanceof ProjectFileDownloadsEntityPK)) return false;
+        ProjectFileDownloadsEntityPK that = (ProjectFileDownloadsEntityPK) o;
+        return Objects.equals(getProjectFile(), that.getProjectFile()) &&
+            Objects.equals(getIp(), that.getIp());
+    }
+
+    @Override
+    public int hashCode () {
+
+        return Objects.hash(getProjectFile(), getIp());
     }
 }

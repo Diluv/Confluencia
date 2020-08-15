@@ -1,6 +1,7 @@
 package com.diluv.confluencia.database.record;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
@@ -36,5 +37,21 @@ public class ProjectTypesEntityPK implements Serializable {
     public void setSlug (String slug) {
 
         this.slug = slug;
+    }
+
+    @Override
+    public boolean equals (Object o) {
+
+        if (this == o) return true;
+        if (!(o instanceof ProjectTypesEntityPK)) return false;
+        ProjectTypesEntityPK that = (ProjectTypesEntityPK) o;
+        return Objects.equals(getGame(), that.getGame()) &&
+            Objects.equals(getSlug(), that.getSlug());
+    }
+
+    @Override
+    public int hashCode () {
+
+        return Objects.hash(getGame(), getSlug());
     }
 }

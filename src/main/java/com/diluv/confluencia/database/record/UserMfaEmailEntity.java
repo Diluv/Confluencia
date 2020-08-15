@@ -1,6 +1,7 @@
 package com.diluv.confluencia.database.record;
 
 import java.sql.Timestamp;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -55,5 +56,22 @@ public class UserMfaEmailEntity {
     public void setCreatedAt (Timestamp createdAt) {
 
         this.createdAt = createdAt;
+    }
+
+    @Override
+    public boolean equals (Object o) {
+
+        if (this == o) return true;
+        if (!(o instanceof UserMfaEmailEntity)) return false;
+        UserMfaEmailEntity that = (UserMfaEmailEntity) o;
+        return Objects.equals(getUser(), that.getUser()) &&
+            Objects.equals(getCode(), that.getCode()) &&
+            Objects.equals(getCreatedAt(), that.getCreatedAt());
+    }
+
+    @Override
+    public int hashCode () {
+
+        return Objects.hash(getUser(), getCode(), getCreatedAt());
     }
 }

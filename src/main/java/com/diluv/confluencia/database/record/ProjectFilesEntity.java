@@ -2,6 +2,7 @@ package com.diluv.confluencia.database.record;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.*;
 
@@ -257,5 +258,37 @@ public class ProjectFilesEntity {
     public void setDependencies (List<ProjectFileDependenciesEntity> dependencies) {
 
         this.dependencies = dependencies;
+    }
+
+    @Override
+    public boolean equals (Object o) {
+
+        if (this == o) return true;
+        if (!(o instanceof ProjectFilesEntity)) return false;
+        ProjectFilesEntity that = (ProjectFilesEntity) o;
+        return getId() == that.getId() &&
+            getSize() == that.getSize() &&
+            getDownloads() == that.getDownloads() &&
+            isReleased() == that.isReleased() &&
+            Objects.equals(getVersion(), that.getVersion()) &&
+            Objects.equals(getName(), that.getName()) &&
+            Objects.equals(getSha512(), that.getSha512()) &&
+            Objects.equals(getChangelog(), that.getChangelog()) &&
+            Objects.equals(getCreatedAt(), that.getCreatedAt()) &&
+            Objects.equals(getUpdatedAt(), that.getUpdatedAt()) &&
+            Objects.equals(getReleaseType(), that.getReleaseType()) &&
+            Objects.equals(getClassifier(), that.getClassifier()) &&
+            getProcessingStatus() == that.getProcessingStatus() &&
+            Objects.equals(getProcessingStatusChanged(), that.getProcessingStatusChanged()) &&
+            Objects.equals(getProject(), that.getProject()) &&
+            Objects.equals(getUser(), that.getUser()) &&
+            Objects.equals(getGameVersions(), that.getGameVersions()) &&
+            Objects.equals(getDependencies(), that.getDependencies());
+    }
+
+    @Override
+    public int hashCode () {
+
+        return Objects.hash(getId(), getVersion(), getName(), getSize(), getSha512(), getDownloads(), getChangelog(), getCreatedAt(), getUpdatedAt(), getReleaseType(), getClassifier(), getProcessingStatus(), getProcessingStatusChanged(), isReleased(), getProject(), getUser(), getGameVersions(), getDependencies());
     }
 }

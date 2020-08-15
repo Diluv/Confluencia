@@ -1,6 +1,7 @@
 package com.diluv.confluencia.database.record;
 
 import java.sql.Timestamp;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -74,5 +75,23 @@ public class NodeCDNCommitsEntity {
     public void setCreatedAt (Timestamp createdAt) {
 
         this.createdAt = createdAt;
+    }
+
+    @Override
+    public boolean equals (Object o) {
+
+        if (this == o) return true;
+        if (!(o instanceof NodeCDNCommitsEntity)) return false;
+        NodeCDNCommitsEntity entity = (NodeCDNCommitsEntity) o;
+        return getId() == entity.getId() &&
+            isCompleted() == entity.isCompleted() &&
+            Objects.equals(getHash(), entity.getHash()) &&
+            Objects.equals(getCreatedAt(), entity.getCreatedAt());
+    }
+
+    @Override
+    public int hashCode () {
+
+        return Objects.hash(getId(), getHash(), isCompleted(), getCreatedAt());
     }
 }

@@ -1,6 +1,7 @@
 package com.diluv.confluencia.database.record;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -81,5 +82,24 @@ public class ProjectAuthorsEntity {
     public void setPermissions (List<ProjectAuthorPermissionsEntity> permissions) {
 
         this.permissions = permissions;
+    }
+
+    @Override
+    public boolean equals (Object o) {
+
+        if (this == o) return true;
+        if (!(o instanceof ProjectAuthorsEntity)) return false;
+        ProjectAuthorsEntity that = (ProjectAuthorsEntity) o;
+        return getId() == that.getId() &&
+            Objects.equals(getProject(), that.getProject()) &&
+            Objects.equals(getUser(), that.getUser()) &&
+            Objects.equals(getRole(), that.getRole()) &&
+            Objects.equals(getPermissions(), that.getPermissions());
+    }
+
+    @Override
+    public int hashCode () {
+
+        return Objects.hash(getId(), getProject(), getUser(), getRole(), getPermissions());
     }
 }

@@ -1,5 +1,7 @@
 package com.diluv.confluencia.database.record;
 
+import java.util.Objects;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -21,5 +23,20 @@ public class EmailDomainBlocklistEntity {
     public void setDomain (String domain) {
 
         this.domain = domain;
+    }
+
+    @Override
+    public boolean equals (Object o) {
+
+        if (this == o) return true;
+        if (!(o instanceof EmailDomainBlocklistEntity)) return false;
+        EmailDomainBlocklistEntity that = (EmailDomainBlocklistEntity) o;
+        return Objects.equals(getDomain(), that.getDomain());
+    }
+
+    @Override
+    public int hashCode () {
+
+        return Objects.hash(getDomain());
     }
 }

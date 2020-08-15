@@ -1,6 +1,7 @@
 package com.diluv.confluencia.database.record;
 
 import java.sql.Timestamp;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -91,5 +92,25 @@ public class NewsEntity {
     public void setCreatedAt (Timestamp createdAt) {
 
         this.createdAt = createdAt;
+    }
+
+    @Override
+    public boolean equals (Object o) {
+
+        if (this == o) return true;
+        if (!(o instanceof NewsEntity)) return false;
+        NewsEntity that = (NewsEntity) o;
+        return Objects.equals(getSlug(), that.getSlug()) &&
+            Objects.equals(getTitle(), that.getTitle()) &&
+            Objects.equals(getSummary(), that.getSummary()) &&
+            Objects.equals(getDescription(), that.getDescription()) &&
+            Objects.equals(getUser(), that.getUser()) &&
+            Objects.equals(getCreatedAt(), that.getCreatedAt());
+    }
+
+    @Override
+    public int hashCode () {
+
+        return Objects.hash(getSlug(), getTitle(), getSummary(), getDescription(), getUser(), getCreatedAt());
     }
 }

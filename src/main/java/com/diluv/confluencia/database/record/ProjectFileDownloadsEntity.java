@@ -1,5 +1,7 @@
 package com.diluv.confluencia.database.record;
 
+import java.util.Objects;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
@@ -52,5 +54,21 @@ public class ProjectFileDownloadsEntity {
     public void setIp (String ip) {
 
         this.ip = ip;
+    }
+
+    @Override
+    public boolean equals (Object o) {
+
+        if (this == o) return true;
+        if (!(o instanceof ProjectFileDownloadsEntity)) return false;
+        ProjectFileDownloadsEntity that = (ProjectFileDownloadsEntity) o;
+        return Objects.equals(getProjectFile(), that.getProjectFile()) &&
+            Objects.equals(getIp(), that.getIp());
+    }
+
+    @Override
+    public int hashCode () {
+
+        return Objects.hash(getProjectFile(), getIp());
     }
 }

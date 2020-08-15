@@ -1,6 +1,7 @@
 package com.diluv.confluencia.database.record;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -36,5 +37,21 @@ public class ProjectTagsEntityPK implements Serializable {
     public void setTag (TagsEntity tags) {
 
         this.tag = tags;
+    }
+
+    @Override
+    public boolean equals (Object o) {
+
+        if (this == o) return true;
+        if (!(o instanceof ProjectTagsEntityPK)) return false;
+        ProjectTagsEntityPK that = (ProjectTagsEntityPK) o;
+        return Objects.equals(getProject(), that.getProject()) &&
+            Objects.equals(getTag(), that.getTag());
+    }
+
+    @Override
+    public int hashCode () {
+
+        return Objects.hash(getProject(), getTag());
     }
 }

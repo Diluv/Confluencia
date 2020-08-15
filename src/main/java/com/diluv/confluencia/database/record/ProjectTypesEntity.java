@@ -1,6 +1,7 @@
 package com.diluv.confluencia.database.record;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.*;
 
@@ -85,5 +86,24 @@ public class ProjectTypesEntity {
     public void setTags (List<TagsEntity> tags) {
 
         this.tags = tags;
+    }
+
+    @Override
+    public boolean equals (Object o) {
+
+        if (this == o) return true;
+        if (!(o instanceof ProjectTypesEntity)) return false;
+        ProjectTypesEntity that = (ProjectTypesEntity) o;
+        return getMaxFileSize() == that.getMaxFileSize() &&
+            Objects.equals(getGame(), that.getGame()) &&
+            Objects.equals(getSlug(), that.getSlug()) &&
+            Objects.equals(getName(), that.getName()) &&
+            Objects.equals(getTags(), that.getTags());
+    }
+
+    @Override
+    public int hashCode () {
+
+        return Objects.hash(getGame(), getSlug(), getName(), getMaxFileSize(), getTags());
     }
 }

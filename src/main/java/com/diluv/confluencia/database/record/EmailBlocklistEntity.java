@@ -1,5 +1,7 @@
 package com.diluv.confluencia.database.record;
 
+import java.util.Objects;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -34,5 +36,21 @@ public class EmailBlocklistEntity {
     public void setReason (String reason) {
 
         this.reason = reason;
+    }
+
+    @Override
+    public boolean equals (Object o) {
+
+        if (this == o) return true;
+        if (!(o instanceof EmailBlocklistEntity)) return false;
+        EmailBlocklistEntity that = (EmailBlocklistEntity) o;
+        return Objects.equals(getEmail(), that.getEmail()) &&
+            Objects.equals(getReason(), that.getReason());
+    }
+
+    @Override
+    public int hashCode () {
+
+        return Objects.hash(getEmail(), getReason());
     }
 }
