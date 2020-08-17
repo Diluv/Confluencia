@@ -7,13 +7,6 @@ import java.util.function.BiFunction;
 import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 
-import com.diluv.confluencia.database.FileDatabase;
-import com.diluv.confluencia.database.GameDatabase;
-import com.diluv.confluencia.database.NewsDatabase;
-import com.diluv.confluencia.database.ProjectDatabase;
-import com.diluv.confluencia.database.SecurityDatabase;
-import com.diluv.confluencia.database.UserDatabase;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
@@ -24,6 +17,12 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
 import org.hibernate.service.ServiceRegistry;
 
+import com.diluv.confluencia.database.FileDatabase;
+import com.diluv.confluencia.database.GameDatabase;
+import com.diluv.confluencia.database.NewsDatabase;
+import com.diluv.confluencia.database.ProjectDatabase;
+import com.diluv.confluencia.database.SecurityDatabase;
+import com.diluv.confluencia.database.UserDatabase;
 import com.diluv.confluencia.utils.FlywayConnectionProvider;
 import com.github.fluent.hibernate.cfg.scanner.EntityScanner;
 
@@ -39,37 +38,31 @@ public class Confluencia {
     public static final Logger LOGGER = LogManager.getLogger("Confluencia");
     private static SessionFactory sessionFactory;
 
-    public static void init (String url, String username, String password) {
+    public static void init (String url, String username, String password) throws Exception {
 
-        try {
-            Configuration configuration = new Configuration();
+        Configuration configuration = new Configuration();
 
-            Properties settings = new Properties();
-            settings.put(Environment.DRIVER, "org.mariadb.jdbc.Driver");
-            settings.put(Environment.URL, url + "?useLegacyDatetimeCode=false&serverTimezone=UTC");
-            settings.put(Environment.USER, username);
-            settings.put(Environment.PASS, password);
-            settings.put(Environment.DIALECT, "org.hibernate.dialect.MariaDB103Dialect");
-            settings.put(Environment.CONNECTION_PROVIDER, FlywayConnectionProvider.class.getName());
-            settings.put(Environment.SHOW_SQL, false);
-            settings.put(Environment.ENABLE_LAZY_LOAD_NO_TRANS, true);
-            configuration.setProperties(settings);
+        Properties settings = new Properties();
+        settings.put(Environment.DRIVER, "org.mariadb.jdbc.Driver");
+        settings.put(Environment.URL, url + "?useLegacyDatetimeCode=false&serverTimezone=UTC");
+        settings.put(Environment.USER, username);
+        settings.put(Environment.PASS, password);
+        settings.put(Environment.DIALECT, "org.hibernate.dialect.MariaDB103Dialect");
+        settings.put(Environment.CONNECTION_PROVIDER, FlywayConnectionProvider.class.getName());
+        settings.put(Environment.SHOW_SQL, false);
+        settings.put(Environment.ENABLE_LAZY_LOAD_NO_TRANS, true);
+        configuration.setProperties(settings);
 
-            List<Class<?>> classes = EntityScanner.scanPackages("com.diluv.confluencia.database.record").result();
+        List<Class<?>> classes = EntityScanner.scanPackages("com.diluv.confluencia.database.record").result();
 
-            for (Class<?> annotatedClass : classes) {
-                configuration.addAnnotatedClass(annotatedClass);
-            }
-
-            ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
-                .applySettings(configuration.getProperties()).build();
-
-            sessionFactory = configuration.buildSessionFactory(serviceRegistry);
+        for (Class<?> annotatedClass : classes) {
+            configuration.addAnnotatedClass(annotatedClass);
         }
-        catch (Exception e) {
 
-            e.printStackTrace();
-        }
+        ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
+            .applySettings(configuration.getProperties()).build();
+
+        sessionFactory = configuration.buildSessionFactory(serviceRegistry);
     }
 
     public static SessionFactory getSessionFactory () {

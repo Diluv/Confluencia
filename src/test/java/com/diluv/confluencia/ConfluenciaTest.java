@@ -1,5 +1,6 @@
 package com.diluv.confluencia;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.testcontainers.containers.MariaDBContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -20,7 +21,13 @@ public abstract class ConfluenciaTest {
     public static void testData () {
 
         if (!init) {
-            Confluencia.init(CONTAINER.getJdbcUrl(), CONTAINER.getUsername(), CONTAINER.getPassword());
+            try {
+                Confluencia.init(CONTAINER.getJdbcUrl(), CONTAINER.getUsername(), CONTAINER.getPassword());
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+                Assertions.fail();
+            }
             init = true;
         }
     }
