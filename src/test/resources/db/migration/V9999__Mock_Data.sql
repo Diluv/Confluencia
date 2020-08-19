@@ -731,11 +731,11 @@ VALUES (1, 341),
 
 ## Client
 INSERT INTO Clients(Id, ClientId, ClientName, RequireConsent, RequirePkce, RequireClientSecret, AllowOfflineAccess)
-VALUES (1, 'DILUV_WEBSITE', 'Diluv Website', FALSE, TRUE, FALSE, TRUE);
+VALUES (1, 'DILUV_WEBSITE', 'Diluv Website', FALSE, FALSE, FALSE, TRUE);
 INSERT INTO ClientGrantTypes(ClientId, GrantType)
 VALUES (1, 'authorization_code');
 INSERT INTO ClientRedirectUris(ClientId, RedirectUri)
-VALUES (1, 'http://localhost:3000');
+VALUES (1, 'http://localhost:3000/api/auth/callback/DILUV');
 INSERT INTO ClientScopes(ClientId, Scope)
 VALUES (1, 'openid'),
        (1, 'profile'),
