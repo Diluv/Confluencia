@@ -65,10 +65,10 @@ public class ProjectFilesEntity {
     @JoinColumn(name = "user_id")
     private UsersEntity user;
 
-    @OneToMany(mappedBy = "projectFile", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @OneToMany(mappedBy = "projectFile", cascade = CascadeType.ALL)
     private List<ProjectFileGameVersionsEntity> gameVersions;
 
-    @OneToMany(mappedBy = "dependencyProject", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @OneToMany(mappedBy = "dependencyProject", cascade = CascadeType.ALL)
     private List<ProjectFileDependenciesEntity> dependencies;
 
     public ProjectFilesEntity () {
