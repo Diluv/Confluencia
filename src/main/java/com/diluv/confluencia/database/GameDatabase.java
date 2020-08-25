@@ -82,7 +82,7 @@ public class GameDatabase {
                 q.where(cb.like(entity.get("slug"), s));
 
                 TypedQuery<GamesEntity> query = session.createQuery(q);
-                query.setParameter(s, "%" + slug + "%");
+                query.setParameter(s, slug);
                 return query.getSingleResult();
             });
         }
