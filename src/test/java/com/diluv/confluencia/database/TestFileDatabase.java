@@ -105,6 +105,6 @@ public class TestFileDatabase extends ConfluenciaTest {
     @Test
     public void updateAllForRelease () {
 
-        Assertions.assertTrue(Confluencia.FILE.updateAllForRelease(new Timestamp(System.currentTimeMillis())));
+        Assertions.assertEquals(1, Confluencia.FILE.updateAllForRelease(new Timestamp(System.currentTimeMillis())));
     }
 }

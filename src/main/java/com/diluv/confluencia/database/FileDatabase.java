@@ -289,7 +289,7 @@ public class FileDatabase {
         return false;
     }
 
-    public boolean updateAllForRelease (Timestamp time) {
+    public int updateAllForRelease (Timestamp time) {
 
         try {
             return Confluencia.getQuery((session, cb) -> {
@@ -303,12 +303,11 @@ public class FileDatabase {
                     cb.lessThanOrEqualTo(entity.get("processingStatusChanged"), time)
                 );
 
-                session.createQuery(q).executeUpdate();
-                return true;
+                return session.createQuery(q).executeUpdate();
             });
         }
         catch (Exception e) {
-            return false;
+            return -1;
         }
     }
 }
