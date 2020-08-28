@@ -99,7 +99,10 @@ public class FileDatabase {
                 ParameterExpression<FileProcessingStatus> s = cb.parameter(FileProcessingStatus.class);
 
                 q.select(entity);
-                q.where(cb.equal(entity.get("processingStatus"), s));
+                q.where(cb.and(
+                    cb.equal(entity.get("processingStatus"), s),
+                    cb.isFalse(entity.get("released")))
+                );
                 q.orderBy(cb.asc(entity.get("createdAt")));
 
                 TypedQuery<ProjectFilesEntity> query = session.createQuery(q);
