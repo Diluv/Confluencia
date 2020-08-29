@@ -462,4 +462,26 @@ public class ProjectDatabase {
             return Collections.emptyList();
         }
     }
+
+    public List<TagsEntity> findAllTagsByGameSlugAndProjectTypeSlug (ProjectTypesEntity projectType) {
+
+        try {
+            return Confluencia.getQuery((session, cb) -> {
+                CriteriaQuery<TagsEntity> q = cb.createQuery(TagsEntity.class);
+                Root<TagsEntity> entity = q.from(TagsEntity.class);
+
+                ParameterExpression<ProjectTypesEntity> projectTypeParam = cb.parameter(ProjectTypesEntity.class);
+
+                q.select(entity);
+                q.where(cb.equal(entity.get("projectType"), projectTypeParam));
+
+                TypedQuery<TagsEntity> query = session.createQuery(q);
+                query.setParameter(projectTypeParam, projectType);
+                return query.getResultList();
+            });
+        }
+        catch (Exception e) {
+            return Collections.emptyList();
+        }
+    }
 }

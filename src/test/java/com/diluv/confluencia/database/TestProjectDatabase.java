@@ -126,4 +126,12 @@ public class TestProjectDatabase extends ConfluenciaTest {
 
         Assertions.assertEquals(1, Confluencia.PROJECT.findProjectsByProjectFileHash("5E96A9A98839D073C298BBD0AC73A510E1F13A64151E2C4895440ECDBCD6D483EDA994D2CD5E69C5C00A96783280F7BC1E933667B4A25C53CE3918007D5C77E3", 1, 10, ProjectSort.NEW).size());
     }
+
+    @Test
+    public void findAllTagsByGameSlugAndProjectTypeSlug () {
+
+        Assertions.assertEquals(0, Confluencia.PROJECT.findAllTagsByGameSlugAndProjectTypeSlug(new ProjectTypesEntity(new GamesEntity("invalid"), "invalid")).size());
+        Assertions.assertEquals(0, Confluencia.PROJECT.findAllTagsByGameSlugAndProjectTypeSlug(new ProjectTypesEntity(new GamesEntity("minecraft-je"), "invalid")).size());
+        Assertions.assertEquals(2, Confluencia.PROJECT.findAllTagsByGameSlugAndProjectTypeSlug(new ProjectTypesEntity(new GamesEntity("minecraft-je"), "forge-mods")).size());
+    }
 }
