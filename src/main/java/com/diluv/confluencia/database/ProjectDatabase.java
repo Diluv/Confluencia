@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -240,31 +241,22 @@ public class ProjectDatabase {
         }
     }
 
-    public List<ProjectsEntity> findAllProjectsByProjectIds (long[] projectIds) {
+    public List<Long> findAllProjectsByProjectIds (Set<Long> projectIds) {
 
         try {
             return Confluencia.getQuery((session, cb) -> {
-                CriteriaQuery<ProjectsEntity> q = cb.createQuery(ProjectsEntity.class);
+                CriteriaQuery<Long> q = cb.createQuery(Long.class);
 
                 Root<ProjectsEntity> entity = q.from(ProjectsEntity.class);
-                q.select(entity);
+                q.select(entity.get("id"));
 
-                List<ParameterExpression<Long>> params = new LinkedList<>();
-                List<Predicate> idk = new LinkedList<>();
-                for (int i = 0; i < projectIds.length; i++) {
-                    ParameterExpression<Long> param = cb.parameter(Long.class);
-                    params.add(param);
-                    idk.add(cb.equal(entity.get("id"), param));
+                List<Predicate> predicates = new LinkedList<>();
+                for (Long id: projectIds) {
+                    predicates.add(cb.equal(entity.get("id"), id));
                 }
-                q.where(cb.or(idk.toArray(new Predicate[0])));
+                q.where(cb.or(predicates.toArray(new Predicate[0])));
 
-                TypedQuery<ProjectsEntity> query = session.createQuery(q);
-                for (int i = 0; i < projectIds.length; i++) {
-                    long id = projectIds[i];
-                    ParameterExpression<Long> param = params.get(i);
-                    query.setParameter(param, id);
-                }
-                return query.getResultList();
+                return session.createQuery(q).getResultList();
             });
         }
         catch (Exception e) {
