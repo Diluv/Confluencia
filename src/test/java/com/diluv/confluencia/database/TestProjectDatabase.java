@@ -1,5 +1,9 @@
 package com.diluv.confluencia.database;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -69,8 +73,13 @@ public class TestProjectDatabase extends ConfluenciaTest {
     @Test
     public void findAllProjectsByProjectIds () {
 
-        Assertions.assertEquals(3, Confluencia.PROJECT.findAllProjectsByProjectIds(new long[]{1, 2, 3}).size());
-        Assertions.assertEquals(2, Confluencia.PROJECT.findAllProjectsByProjectIds(new long[]{1000, 2, 3}).size());
+        Set<Long> set = new HashSet<>();
+        set.add(1L);
+        set.add(2L);
+        set.add(3L);
+        Assertions.assertEquals(3, Confluencia.PROJECT.findAllProjectsByProjectIds(set).size());
+        set.add(1000L);
+        Assertions.assertEquals(3, Confluencia.PROJECT.findAllProjectsByProjectIds(set).size());
     }
 
 

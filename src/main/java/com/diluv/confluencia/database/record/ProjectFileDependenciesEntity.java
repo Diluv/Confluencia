@@ -2,6 +2,7 @@ package com.diluv.confluencia.database.record;
 
 import java.util.Objects;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
@@ -24,6 +25,9 @@ public class ProjectFileDependenciesEntity {
     @JoinColumn(name = "dependency_project_id")
     private ProjectsEntity dependencyProject;
 
+    @Column(name = "type")
+    private String type;
+
     public ProjectFilesEntity getProjectFile () {
 
         return this.projectFile;
@@ -42,6 +46,16 @@ public class ProjectFileDependenciesEntity {
     public void setDependencyProject (ProjectsEntity dependencyProject) {
 
         this.dependencyProject = dependencyProject;
+    }
+
+    public String getType () {
+
+        return this.type;
+    }
+
+    public void setType (String type) {
+
+        this.type = type;
     }
 
     @Override
