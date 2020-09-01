@@ -262,6 +262,7 @@ public class FileDatabase {
                 q.where(cb.and(cb.equal(entity.get("project"), projectParam), cb.equal(entity.get("version"), versionParam)));
 
                 TypedQuery<ProjectFilesEntity> query = session.createQuery(q);
+                query.setMaxResults(1);
                 query.setParameter(projectParam, new ProjectsEntity(projectId));
                 query.setParameter(versionParam, version);
                 return query.getSingleResult() != null;

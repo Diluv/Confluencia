@@ -1,15 +1,16 @@
 package com.diluv.confluencia.database;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.diluv.confluencia.Confluencia;
+import com.diluv.confluencia.ConfluenciaTest;
+import com.diluv.confluencia.database.record.UserEmailEntity;
+import com.diluv.confluencia.database.record.UserMfaRecoveryEntity;
+import com.diluv.confluencia.database.record.UsersEntity;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import com.diluv.confluencia.Confluencia;
-import com.diluv.confluencia.ConfluenciaTest;
-import com.diluv.confluencia.database.record.UserMfaRecoveryEntity;
-import com.diluv.confluencia.database.record.UsersEntity;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TestUserDatabase extends ConfluenciaTest {
 
@@ -59,5 +60,44 @@ public class TestUserDatabase extends ConfluenciaTest {
         UsersEntity user = Confluencia.USER.findOneByUsername("lclc98");
         Assertions.assertTrue(Confluencia.USER.deleteUserMFARecovery(user));
         Assertions.assertEquals(0, Confluencia.USER.findAllUserMfaRecoveryByUser(user).size());
+    }
+
+    @Test
+    public void existsByEmail () {
+
+        Assertions.assertTrue(Confluencia.USER.existsByEmail("lclc98@diluv.com"));
+        Assertions.assertFalse(Confluencia.USER.existsByEmail("tempuser2@diluv.com"));
+    }
+
+    @Test
+    public void existsTempUserByEmail () {
+
+        Assertions.assertTrue(Confluencia.USER.existsTempUserByEmail("tempuser@diluv.com"));
+        Assertions.assertFalse(Confluencia.USER.existsTempUserByEmail("lclc98@diluv.com"));
+    }
+
+    @Test
+    public void existUserEmailByUser () {
+
+        Assertions.assertTrue(Confluencia.USER.existUserEmailByUser(new UsersEntity(4)));
+        Assertions.assertFalse(Confluencia.USER.existUserEmailByUser(new UsersEntity(1)));
+    }
+
+    @Test
+    public void existUserEmailByEmail () {
+
+        Assertions.assertTrue(Confluencia.USER.existUserEmailByEmail("newemail@diluv.com"));
+        Assertions.assertFalse(Confluencia.USER.existUserEmailByEmail("lclc98@diluv.com"));
+    }
+
+    @Test
+    public void insertUserNewEmail () {
+
+        UserEmailEntity userEmail = new UserEmailEntity();
+        userEmail.setUser(new UsersEntity(3));
+        userEmail.setEmail("newnew@diluv.com");
+        userEmail.setCode("12345678");
+
+        Assertions.assertTrue(Confluencia.USER.insertUserEmail(userEmail));
     }
 }

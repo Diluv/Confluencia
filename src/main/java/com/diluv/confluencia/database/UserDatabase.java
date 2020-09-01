@@ -1,7 +1,13 @@
 package com.diluv.confluencia.database;
 
-import java.util.Collections;
-import java.util.List;
+import com.diluv.confluencia.Confluencia;
+import com.diluv.confluencia.database.record.TempUsersEntity;
+import com.diluv.confluencia.database.record.UserEmailEntity;
+import com.diluv.confluencia.database.record.UserMfaRecoveryEntity;
+import com.diluv.confluencia.database.record.UsersEntity;
+
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
@@ -10,12 +16,8 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Root;
 
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-
-import com.diluv.confluencia.Confluencia;
-import com.diluv.confluencia.database.record.UserMfaRecoveryEntity;
-import com.diluv.confluencia.database.record.UsersEntity;
+import java.util.Collections;
+import java.util.List;
 
 public class UserDatabase {
 
@@ -160,6 +162,131 @@ public class UserDatabase {
         }
         catch (Exception e) {
             return Collections.emptyList();
+        }
+    }
+
+    public boolean existsByEmail (String email) {
+
+        try {
+            return Confluencia.getQuery((session, cb) -> {
+
+                CriteriaQuery<UsersEntity> q = cb.createQuery(UsersEntity.class);
+                Root<UsersEntity> entity = q.from(UsersEntity.class);
+                ParameterExpression<String> emailParam = cb.parameter(String.class);
+                q.select(entity);
+                q.where(cb.equal(entity.get("email"), emailParam));
+
+                TypedQuery<UsersEntity> query = session.createQuery(q);
+                query.setMaxResults(1);
+                query.setParameter(emailParam, email);
+                return query.getSingleResult() != null;
+            });
+        }
+        catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean existsTempUserByEmail (String email) {
+
+        try {
+            return Confluencia.getQuery((session, cb) -> {
+
+                CriteriaQuery<TempUsersEntity> q = cb.createQuery(TempUsersEntity.class);
+                Root<TempUsersEntity> entity = q.from(TempUsersEntity.class);
+                ParameterExpression<String> emailParam = cb.parameter(String.class);
+                q.select(entity);
+                q.where(cb.equal(entity.get("email"), emailParam));
+
+                TypedQuery<TempUsersEntity> query = session.createQuery(q);
+                query.setMaxResults(1);
+                query.setParameter(emailParam, email);
+                return query.getSingleResult() != null;
+            });
+        }
+        catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean existUserEmailByUser (UsersEntity user) {
+
+        try {
+            return Confluencia.getQuery((session, cb) -> {
+
+                CriteriaQuery<UserEmailEntity> q = cb.createQuery(UserEmailEntity.class);
+                Root<UserEmailEntity> entity = q.from(UserEmailEntity.class);
+                ParameterExpression<UsersEntity> userParam = cb.parameter(UsersEntity.class);
+                q.select(entity);
+                q.where(cb.equal(entity.get("user"), userParam));
+
+                TypedQuery<UserEmailEntity> query = session.createQuery(q);
+                query.setMaxResults(1);
+                query.setParameter(userParam, user);
+                return query.getSingleResult() != null;
+            });
+        }
+        catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean existUserEmailByEmail (String email) {
+
+        try {
+            return Confluencia.getQuery((session, cb) -> {
+
+                CriteriaQuery<UserEmailEntity> q = cb.createQuery(UserEmailEntity.class);
+                Root<UserEmailEntity> entity = q.from(UserEmailEntity.class);
+                ParameterExpression<String> emailParam = cb.parameter(String.class);
+                q.select(entity);
+                q.where(cb.equal(entity.get("email"), emailParam));
+
+                TypedQuery<UserEmailEntity> query = session.createQuery(q);
+                query.setMaxResults(1);
+                query.setParameter(emailParam, email);
+                return query.getSingleResult() != null;
+            });
+        }
+        catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean insertUserEmail (UserEmailEntity userEmail) {
+
+        Transaction transaction = null;
+        try (Session session = Confluencia.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.save(userEmail);
+            transaction.commit();
+            return true;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public boolean deleteUserEmail (UsersEntity user) {
+        try {
+            return Confluencia.getQuery((session, cb) -> {
+                CriteriaDelete<UserEmailEntity> q = cb.createCriteriaDelete(UserEmailEntity.class);
+
+                Root<UserEmailEntity> entity = q.from(UserEmailEntity.class);
+                q.where(cb.equal(entity.get("user"), user));
+
+                Query query = session.createQuery(q);
+                return query.executeUpdate() >= 0;
+            });
+        }
+        catch (Exception e) {
+            return false;
         }
     }
 }
