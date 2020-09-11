@@ -251,7 +251,7 @@ public class ProjectDatabase {
                 q.select(entity.get("id"));
 
                 List<Predicate> predicates = new LinkedList<>();
-                for (Long id: projectIds) {
+                for (Long id : projectIds) {
                     predicates.add(cb.equal(entity.get("id"), id));
                 }
                 q.where(cb.or(predicates.toArray(new Predicate[0])));

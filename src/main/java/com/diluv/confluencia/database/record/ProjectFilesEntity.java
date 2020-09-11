@@ -1,12 +1,12 @@
 package com.diluv.confluencia.database.record;
 
-import java.sql.Timestamp;
-import java.util.List;
-import java.util.Objects;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 
-import org.hibernate.annotations.DynamicInsert;
+import java.sql.Timestamp;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
 @DynamicInsert
@@ -70,6 +70,9 @@ public class ProjectFilesEntity {
 
     @OneToMany(mappedBy = "dependencyProject", cascade = CascadeType.ALL)
     private List<ProjectFileDependenciesEntity> dependencies;
+
+    @OneToMany(mappedBy = "projectFile", cascade = CascadeType.ALL)
+    private List<ProjectFileLoadersEntity> loaders;
 
     public ProjectFilesEntity () {
 
@@ -260,6 +263,16 @@ public class ProjectFilesEntity {
         this.dependencies = dependencies;
     }
 
+    public List<ProjectFileLoadersEntity> getLoaders () {
+
+        return this.loaders;
+    }
+
+    public void setLoaders (List<ProjectFileLoadersEntity> loaders) {
+
+        this.loaders = loaders;
+    }
+
     @Override
     public boolean equals (Object o) {
 
@@ -283,12 +296,13 @@ public class ProjectFilesEntity {
             Objects.equals(getProject(), that.getProject()) &&
             Objects.equals(getUser(), that.getUser()) &&
             Objects.equals(getGameVersions(), that.getGameVersions()) &&
-            Objects.equals(getDependencies(), that.getDependencies());
+            Objects.equals(getDependencies(), that.getDependencies()) &&
+            Objects.equals(getLoaders(), that.getLoaders());
     }
 
     @Override
     public int hashCode () {
 
-        return Objects.hash(getId(), getVersion(), getName(), getSize(), getSha512(), getDownloads(), getChangelog(), getCreatedAt(), getUpdatedAt(), getReleaseType(), getClassifier(), getProcessingStatus(), getProcessingStatusChanged(), isReleased(), getProject(), getUser(), getGameVersions(), getDependencies());
+        return Objects.hash(getId(), getVersion(), getName(), getSize(), getSha512(), getDownloads(), getChangelog(), getCreatedAt(), getUpdatedAt(), getReleaseType(), getClassifier(), getProcessingStatus(), getProcessingStatusChanged(), isReleased(), getProject(), getUser(), getGameVersions(), getDependencies(), getLoaders());
     }
 }

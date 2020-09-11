@@ -15,8 +15,8 @@ import javax.persistence.Table;
 
 @Entity
 @DynamicInsert
-@Table(name = "user_email")
-public class UserEmailEntity implements Serializable {
+@Table(name = "user_change_email")
+public class UserChangeEmail implements Serializable {
 
     @Id
     @OneToOne
@@ -76,8 +76,8 @@ public class UserEmailEntity implements Serializable {
     public boolean equals (Object o) {
 
         if (this == o) return true;
-        if (!(o instanceof UserEmailEntity)) return false;
-        UserEmailEntity that = (UserEmailEntity) o;
+        if (!(o instanceof UserChangeEmail)) return false;
+        UserChangeEmail that = (UserChangeEmail) o;
         return getUser() == that.getUser() &&
             Objects.equals(getEmail(), that.getEmail()) &&
             Objects.equals(getCode(), that.getCode()) &&

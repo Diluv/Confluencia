@@ -28,6 +28,9 @@ public class ProjectTypesEntity {
     @OneToMany(mappedBy = "projectType", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     private List<TagsEntity> tags;
 
+    @OneToMany(mappedBy = "projectType")
+    private List<ProjectTypeLoadersEntity> projectTypeLoaders;
+
     public ProjectTypesEntity () {
 
     }
@@ -86,6 +89,16 @@ public class ProjectTypesEntity {
     public void setTags (List<TagsEntity> tags) {
 
         this.tags = tags;
+    }
+
+    public List<ProjectTypeLoadersEntity> getProjectTypeLoaders () {
+
+        return this.projectTypeLoaders;
+    }
+
+    public void setProjectTypeLoaders (List<ProjectTypeLoadersEntity> projectTypeLoaders) {
+
+        this.projectTypeLoaders = projectTypeLoaders;
     }
 
     @Override

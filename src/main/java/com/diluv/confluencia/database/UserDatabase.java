@@ -2,7 +2,7 @@ package com.diluv.confluencia.database;
 
 import com.diluv.confluencia.Confluencia;
 import com.diluv.confluencia.database.record.TempUsersEntity;
-import com.diluv.confluencia.database.record.UserEmailEntity;
+import com.diluv.confluencia.database.record.UserChangeEmail;
 import com.diluv.confluencia.database.record.UserMfaRecoveryEntity;
 import com.diluv.confluencia.database.record.UsersEntity;
 
@@ -214,13 +214,13 @@ public class UserDatabase {
         try {
             return Confluencia.getQuery((session, cb) -> {
 
-                CriteriaQuery<UserEmailEntity> q = cb.createQuery(UserEmailEntity.class);
-                Root<UserEmailEntity> entity = q.from(UserEmailEntity.class);
+                CriteriaQuery<UserChangeEmail> q = cb.createQuery(UserChangeEmail.class);
+                Root<UserChangeEmail> entity = q.from(UserChangeEmail.class);
                 ParameterExpression<UsersEntity> userParam = cb.parameter(UsersEntity.class);
                 q.select(entity);
                 q.where(cb.equal(entity.get("user"), userParam));
 
-                TypedQuery<UserEmailEntity> query = session.createQuery(q);
+                TypedQuery<UserChangeEmail> query = session.createQuery(q);
                 query.setMaxResults(1);
                 query.setParameter(userParam, user);
                 return query.getSingleResult() != null;
@@ -236,13 +236,13 @@ public class UserDatabase {
         try {
             return Confluencia.getQuery((session, cb) -> {
 
-                CriteriaQuery<UserEmailEntity> q = cb.createQuery(UserEmailEntity.class);
-                Root<UserEmailEntity> entity = q.from(UserEmailEntity.class);
+                CriteriaQuery<UserChangeEmail> q = cb.createQuery(UserChangeEmail.class);
+                Root<UserChangeEmail> entity = q.from(UserChangeEmail.class);
                 ParameterExpression<String> emailParam = cb.parameter(String.class);
                 q.select(entity);
                 q.where(cb.equal(entity.get("email"), emailParam));
 
-                TypedQuery<UserEmailEntity> query = session.createQuery(q);
+                TypedQuery<UserChangeEmail> query = session.createQuery(q);
                 query.setMaxResults(1);
                 query.setParameter(emailParam, email);
                 return query.getSingleResult() != null;
@@ -253,7 +253,7 @@ public class UserDatabase {
         }
     }
 
-    public boolean insertUserEmail (UserEmailEntity userEmail) {
+    public boolean insertUserEmail (UserChangeEmail userEmail) {
 
         Transaction transaction = null;
         try (Session session = Confluencia.getSessionFactory().openSession()) {
@@ -274,11 +274,12 @@ public class UserDatabase {
     }
 
     public boolean deleteUserEmail (UsersEntity user) {
+
         try {
             return Confluencia.getQuery((session, cb) -> {
-                CriteriaDelete<UserEmailEntity> q = cb.createCriteriaDelete(UserEmailEntity.class);
+                CriteriaDelete<UserChangeEmail> q = cb.createCriteriaDelete(UserChangeEmail.class);
 
-                Root<UserEmailEntity> entity = q.from(UserEmailEntity.class);
+                Root<UserChangeEmail> entity = q.from(UserChangeEmail.class);
                 q.where(cb.equal(entity.get("user"), user));
 
                 Query query = session.createQuery(q);

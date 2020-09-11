@@ -39,7 +39,7 @@ CREATE TABLE password_reset
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
 
     PRIMARY KEY (user_id, code),
-    FOREIGN KEY (user_id) REFERENCES users (id)
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE games
@@ -64,7 +64,7 @@ CREATE TABLE game_versions
     released  TIMESTAMP    NOT NULL DEFAULT NOW(),
 
     PRIMARY KEY (id),
-    FOREIGN KEY (game_slug) REFERENCES games (slug)
+    FOREIGN KEY (game_slug) REFERENCES games (slug) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE project_types
@@ -77,7 +77,7 @@ CREATE TABLE project_types
     max_file_size BIGINT       NOT NULL DEFAULT 5000000,
 
     PRIMARY KEY (game_slug, slug),
-    FOREIGN KEY (game_slug) REFERENCES games (slug)
+    FOREIGN KEY (game_slug) REFERENCES games (slug) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE game_default_project_type
@@ -86,8 +86,31 @@ CREATE TABLE game_default_project_type
     project_type_slug VARCHAR(200) NOT NULL,
 
     PRIMARY KEY (game_slug),
-    FOREIGN KEY (game_slug) REFERENCES games (slug),
+    FOREIGN KEY (game_slug) REFERENCES games (slug) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (game_slug, project_type_slug) REFERENCES project_types (game_slug, slug) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE project_type_loaders
+(
+    id                BIGINT       NOT NULL AUTO_INCREMENT,
+
+    game_slug         VARCHAR(200) NOT NULL,
+    project_type_slug VARCHAR(200) NOT NULL,
+
+    name              VARCHAR(45)  NOT NULL,
+    slug              VARCHAR(45)  NOT NULL,
+
+    PRIMARY KEY (id),
     FOREIGN KEY (game_slug, project_type_slug) REFERENCES project_types (game_slug, slug)
+);
+
+CREATE TABLE project_file_loaders
+(
+    project_file_id BIGINT NOT NULL,
+    loader_id       BIGINT NOT NULL,
+
+    PRIMARY KEY (project_file_id, loader_id),
+    FOREIGN KEY (loader_id) REFERENCES project_type_loaders (id)
 );
 
 CREATE TABLE tags
@@ -101,8 +124,8 @@ CREATE TABLE tags
     name              VARCHAR(200) NOT NULL,
 
     PRIMARY KEY (id),
-    FOREIGN KEY (game_slug) REFERENCES games (slug),
-    FOREIGN KEY (game_slug, project_type_slug) REFERENCES project_types (game_slug, slug)
+    FOREIGN KEY (game_slug) REFERENCES games (slug) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (game_slug, project_type_slug) REFERENCES project_types (game_slug, slug) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 # Project
@@ -126,9 +149,9 @@ CREATE TABLE projects
     project_type_slug VARCHAR(200) NOT NULL,
 
     PRIMARY KEY (id),
-    FOREIGN KEY (user_id) REFERENCES users (id),
-    FOREIGN KEY (game_slug, project_type_slug) REFERENCES project_types (game_slug, slug),
-    FOREIGN KEY (game_slug) REFERENCES games (slug)
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (game_slug, project_type_slug) REFERENCES project_types (game_slug, slug) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (game_slug) REFERENCES games (slug) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE project_links
@@ -138,7 +161,7 @@ CREATE TABLE project_links
     url        VARCHAR(255) NOT NULL,
 
     PRIMARY KEY (project_id, type),
-    FOREIGN KEY (project_id) REFERENCES projects (id)
+    FOREIGN KEY (project_id) REFERENCES projects (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE project_authors
@@ -151,8 +174,8 @@ CREATE TABLE project_authors
     role       VARCHAR(255) NOT NULL,
 
     PRIMARY KEY (id),
-    FOREIGN KEY (project_id) REFERENCES projects (id),
-    FOREIGN KEY (user_id) REFERENCES users (id)
+    FOREIGN KEY (project_id) REFERENCES projects (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE project_author_permissions
@@ -161,7 +184,7 @@ CREATE TABLE project_author_permissions
     permission        VARCHAR(255) NOT NULL,
 
     PRIMARY KEY (project_author_id, permission),
-    FOREIGN KEY (project_author_id) REFERENCES project_authors (id)
+    FOREIGN KEY (project_author_id) REFERENCES project_authors (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE project_tags
@@ -170,8 +193,8 @@ CREATE TABLE project_tags
     tag_id     BIGINT NOT NULL,
 
     PRIMARY KEY (project_id, tag_id),
-    FOREIGN KEY (project_id) REFERENCES projects (id),
-    FOREIGN KEY (tag_id) REFERENCES tags (id)
+    FOREIGN KEY (project_id) REFERENCES projects (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (tag_id) REFERENCES tags (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE project_files
@@ -183,6 +206,7 @@ CREATE TABLE project_files
     size                      BIGINT       NOT NULL,
     sha512                    VARCHAR(128) NOT NULL,
 
+    downloads                 BIGINT       NOT NULL DEFAULT 0,
     changelog                 TEXT         NOT NULL,
     created_at                TIMESTAMP    NOT NULL DEFAULT NOW(),
     updated_at                TIMESTAMP    NOT NULL DEFAULT NOW() ON UPDATE NOW(),
@@ -198,8 +222,8 @@ CREATE TABLE project_files
     user_id                   BIGINT       NOT NULL,
 
     PRIMARY KEY (id),
-    FOREIGN KEY (project_id) REFERENCES projects (id),
-    FOREIGN KEY (user_id) REFERENCES users (id)
+    FOREIGN KEY (project_id) REFERENCES projects (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE project_file_game_versions
@@ -208,18 +232,19 @@ CREATE TABLE project_file_game_versions
     game_version_id BIGINT NOT NULL,
 
     PRIMARY KEY (project_file_id, game_version_id),
-    FOREIGN KEY (project_file_id) REFERENCES project_files (id),
-    FOREIGN KEY (game_version_id) REFERENCES game_versions (id)
+    FOREIGN KEY (project_file_id) REFERENCES project_files (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (game_version_id) REFERENCES game_versions (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE project_file_dependencies
 (
-    project_file_id       BIGINT NOT NULL,
-    dependency_project_id BIGINT NOT NULL,
+    project_file_id       BIGINT      NOT NULL,
+    dependency_project_id BIGINT      NOT NULL,
+    type                  VARCHAR(50) NOT NULL DEFAULT 'required',
 
     PRIMARY KEY (project_file_id, dependency_project_id),
-    FOREIGN KEY (project_file_id) REFERENCES project_files (id),
-    FOREIGN KEY (dependency_project_id) REFERENCES projects (id)
+    FOREIGN KEY (project_file_id) REFERENCES project_files (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (dependency_project_id) REFERENCES projects (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE project_file_antivirus
@@ -228,7 +253,7 @@ CREATE TABLE project_file_antivirus
     malware         VARCHAR(128) NOT NULL,
 
     PRIMARY KEY (project_file_id),
-    FOREIGN KEY (project_file_id) REFERENCES project_files (id)
+    FOREIGN KEY (project_file_id) REFERENCES project_files (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE news
@@ -241,8 +266,9 @@ CREATE TABLE news
     user_id     BIGINT       NOT NULL,
 
     created_at  TIMESTAMP    NOT NULL DEFAULT NOW(),
+
     PRIMARY KEY (slug),
-    FOREIGN KEY (user_id) REFERENCES users (id)
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE featured_games
@@ -251,7 +277,7 @@ CREATE TABLE featured_games
     slug VARCHAR(200) NOT NULL,
 
     PRIMARY KEY (id),
-    FOREIGN KEY (slug) REFERENCES games (slug)
+    FOREIGN KEY (slug) REFERENCES games (slug) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE featured_projects
@@ -260,5 +286,28 @@ CREATE TABLE featured_projects
     project_id BIGINT NOT NULL,
 
     PRIMARY KEY (id),
-    FOREIGN KEY (project_id) REFERENCES projects (id)
+    FOREIGN KEY (project_id) REFERENCES projects (id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE nodecdn_commits
+(
+    id         BIGINT    NOT NULL AUTO_INCREMENT,
+
+    hash       CHAR(36)  NOT NULL UNIQUE,
+
+    completed  BOOL      NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE project_file_downloads
+(
+    project_file_id BIGINT    NOT NULL,
+    ip              CHAR(128) NOT NULL,
+
+    created_at      TIMESTAMP NOT NULL DEFAULT NOW(),
+
+    PRIMARY KEY (project_file_id, ip),
+    FOREIGN KEY (project_file_id) REFERENCES project_files (id) ON DELETE CASCADE ON UPDATE CASCADE
 );

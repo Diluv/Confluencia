@@ -12,7 +12,7 @@ CREATE TABLE role_permissions
     permission VARCHAR(255) NOT NULL,
 
     PRIMARY KEY (role_id, permission),
-    FOREIGN KEY (role_id) REFERENCES roles (id)
+    FOREIGN KEY (role_id) REFERENCES roles (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE user_roles
@@ -21,6 +21,6 @@ CREATE TABLE user_roles
     role_id BIGINT NOT NULL,
 
     PRIMARY KEY (user_id, role_id),
-    FOREIGN KEY (user_id) REFERENCES users (id),
-    FOREIGN KEY (role_id) REFERENCES roles (id)
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (role_id) REFERENCES roles (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
