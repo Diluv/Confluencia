@@ -28,7 +28,7 @@ public class TestProjectDatabase extends ConfluenciaTest {
 
         Assertions.assertEquals(0, Confluencia.PROJECT.countAllByGameSlugAndProjectTypeSlug("invalid", "invalid"));
         Assertions.assertEquals(0, Confluencia.PROJECT.countAllByGameSlugAndProjectTypeSlug("minecraft-je", "invalid"));
-        Assertions.assertEquals(129, Confluencia.PROJECT.countAllByGameSlugAndProjectTypeSlug("minecraft-je", "forge-mods"));
+        Assertions.assertEquals(129, Confluencia.PROJECT.countAllByGameSlugAndProjectTypeSlug("minecraft-je", "mods"));
     }
 
     @Test
@@ -42,8 +42,8 @@ public class TestProjectDatabase extends ConfluenciaTest {
 
         Assertions.assertNull(Confluencia.PROJECT.findOneProjectByGameSlugAndProjectTypeSlugAndProjectSlug("invalid", "invalid", "invalid"));
         Assertions.assertNull(Confluencia.PROJECT.findOneProjectByGameSlugAndProjectTypeSlugAndProjectSlug("minecraft-je", "invalid", "invalid"));
-        Assertions.assertNull(Confluencia.PROJECT.findOneProjectByGameSlugAndProjectTypeSlugAndProjectSlug("minecraft-je", "forge-mods", "invalid"));
-        Assertions.assertNotNull(Confluencia.PROJECT.findOneProjectByGameSlugAndProjectTypeSlugAndProjectSlug("minecraft-je", "forge-mods", "bookshelf"));
+        Assertions.assertNull(Confluencia.PROJECT.findOneProjectByGameSlugAndProjectTypeSlugAndProjectSlug("minecraft-je", "mods", "invalid"));
+        Assertions.assertNotNull(Confluencia.PROJECT.findOneProjectByGameSlugAndProjectTypeSlugAndProjectSlug("minecraft-je", "mods", "bookshelf"));
     }
 
     @Test
@@ -51,7 +51,7 @@ public class TestProjectDatabase extends ConfluenciaTest {
 
         Assertions.assertNull(Confluencia.PROJECT.findOneProjectTypeByGameSlugAndProjectTypeSlug("invalid", "invalid"));
         Assertions.assertNull(Confluencia.PROJECT.findOneProjectTypeByGameSlugAndProjectTypeSlug("minecraft-je", "invalid"));
-        Assertions.assertNotNull(Confluencia.PROJECT.findOneProjectTypeByGameSlugAndProjectTypeSlug("minecraft-je", "forge-mods"));
+        Assertions.assertNotNull(Confluencia.PROJECT.findOneProjectTypeByGameSlugAndProjectTypeSlug("minecraft-je", "mods"));
     }
 
     @Test
@@ -88,18 +88,18 @@ public class TestProjectDatabase extends ConfluenciaTest {
 
         Assertions.assertEquals(0, Confluencia.PROJECT.findAllByGameAndProjectType("invalid", "invalid", "", 1, 10, ProjectSort.NEW).size());
         Assertions.assertEquals(0, Confluencia.PROJECT.findAllByGameAndProjectType("minecraft-je", "invalid", "", 1, 10, ProjectSort.NEW).size());
-        Assertions.assertEquals(10, Confluencia.PROJECT.findAllByGameAndProjectType("minecraft-je", "forge-mods", "", 1, 10, ProjectSort.NEW).size());
+        Assertions.assertEquals(10, Confluencia.PROJECT.findAllByGameAndProjectType("minecraft-je", "mods", "", 1, 10, ProjectSort.NEW).size());
     }
 
     @Test
     public void findAllProjectsByGameSlugAndProjectTypeAndVersion () {
 
-        Assertions.assertEquals(1, Confluencia.PROJECT.findAllByGameAndProjectType("minecraft-je", "forge-mods", "", 1, 10, ProjectSort.NEW, "1.15.2", new String[0]).size());
-        Assertions.assertEquals(1, Confluencia.PROJECT.findAllByGameAndProjectType("minecraft-je", "forge-mods", "", 1, 10, ProjectSort.NEW, "1.15.2", new String[]{"tech"}).size());
-        Assertions.assertEquals(1, Confluencia.PROJECT.findAllByGameAndProjectType("minecraft-je", "forge-mods", "", 1, 10, ProjectSort.NEW, "1.15.2", new String[]{"tech"}).size());
-        Assertions.assertEquals(1, Confluencia.PROJECT.findAllByGameAndProjectType("minecraft-je", "forge-mods", "", 1, 10, ProjectSort.NEW, null, new String[]{"tech", "magic"}).size());
-        Assertions.assertEquals(2, Confluencia.PROJECT.findAllByGameAndProjectType("minecraft-je", "forge-mods", "", 1, 10, ProjectSort.NEW, null, new String[]{"magic"}).size());
-        Assertions.assertEquals(2, Confluencia.PROJECT.findAllByGameAndProjectType("minecraft-je", "forge-mods", "", 1, 10, ProjectSort.NEW, null, new String[]{"tech"}).size());
+        Assertions.assertEquals(1, Confluencia.PROJECT.findAllByGameAndProjectType("minecraft-je", "mods", "", 1, 10, ProjectSort.NEW, "1.15.2", new String[0]).size());
+        Assertions.assertEquals(1, Confluencia.PROJECT.findAllByGameAndProjectType("minecraft-je", "mods", "", 1, 10, ProjectSort.NEW, "1.15.2", new String[]{"tech"}).size());
+        Assertions.assertEquals(1, Confluencia.PROJECT.findAllByGameAndProjectType("minecraft-je", "mods", "", 1, 10, ProjectSort.NEW, "1.15.2", new String[]{"tech"}).size());
+        Assertions.assertEquals(1, Confluencia.PROJECT.findAllByGameAndProjectType("minecraft-je", "mods", "", 1, 10, ProjectSort.NEW, null, new String[]{"tech", "magic"}).size());
+        Assertions.assertEquals(2, Confluencia.PROJECT.findAllByGameAndProjectType("minecraft-je", "mods", "", 1, 10, ProjectSort.NEW, null, new String[]{"magic"}).size());
+        Assertions.assertEquals(2, Confluencia.PROJECT.findAllByGameAndProjectType("minecraft-je", "mods", "", 1, 10, ProjectSort.NEW, null, new String[]{"tech"}).size());
     }
 
     @Test
@@ -117,7 +117,7 @@ public class TestProjectDatabase extends ConfluenciaTest {
         project.setSummary("Insert Summary");
         project.setDescription("Insert Description");
         project.setOwner(new UsersEntity(2));
-        project.setProjectType(new ProjectTypesEntity(new GamesEntity("minecraft-je"), "forge-mods"));
+        project.setProjectType(new ProjectTypesEntity(new GamesEntity("minecraft-je"), "mods"));
         Assertions.assertTrue(Confluencia.PROJECT.insertProject(project));
     }
 
@@ -141,6 +141,6 @@ public class TestProjectDatabase extends ConfluenciaTest {
 
         Assertions.assertEquals(0, Confluencia.PROJECT.findAllTagsByGameSlugAndProjectTypeSlug(new ProjectTypesEntity(new GamesEntity("invalid"), "invalid")).size());
         Assertions.assertEquals(0, Confluencia.PROJECT.findAllTagsByGameSlugAndProjectTypeSlug(new ProjectTypesEntity(new GamesEntity("minecraft-je"), "invalid")).size());
-        Assertions.assertEquals(2, Confluencia.PROJECT.findAllTagsByGameSlugAndProjectTypeSlug(new ProjectTypesEntity(new GamesEntity("minecraft-je"), "forge-mods")).size());
+        Assertions.assertEquals(2, Confluencia.PROJECT.findAllTagsByGameSlugAndProjectTypeSlug(new ProjectTypesEntity(new GamesEntity("minecraft-je"), "mods")).size());
     }
 }

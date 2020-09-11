@@ -12,7 +12,7 @@ public class TestGameDatabase extends ConfluenciaTest {
     @Test
     public void countAllBySearch () {
 
-        Assertions.assertEquals(2, Confluencia.GAME.countAllBySearch(""));
+        Assertions.assertEquals(4, Confluencia.GAME.countAllBySearch(""));
         Assertions.assertEquals(1, Confluencia.GAME.countAllBySearch("bedrock"));
     }
 
@@ -29,7 +29,7 @@ public class TestGameDatabase extends ConfluenciaTest {
     @Test
     public void findAll () {
 
-        Assertions.assertEquals(2, Confluencia.GAME.findAll(1, 25, GameSort.NEW, "").size());
+        Assertions.assertEquals(4, Confluencia.GAME.findAll(1, 25, GameSort.NEW, "").size());
     }
 
     @Test
@@ -41,6 +41,6 @@ public class TestGameDatabase extends ConfluenciaTest {
     @Test
     public void countAllProjectTypes () {
 
-        Assertions.assertEquals(3, Confluencia.GAME.countAllProjectTypes());
+        Assertions.assertEquals(5, Confluencia.GAME.countAllProjectTypes());
     }
 }

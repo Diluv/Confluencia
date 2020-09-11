@@ -2,7 +2,7 @@ package com.diluv.confluencia.database;
 
 import com.diluv.confluencia.Confluencia;
 import com.diluv.confluencia.ConfluenciaTest;
-import com.diluv.confluencia.database.record.UserEmailEntity;
+import com.diluv.confluencia.database.record.UserChangeEmail;
 import com.diluv.confluencia.database.record.UserMfaRecoveryEntity;
 import com.diluv.confluencia.database.record.UsersEntity;
 
@@ -77,27 +77,27 @@ public class TestUserDatabase extends ConfluenciaTest {
     }
 
     @Test
-    public void existUserEmailByUser () {
+    public void existUserChangeEmailByUser () {
 
-        Assertions.assertTrue(Confluencia.USER.existUserEmailByUser(new UsersEntity(4)));
-        Assertions.assertFalse(Confluencia.USER.existUserEmailByUser(new UsersEntity(1)));
+        Assertions.assertTrue(Confluencia.USER.existUserChangeEmailByUser(new UsersEntity(4)));
+        Assertions.assertFalse(Confluencia.USER.existUserChangeEmailByUser(new UsersEntity(1)));
     }
 
     @Test
-    public void existUserEmailByEmail () {
+    public void existUserChangeEmailByEmail () {
 
-        Assertions.assertTrue(Confluencia.USER.existUserEmailByEmail("newemail@diluv.com"));
-        Assertions.assertFalse(Confluencia.USER.existUserEmailByEmail("lclc98@diluv.com"));
+        Assertions.assertTrue(Confluencia.USER.existUserChangeEmailByEmail("newemail@diluv.com"));
+        Assertions.assertFalse(Confluencia.USER.existUserChangeEmailByEmail("lclc98@diluv.com"));
     }
 
     @Test
-    public void insertUserNewEmail () {
+    public void insertUserChangeEmail () {
 
-        UserEmailEntity userEmail = new UserEmailEntity();
+        UserChangeEmail userEmail = new UserChangeEmail();
         userEmail.setUser(new UsersEntity(3));
         userEmail.setEmail("newnew@diluv.com");
         userEmail.setCode("12345678");
 
-        Assertions.assertTrue(Confluencia.USER.insertUserEmail(userEmail));
+        Assertions.assertTrue(Confluencia.USER.insertUserChangeEmail(userEmail));
     }
 }

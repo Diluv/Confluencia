@@ -209,7 +209,7 @@ public class UserDatabase {
         }
     }
 
-    public boolean existUserEmailByUser (UsersEntity user) {
+    public boolean existUserChangeEmailByUser (UsersEntity user) {
 
         try {
             return Confluencia.getQuery((session, cb) -> {
@@ -231,7 +231,7 @@ public class UserDatabase {
         }
     }
 
-    public boolean existUserEmailByEmail (String email) {
+    public boolean existUserChangeEmailByEmail (String email) {
 
         try {
             return Confluencia.getQuery((session, cb) -> {
@@ -253,7 +253,7 @@ public class UserDatabase {
         }
     }
 
-    public boolean insertUserEmail (UserChangeEmail userEmail) {
+    public boolean insertUserChangeEmail (UserChangeEmail userEmail) {
 
         Transaction transaction = null;
         try (Session session = Confluencia.getSessionFactory().openSession()) {
@@ -273,7 +273,7 @@ public class UserDatabase {
         return false;
     }
 
-    public boolean deleteUserEmail (UsersEntity user) {
+    public boolean deleteUserChangeEmail (UsersEntity user) {
 
         try {
             return Confluencia.getQuery((session, cb) -> {
