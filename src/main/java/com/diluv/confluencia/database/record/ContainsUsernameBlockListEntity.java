@@ -9,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "contains_username_blocklist")
-public class ContainsUsernameBlocklistEntity {
+public class ContainsUsernameBlockListEntity {
 
     @Id
     @Column(name = "username")
@@ -29,8 +29,8 @@ public class ContainsUsernameBlocklistEntity {
     public boolean equals (Object o) {
 
         if (this == o) return true;
-        if (!(o instanceof ContainsUsernameBlocklistEntity)) return false;
-        ContainsUsernameBlocklistEntity that = (ContainsUsernameBlocklistEntity) o;
+        if (!(o instanceof ContainsUsernameBlockListEntity)) return false;
+        ContainsUsernameBlockListEntity that = (ContainsUsernameBlockListEntity) o;
         return Objects.equals(getUsername(), that.getUsername());
     }
 

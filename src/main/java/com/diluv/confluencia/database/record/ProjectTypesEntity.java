@@ -28,7 +28,7 @@ public class ProjectTypesEntity {
     @OneToMany(mappedBy = "projectType", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     private List<TagsEntity> tags;
 
-    @OneToMany(mappedBy = "projectType")
+    @OneToMany(mappedBy = "projectType", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     private List<ProjectTypeLoadersEntity> projectTypeLoaders;
 
     public ProjectTypesEntity () {
@@ -110,13 +110,12 @@ public class ProjectTypesEntity {
         return getMaxFileSize() == that.getMaxFileSize() &&
             Objects.equals(getGame(), that.getGame()) &&
             Objects.equals(getSlug(), that.getSlug()) &&
-            Objects.equals(getName(), that.getName()) &&
-            Objects.equals(getTags(), that.getTags());
+            Objects.equals(getName(), that.getName());
     }
 
     @Override
     public int hashCode () {
 
-        return Objects.hash(getGame(), getSlug(), getName(), getMaxFileSize(), getTags());
+        return Objects.hash(getGame(), getSlug(), getName(), getMaxFileSize());
     }
 }

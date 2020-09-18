@@ -126,15 +126,12 @@ public class GamesEntity {
         return Objects.equals(getSlug(), that.getSlug()) &&
             Objects.equals(getName(), that.getName()) &&
             Objects.equals(getUrl(), that.getUrl()) &&
-            Objects.equals(getCreatedAt(), that.getCreatedAt()) &&
-            Objects.equals(getProjectTypes(), that.getProjectTypes()) &&
-            Objects.equals(getGameVersions(), that.getGameVersions()) &&
-            Objects.equals(getDefaultProjectTypeEntity(), that.getDefaultProjectTypeEntity());
+            Objects.equals(getCreatedAt(), that.getCreatedAt());
     }
 
     @Override
     public int hashCode () {
 
-        return Objects.hash(getSlug(), getName(), getUrl(), getCreatedAt(), getProjectTypes(), getGameVersions(), getDefaultProjectTypeEntity());
+        return Objects.hash(getSlug(), getName(), getUrl(), getCreatedAt());
     }
 }

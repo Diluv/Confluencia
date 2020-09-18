@@ -21,6 +21,9 @@ public class ProjectTypeLoadersEntity {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "slug")
+    private String slug;
+
     @ManyToOne
     @JoinColumns({
         @JoinColumn(name = "project_type_slug"),
@@ -48,6 +51,16 @@ public class ProjectTypeLoadersEntity {
         this.name = name;
     }
 
+    public String getSlug () {
+
+        return this.slug;
+    }
+
+    public void setSlug (String slug) {
+
+        this.slug = slug;
+    }
+
     public ProjectTypesEntity getProjectType () {
 
         return this.projectType;
@@ -66,12 +79,13 @@ public class ProjectTypeLoadersEntity {
         ProjectTypeLoadersEntity that = (ProjectTypeLoadersEntity) o;
         return getId() == that.getId() &&
             Objects.equals(getName(), that.getName()) &&
+            Objects.equals(getSlug(), that.getSlug()) &&
             Objects.equals(getProjectType(), that.getProjectType());
     }
 
     @Override
     public int hashCode () {
 
-        return Objects.hash(getId(), getName(), getProjectType());
+        return Objects.hash(getId(), getName(), getSlug(), getProjectType());
     }
 }

@@ -94,13 +94,12 @@ public class TagsEntity {
         return getId() == that.getId() &&
             Objects.equals(getSlug(), that.getSlug()) &&
             Objects.equals(getName(), that.getName()) &&
-            Objects.equals(getProjectType(), that.getProjectType()) &&
-            Objects.equals(getGame(), that.getGame());
+            Objects.equals(getProjectType(), that.getProjectType());
     }
 
     @Override
     public int hashCode () {
 
-        return Objects.hash(getId(), getSlug(), getName(), getProjectType(), getGame());
+        return Objects.hash(getId(), getSlug(), getName(), getProjectType());
     }
 }

@@ -291,18 +291,15 @@ public class ProjectFilesEntity {
             Objects.equals(getUpdatedAt(), that.getUpdatedAt()) &&
             Objects.equals(getReleaseType(), that.getReleaseType()) &&
             Objects.equals(getClassifier(), that.getClassifier()) &&
-            getProcessingStatus() == that.getProcessingStatus() &&
+            Objects.equals(getProcessingStatus(), that.getProcessingStatus()) &&
             Objects.equals(getProcessingStatusChanged(), that.getProcessingStatusChanged()) &&
             Objects.equals(getProject(), that.getProject()) &&
-            Objects.equals(getUser(), that.getUser()) &&
-            Objects.equals(getGameVersions(), that.getGameVersions()) &&
-            Objects.equals(getDependencies(), that.getDependencies()) &&
-            Objects.equals(getLoaders(), that.getLoaders());
+            Objects.equals(getUser(), that.getUser());
     }
 
     @Override
     public int hashCode () {
 
-        return Objects.hash(getId(), getVersion(), getName(), getSize(), getSha512(), getDownloads(), getChangelog(), getCreatedAt(), getUpdatedAt(), getReleaseType(), getClassifier(), getProcessingStatus(), getProcessingStatusChanged(), isReleased(), getProject(), getUser(), getGameVersions(), getDependencies(), getLoaders());
+        return Objects.hash(getId(), getVersion(), getName(), getSize(), getSha512(), getDownloads(), getChangelog(), getCreatedAt(), getUpdatedAt(), getReleaseType(), getClassifier(), getProcessingStatus(), getProcessingStatusChanged(), isReleased(), getProject(), getUser());
     }
 }

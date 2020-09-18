@@ -256,7 +256,6 @@ public class ProjectsEntity {
             Objects.equals(getUpdatedAt(), that.getUpdatedAt()) &&
             Objects.equals(user, that.user) &&
             Objects.equals(getProjectType(), that.getProjectType()) &&
-            Objects.equals(getGame(), that.getGame()) &&
             Objects.equals(getTags(), that.getTags()) &&
             Objects.equals(getLinks(), that.getLinks()) &&
             Objects.equals(getAuthors(), that.getAuthors());
@@ -265,6 +264,6 @@ public class ProjectsEntity {
     @Override
     public int hashCode () {
 
-        return Objects.hash(getId(), getName(), getSlug(), getSummary(), getDescription(), getCachedDownloads(), isReview(), isReleased(), getCreatedAt(), getUpdatedAt(), user, getProjectType(), getGame(), getTags(), getLinks(), getAuthors());
+        return Objects.hash(getId(), getName(), getSlug(), getSummary(), getDescription(), getCachedDownloads(), isReview(), isReleased(), getCreatedAt(), getUpdatedAt(), user, getProjectType(), getTags(), getLinks(), getAuthors());
     }
 }

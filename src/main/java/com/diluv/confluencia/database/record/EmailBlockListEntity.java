@@ -9,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "email_blocklist")
-public class EmailBlocklistEntity {
+public class EmailBlockListEntity {
 
     @Id
     @Column(name = "email")
@@ -42,8 +42,8 @@ public class EmailBlocklistEntity {
     public boolean equals (Object o) {
 
         if (this == o) return true;
-        if (!(o instanceof EmailBlocklistEntity)) return false;
-        EmailBlocklistEntity that = (EmailBlocklistEntity) o;
+        if (!(o instanceof EmailBlockListEntity)) return false;
+        EmailBlockListEntity that = (EmailBlockListEntity) o;
         return Objects.equals(getEmail(), that.getEmail()) &&
             Objects.equals(getReason(), that.getReason());
     }
