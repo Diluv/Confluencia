@@ -833,6 +833,9 @@ VALUES (1, '1.0.4.187', 'Bookshelf-1.7.10-1.0.4.187.jar', 230589, '- Final RC fo
         '4f4267d8d8f81795e73b7cff887c6ab7e5957b50afd2a007690bdfd1de0a8a8a68807901f49765c72a6b98ac34a2d20b88d7302bfdce52c6eb31cfcaf572cb09',
         'release', 'binary', 2, TRUE, 1, 1);
 
+INSERT INTO project_file_loaders(project_file_id, loader_id)
+VALUES (9, 1);
+
 INSERT INTO project_files(id, version, name, size, changelog, sha512, release_type, classifier, processing_status,
                           released, project_id, user_id)
 VALUES (10, '1.0.0', 'forge_mod.jar', 100, 'Project file changelog',

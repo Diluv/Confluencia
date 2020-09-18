@@ -267,12 +267,12 @@ public class ProjectDatabase {
     public List<ProjectsEntity> findAllByGameAndProjectType (String gameSlug, String projectTypeSlug,
                                                              String search, long page, int limit, Sort sort) {
 
-        return this.findAllByGameAndProjectType(gameSlug, projectTypeSlug, search, page, limit, sort, null, null);
+        return this.findAllByGameAndProjectType(gameSlug, projectTypeSlug, search, page, limit, sort, null, null, null);
     }
 
     public List<ProjectsEntity> findAllByGameAndProjectType (String gameSlug, String projectTypeSlug,
                                                              String search, long page, int limit,
-                                                             Sort sort, String gameVersion, String[] tags) {
+                                                             Sort sort, String gameVersion, String[] tags, String[] loaders) {
 
         try {
             return Confluencia.getQuery((session, cb) -> {
@@ -284,6 +284,8 @@ public class ProjectDatabase {
                 ParameterExpression<String> gameVersionParam = cb.parameter(String.class);
                 List<ParameterExpression<String>> tagParams = new LinkedList<>();
                 ParameterExpression<Long> tagLengthParam = cb.parameter(Long.class);
+                List<ParameterExpression<String>> loaderParams = new LinkedList<>();
+                ParameterExpression<Long> loaderLengthParam = cb.parameter(Long.class);
 
                 q.select(entity);
                 List<Predicate> predicates = new ArrayList<>();
@@ -298,9 +300,9 @@ public class ProjectDatabase {
 
                     CriteriaBuilder.In<Object> in = cb.in(entityTag.get("slug"));
                     for (int i = 0; i < tags.length; i++) {
-                        ParameterExpression<String> tagParam = cb.parameter(String.class);
-                        tagParams.add(tagParam);
-                        in.value(tagParam);
+                        ParameterExpression<String> param = cb.parameter(String.class);
+                        tagParams.add(param);
+                        in.value(param);
                     }
 
                     projectTagsSubQuery.select(entityProjectTags.get("project"));
@@ -313,6 +315,33 @@ public class ProjectDatabase {
                     projectTagsSubQuery.having(cb.equal(cb.count(entityProjectTags.get("project")), tagLengthParam));
                     predicates.add(cb.in(entity).value(projectTagsSubQuery));
                 }
+
+                if (loaders != null && loaders.length > 0) {
+
+                    Subquery<ProjectsEntity> projectLoaderSubQuery = q.subquery(ProjectsEntity.class);
+                    Root<ProjectFilesEntity> entityProjectFiles = projectLoaderSubQuery.from(ProjectFilesEntity.class);
+                    Root<ProjectFileLoadersEntity> entityFileLoader = projectLoaderSubQuery.from(ProjectFileLoadersEntity.class);
+                    Root<ProjectTypeLoadersEntity> entityTypeLoader = projectLoaderSubQuery.from(ProjectTypeLoadersEntity.class);
+
+                    CriteriaBuilder.In<Object> in = cb.in(entityTypeLoader.get("slug"));
+                    for (int i = 0; i < loaders.length; i++) {
+                        ParameterExpression<String> param = cb.parameter(String.class);
+                        loaderParams.add(param);
+                        in.value(param);
+                    }
+
+                    projectLoaderSubQuery.select(entityProjectFiles.get("project"));
+                    projectLoaderSubQuery.where(cb.and(
+                        cb.equal(entityProjectFiles,entityFileLoader.get("projectFile")),
+                        cb.equal(entityFileLoader.get("loader"), entityTypeLoader),
+                        in,
+                        cb.equal(entityTypeLoader.get("projectType"), projectTypeSlugParam))
+                    );
+                    projectLoaderSubQuery.groupBy(entityProjectFiles.get("project"));
+                    projectLoaderSubQuery.having(cb.equal(cb.count(entityProjectFiles.get("project")), loaderLengthParam));
+                    predicates.add(cb.in(entity).value(projectLoaderSubQuery));
+                }
+
                 if (gameVersion != null) {
                     Subquery<ProjectsEntity> projectSubQuery = q.subquery(ProjectsEntity.class);
                     Root<ProjectFilesEntity> entityProjectFiles = projectSubQuery.from(ProjectFilesEntity.class);
@@ -341,10 +370,15 @@ public class ProjectDatabase {
                 query.setParameter(nameParam, "%" + search + "%");
                 if (tags != null && tags.length > 0) {
                     for (int i = 0; i < tags.length; i++) {
-                        ParameterExpression<String> tagParam = tagParams.get(i);
-                        query.setParameter(tagParam, tags[i]);
+                        query.setParameter(tagParams.get(i), tags[i]);
                     }
                     query.setParameter(tagLengthParam, (long) tags.length);
+                }
+                if (loaders != null && loaders.length > 0) {
+                    for (int i = 0; i < loaders.length; i++) {
+                        query.setParameter(loaderParams.get(i), loaders[i]);
+                    }
+                    query.setParameter(loaderLengthParam, (long) loaders.length);
                 }
                 if (gameVersion != null) {
                     query.setParameter(gameVersionParam, gameVersion);

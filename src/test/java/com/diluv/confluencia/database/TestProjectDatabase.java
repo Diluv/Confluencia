@@ -1,6 +1,5 @@
 package com.diluv.confluencia.database;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -94,12 +93,13 @@ public class TestProjectDatabase extends ConfluenciaTest {
     @Test
     public void findAllProjectsByGameSlugAndProjectTypeAndVersion () {
 
-        Assertions.assertEquals(1, Confluencia.PROJECT.findAllByGameAndProjectType("minecraft-je", "mods", "", 1, 10, ProjectSort.NEW, "1.15.2", new String[0]).size());
-        Assertions.assertEquals(1, Confluencia.PROJECT.findAllByGameAndProjectType("minecraft-je", "mods", "", 1, 10, ProjectSort.NEW, "1.15.2", new String[]{"tech"}).size());
-        Assertions.assertEquals(1, Confluencia.PROJECT.findAllByGameAndProjectType("minecraft-je", "mods", "", 1, 10, ProjectSort.NEW, "1.15.2", new String[]{"tech"}).size());
-        Assertions.assertEquals(1, Confluencia.PROJECT.findAllByGameAndProjectType("minecraft-je", "mods", "", 1, 10, ProjectSort.NEW, null, new String[]{"tech", "magic"}).size());
-        Assertions.assertEquals(2, Confluencia.PROJECT.findAllByGameAndProjectType("minecraft-je", "mods", "", 1, 10, ProjectSort.NEW, null, new String[]{"magic"}).size());
-        Assertions.assertEquals(2, Confluencia.PROJECT.findAllByGameAndProjectType("minecraft-je", "mods", "", 1, 10, ProjectSort.NEW, null, new String[]{"tech"}).size());
+        Assertions.assertEquals(1, Confluencia.PROJECT.findAllByGameAndProjectType("minecraft-je", "mods", "", 1, 10, ProjectSort.NEW, "1.15.2", new String[0], new String[0]).size());
+        Assertions.assertEquals(1, Confluencia.PROJECT.findAllByGameAndProjectType("minecraft-je", "mods", "", 1, 10, ProjectSort.NEW, "1.15.2", new String[]{"tech"}, new String[0]).size());
+        Assertions.assertEquals(1, Confluencia.PROJECT.findAllByGameAndProjectType("minecraft-je", "mods", "", 1, 10, ProjectSort.NEW, "1.15.2", new String[]{"tech"}, new String[]{"forge"}).size());
+        Assertions.assertEquals(0, Confluencia.PROJECT.findAllByGameAndProjectType("minecraft-je", "mods", "", 1, 10, ProjectSort.NEW, null, new String[]{"tech", "magic"}, new String[]{"forge"}).size());
+        Assertions.assertEquals(1, Confluencia.PROJECT.findAllByGameAndProjectType("minecraft-je", "mods", "", 1, 10, ProjectSort.NEW, null, new String[0], new String[]{"forge"}).size());
+        Assertions.assertEquals(2, Confluencia.PROJECT.findAllByGameAndProjectType("minecraft-je", "mods", "", 1, 10, ProjectSort.NEW, null, new String[]{"magic"}, new String[0]).size());
+        Assertions.assertEquals(1, Confluencia.PROJECT.findAllByGameAndProjectType("minecraft-je", "mods", "", 1, 10, ProjectSort.NEW, null, new String[]{"tech"}, new String[]{"forge"}).size());
     }
 
     @Test
