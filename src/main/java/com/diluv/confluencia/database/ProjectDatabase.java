@@ -332,7 +332,7 @@ public class ProjectDatabase {
 
                     projectLoaderSubQuery.select(entityProjectFiles.get("project"));
                     projectLoaderSubQuery.where(cb.and(
-                        cb.equal(entityProjectFiles,entityFileLoader.get("projectFile")),
+                        cb.equal(entityProjectFiles, entityFileLoader.get("projectFile")),
                         cb.equal(entityFileLoader.get("loader"), entityTypeLoader),
                         in,
                         cb.equal(entityTypeLoader.get("projectType"), projectTypeSlugParam))

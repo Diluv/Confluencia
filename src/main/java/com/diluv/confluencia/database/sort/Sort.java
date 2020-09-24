@@ -17,11 +17,6 @@ public class Sort {
         this.orderName = order.name;
     }
 
-    public String getQuery (String query) {
-
-        return query.replace("'%sort%'", this.column).replace("'%order%'", this.orderName);
-    }
-
     public String getSlug () {
 
         return this.slug;
