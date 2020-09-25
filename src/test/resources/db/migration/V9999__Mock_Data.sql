@@ -159,9 +159,6 @@ VALUES ('minecraft-je', 'rd-132211', 'old_alpha', STR_TO_DATE('2009-05-13T20:11:
 INSERT INTO roles(name)
 VALUES ('admin');
 
-INSERT INTO role_permissions(role_id, permission)
-VALUES (1, 'admin.view');
-
 INSERT INTO users(id, username, display_name, email, password, password_type, mfa, mfa_secret, created_at)
 VALUES (1, 'darkhax', 'Darkhax', 'darkhax@diluv.com',
         '$2y$12$Y09/RQkc7icbiOonlBqTeegjtk9VYPKamMTJqkFVtfKDawRwifc8i', 'bcrypt', FALSE, NULL, NOW()),

@@ -510,4 +510,23 @@ public class ProjectDatabase {
             return Collections.emptyList();
         }
     }
+
+    public List<ProjectsEntity> findAllByReview () {
+
+        try {
+            return Confluencia.getQuery((session, cb) -> {
+                CriteriaQuery<ProjectsEntity> q = cb.createQuery(ProjectsEntity.class);
+                Root<ProjectsEntity> entity = q.from(ProjectsEntity.class);
+
+                q.select(entity);
+                q.where(cb.isTrue(entity.get("review")));
+
+                TypedQuery<ProjectsEntity> query = session.createQuery(q);
+                return query.getResultList();
+            });
+        }
+        catch (Exception e) {
+            return Collections.emptyList();
+        }
+    }
 }

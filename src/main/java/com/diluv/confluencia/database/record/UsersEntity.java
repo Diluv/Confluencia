@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -42,6 +44,10 @@ public class UsersEntity {
 
     @Column(name = "created_at")
     private Timestamp createdAt;
+
+    @OneToOne
+    @JoinColumn(name = "id")
+    private UserRolesEntity userRole;
 
     public UsersEntity () {
 
@@ -140,6 +146,16 @@ public class UsersEntity {
     public void setCreatedAt (Timestamp createdAt) {
 
         this.createdAt = createdAt;
+    }
+
+    public UserRolesEntity getUserRole () {
+
+        return this.userRole;
+    }
+
+    public void setUserRole (UserRolesEntity role) {
+
+        this.userRole = role;
     }
 
     @Override
