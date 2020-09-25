@@ -143,4 +143,10 @@ public class TestProjectDatabase extends ConfluenciaTest {
         Assertions.assertEquals(0, Confluencia.PROJECT.findAllTagsByGameSlugAndProjectTypeSlug(new ProjectTypesEntity(new GamesEntity("minecraft-je"), "invalid")).size());
         Assertions.assertEquals(2, Confluencia.PROJECT.findAllTagsByGameSlugAndProjectTypeSlug(new ProjectTypesEntity(new GamesEntity("minecraft-je"), "mods")).size());
     }
+
+    @Test
+    public void findAllByReview () {
+
+        Assertions.assertEquals(7, Confluencia.PROJECT.findAllByReview(1, 10).size());
+    }
 }
