@@ -511,7 +511,7 @@ public class ProjectDatabase {
         }
     }
 
-    public List<ProjectsEntity> findAllByReview () {
+    public List<ProjectsEntity> findAllByReview (long page, int limit) {
 
         try {
             return Confluencia.getQuery((session, cb) -> {
@@ -520,8 +520,10 @@ public class ProjectDatabase {
 
                 q.select(entity);
                 q.where(cb.isTrue(entity.get("review")));
-
+                q.orderBy(cb.asc(entity.get("createdAt")));
                 TypedQuery<ProjectsEntity> query = session.createQuery(q);
+                query.setFirstResult((int) ((page - 1) * limit));
+                query.setMaxResults(limit);
                 return query.getResultList();
             });
         }
