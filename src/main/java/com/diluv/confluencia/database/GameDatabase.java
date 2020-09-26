@@ -15,6 +15,9 @@ import com.diluv.confluencia.database.record.ProjectTypesEntity;
 import com.diluv.confluencia.database.sort.Order;
 import com.diluv.confluencia.database.sort.Sort;
 
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+
 public class GameDatabase {
 
     public long countAllBySearch (String search) {
@@ -126,5 +129,25 @@ public class GameDatabase {
         catch (Exception e) {
             return 0;
         }
+    }
+
+    public boolean insertGame (GamesEntity entity) {
+
+        Transaction transaction = null;
+        try (Session session = Confluencia.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.save(entity);
+            transaction.commit();
+            return true;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+
+        return false;
     }
 }

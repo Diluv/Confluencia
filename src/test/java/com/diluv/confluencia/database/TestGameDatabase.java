@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import com.diluv.confluencia.Confluencia;
 import com.diluv.confluencia.ConfluenciaTest;
+import com.diluv.confluencia.database.record.GamesEntity;
 import com.diluv.confluencia.database.sort.GameSort;
 
 public class TestGameDatabase extends ConfluenciaTest {
@@ -42,5 +43,15 @@ public class TestGameDatabase extends ConfluenciaTest {
     public void countAllProjectTypes () {
 
         Assertions.assertEquals(5, Confluencia.GAME.countAllProjectTypes());
+    }
+
+    @Test
+    public void insertGame () {
+
+        GamesEntity game = new GamesEntity();
+        game.setSlug("testing");
+        game.setName("Testing");
+        game.setUrl("https://example.com");
+        Assertions.assertTrue(Confluencia.GAME.insertGame(game));
     }
 }
