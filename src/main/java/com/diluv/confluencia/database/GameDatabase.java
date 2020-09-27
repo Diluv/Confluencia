@@ -8,15 +8,16 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Root;
 
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+
 import com.diluv.confluencia.Confluencia;
 import com.diluv.confluencia.database.record.FeaturedGamesEntity;
+import com.diluv.confluencia.database.record.GameDefaultProjectTypeEntity;
 import com.diluv.confluencia.database.record.GamesEntity;
 import com.diluv.confluencia.database.record.ProjectTypesEntity;
 import com.diluv.confluencia.database.sort.Order;
 import com.diluv.confluencia.database.sort.Sort;
-
-import org.hibernate.Session;
-import org.hibernate.Transaction;
 
 public class GameDatabase {
 
@@ -142,6 +143,45 @@ public class GameDatabase {
         }
         catch (Exception e) {
             e.printStackTrace();
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public boolean insertProjectType (ProjectTypesEntity entity) {
+
+        Transaction transaction = null;
+        try (Session session = Confluencia.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.save(entity);
+            transaction.commit();
+            return true;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public boolean insertDefaultProjectType (GameDefaultProjectTypeEntity entity) {
+
+        Transaction transaction = null;
+        try (Session session = Confluencia.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.save(entity);
+            transaction.commit();
+            return true;
+        }
+        catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }

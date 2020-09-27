@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.Objects;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -38,7 +39,7 @@ public class GamesEntity {
     @OneToMany(mappedBy = "game")
     private List<GameVersionsEntity> gameVersions;
 
-    @OneToOne(mappedBy = "game", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "game", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     private GameDefaultProjectTypeEntity defaultProjectTypeEntity;
 
     public GamesEntity () {
@@ -110,9 +111,9 @@ public class GamesEntity {
         this.gameVersions = gameVersions;
     }
 
-    public ProjectTypesEntity getDefaultProjectTypeEntity () {
+    public String getDefaultProjectTypeSlug () {
 
-        return this.defaultProjectTypeEntity.getProjectType();
+        return this.defaultProjectTypeEntity == null ? null : this.defaultProjectTypeEntity.getProjectTypeSlug();
     }
 
     public void setDefaultProjectTypeEntity (GameDefaultProjectTypeEntity defaultProjectTypeEntity) {
