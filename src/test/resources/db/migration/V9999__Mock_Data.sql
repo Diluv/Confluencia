@@ -281,7 +281,7 @@ This project is sponsored by Nodecraft! Use code Darkhax for 30% off your first 
         FROM_UNIXTIME(1507134742), FROM_UNIXTIME(1582146181), 1, 'minecraft-je', 'mods'),
        ('Better Burning', 'better-burning',
         'Improves the burning and fire mechanics of Minecraft.',
-        'Improves the burning and fire mechanics of Minecraft.', 0, TRUE, TRUE,
+        'Improves the burning and fire mechanics of Minecraft.', 0, TRUE, FALSE,
         FROM_UNIXTIME(1575287161), FROM_UNIXTIME(1583098748), 1, 'minecraft-je', 'mods'),
        ('AttributeFix', 'attributefix',
         'Removes arbitrary limits on Minecraft\'s attribute system. Fixes MANY mods!',
@@ -837,44 +837,28 @@ INSERT INTO project_files(id, version, name, size, changelog, sha512, release_ty
                           released, project_id, user_id)
 VALUES (10, '1.0.0', 'forge_mod.jar', 100, 'Project file changelog',
         '5E96A9A98839D073C298BBD0AC73A510E1F13A64151E2C4895440ECDBCD6D483EDA994D2CD5E69C5C00A96783280F7BC1E933667B4A25C53CE3918007D5C77E3',
-        'release', 'binary', 2, FALSE, 1, 1);
-
-INSERT INTO project_files(id, version, name, size, changelog, sha512, release_type, classifier, processing_status,
-                          released, project_id, user_id)
-VALUES (11, '1.0.1', 'forge_mod_signed.jar', 101, 'Project file changelog',
+        'release', 'binary', 2, FALSE, 1, 1),
+     (11, '1.0.1', 'forge_mod_signed.jar', 101, 'Project file changelog',
         '5E96A9A98839D073C298BBD0AC73A510E1F13A64151E2C4895440ECDBCD6D483EDA994D2CD5E69C5C00A96783280F7BC1E933667B4A25C53CE3918007D5C77E3',
-        'release', 'binary', 0, FALSE, 1, 1);
-
-INSERT INTO project_files(id, version, name, size, changelog, sha512, release_type, classifier, processing_status,
-                          released, project_id, user_id)
-VALUES (12, '1.0.2', 'forge_mod_tampered.jar', 1000, 'Changing',
+        'release', 'binary', 0, FALSE, 1, 1),
+       (12, '1.0.2', 'forge_mod_tampered.jar', 1000, 'Changing',
         '5E96A9A98839D073C298BBD0AC73A510E1F13A64151E2C4895440ECDBCD6D483EDA994D2CD5E69C5C00A96783280F7BC1E933667B4A25C53CE3918007D5C77E3',
-        'release', 'binary', 0, FALSE, 1, 1);
-
-INSERT INTO project_files(id, version, name, size, changelog, sha512, release_type, classifier, processing_status,
-                          released, project_id, user_id)
-VALUES (13, '1.0.3', 'zip_archive.zip', 1000, 'Changing',
+        'release', 'binary', 0, FALSE, 1, 1),
+       (13, '1.0.3', 'zip_archive.zip', 1000, 'Changing',
         '5E96A9A98839D073C298BBD0AC73A510E1F13A64151E2C4895440ECDBCD6D483EDA994D2CD5E69C5C00A96783280F7BC1E933667B4A25C53CE3918007D5C77E3',
-        'release', 'binary', 0, FALSE, 1, 1);
-
-INSERT INTO project_files(id, version, name, size, changelog, sha512, release_type, classifier, processing_status,
-                          released, project_id, user_id)
-VALUES (14, '1.0.4', 'zip_archive.zip', 1000, 'Changing',
+        'release', 'binary', 0, FALSE, 1, 1),
+       (14, '1.0.4', 'zip_archive.zip', 1000, 'Changing',
         '5E96A9A98839D073C298BBD0AC73A510E1F13A64151E2C4895440ECDBCD6D483EDA994D2CD5E69C5C00A96783280F7BC1E933667B4A25C53CE3918007D5C77E3',
-        'release', 'binary', 5, FALSE, 1, 1);
-
-INSERT INTO project_files(id, version, name, size, changelog, sha512, release_type, classifier, processing_status,
-                          released, project_id, user_id)
-VALUES (15, '1.0.5', 'malware.txt', 1000, 'Changing',
+        'release', 'binary', 5, FALSE, 1, 1),
+       (15, '1.0.5', 'malware.txt', 1000, 'Changing',
         '5E96A9A98839D073C298BBD0AC73A510E1F13A64151E2C4895440ECDBCD6D483EDA994D2CD5E69C5C00A96783280F7BC1E933667B4A25C53CE3918007D5C77E3',
-        'release', 'binary', 0, FALSE, 1, 1);
-
-INSERT INTO project_files(id, version, name, size, changelog, sha512, release_type, classifier, processing_status,
-                          released,
-                          project_id, user_id)
-VALUES (16, '1.0.6', 'non_existing_file.txt', 1000, 'Changing',
+        'release', 'binary', 0, FALSE, 1, 1),
+       (16, '1.0.6', 'non_existing_file.txt', 1000, 'Changing',
         '5E96A9A98839D073C298BBD0AC73A510E1F13A64151E2C4895440ECDBCD6D483EDA994D2CD5E69C5C00A96783280F7BC1E933667B4A25C53CE3918007D5C77E3',
-        'release', 'binary', 0, FALSE, TRUE, 1);
+        'release', 'binary', 0, FALSE, 1, 1),
+       (17, '1.0.7', 'non_existing_file.txt', 1000, 'Changing',
+        '5E96A9A98839D073C298BBD0AC73A510E1F13A64151E2C4895440ECDBCD6D483EDA994D2CD5E69C5C00A96783280F7BC1E933667B4A25C53CE3918007D5C77E3',
+        'release', 'binary', 2, TRUE, 17, 1);
 
 INSERT INTO project_file_dependencies(project_file_id, dependency_project_id)
 VALUES (1, 2),

@@ -518,8 +518,16 @@ public class ProjectDatabase {
                 CriteriaQuery<ProjectsEntity> q = cb.createQuery(ProjectsEntity.class);
                 Root<ProjectsEntity> entity = q.from(ProjectsEntity.class);
 
+                Subquery<ProjectsEntity> projectSubQuery = q.subquery(ProjectsEntity.class);
+                Root<ProjectFilesEntity> entityFile = projectSubQuery.from(ProjectFilesEntity.class);
+                projectSubQuery.select(entityFile.get("project"));
+                projectSubQuery.groupBy(entityFile.get("project"));
+
                 q.select(entity);
-                q.where(cb.isTrue(entity.get("review")));
+                q.where(cb.and(
+                    cb.isTrue(entity.get("review")),
+                    cb.in(entity).value(projectSubQuery)
+                ));
                 q.orderBy(cb.asc(entity.get("createdAt")));
                 TypedQuery<ProjectsEntity> query = session.createQuery(q);
                 query.setFirstResult((int) ((page - 1) * limit));
