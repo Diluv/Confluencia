@@ -526,7 +526,10 @@ public class ProjectDatabase {
                 q.select(entity);
                 q.where(cb.and(
                     cb.isTrue(entity.get("review")),
-                    cb.in(entity).value(projectSubQuery)
+                    cb.or(
+                        cb.isTrue(entity.get("released")),
+                        cb.in(entity).value(projectSubQuery)
+                    )
                 ));
                 q.orderBy(cb.asc(entity.get("createdAt")));
                 TypedQuery<ProjectsEntity> query = session.createQuery(q);

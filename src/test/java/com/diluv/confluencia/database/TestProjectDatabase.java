@@ -57,7 +57,7 @@ public class TestProjectDatabase extends ConfluenciaTest {
     public void countAllByUsername () {
 
         Assertions.assertEquals(0, Confluencia.PROJECT.countAllByUsername("invalid", false));
-        Assertions.assertEquals(84, Confluencia.PROJECT.countAllByUsername("darkhax", false));
+        Assertions.assertEquals(83, Confluencia.PROJECT.countAllByUsername("darkhax", false));
         Assertions.assertEquals(51, Confluencia.PROJECT.countAllByUsername("jaredlll08", false));
     }
 
@@ -65,7 +65,7 @@ public class TestProjectDatabase extends ConfluenciaTest {
     public void findAllByUsername () {
 
         Assertions.assertEquals(0, Confluencia.PROJECT.findAllByUsername("invalid", false, 1, 200, ProjectSort.NEW).size());
-        Assertions.assertEquals(84, Confluencia.PROJECT.findAllByUsername("darkhax", false, 1, 200, ProjectSort.NEW).size());
+        Assertions.assertEquals(83, Confluencia.PROJECT.findAllByUsername("darkhax", false, 1, 200, ProjectSort.NEW).size());
         Assertions.assertEquals(51, Confluencia.PROJECT.findAllByUsername("jaredlll08", false, 1, 200, ProjectSort.NEW).size());
     }
 
@@ -133,7 +133,7 @@ public class TestProjectDatabase extends ConfluenciaTest {
     @Test
     public void findProjectsByProjectFileHash () {
 
-        Assertions.assertEquals(1, Confluencia.PROJECT.findProjectsByProjectFileHash("5E96A9A98839D073C298BBD0AC73A510E1F13A64151E2C4895440ECDBCD6D483EDA994D2CD5E69C5C00A96783280F7BC1E933667B4A25C53CE3918007D5C77E3", 1, 10, ProjectSort.NEW).size());
+        Assertions.assertEquals(2, Confluencia.PROJECT.findProjectsByProjectFileHash("5E96A9A98839D073C298BBD0AC73A510E1F13A64151E2C4895440ECDBCD6D483EDA994D2CD5E69C5C00A96783280F7BC1E933667B4A25C53CE3918007D5C77E3", 1, 10, ProjectSort.NEW).size());
     }
 
     @Test
