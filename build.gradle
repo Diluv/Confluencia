@@ -23,7 +23,7 @@ dependencies {
     implementation group: 'org.hibernate', name: 'hibernate-core', version: '5.4.21.Final'
     implementation group: 'com.github.v-ladynev', name: 'fluent-hibernate-core', version: '0.3.1'
 
-    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.6.2'
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.7.0'
 
     testImplementation group: 'org.testcontainers', name: 'testcontainers', version: '1.14.3'
     testImplementation group: 'org.testcontainers', name: 'mariadb', version: '1.14.3'
