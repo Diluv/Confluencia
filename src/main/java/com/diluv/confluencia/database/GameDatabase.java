@@ -132,6 +132,27 @@ public class GameDatabase {
         }
     }
 
+    public List<ProjectTypesEntity> findAllProjectTypesByGameSlug (String gameSlug) {
+
+        try {
+            return Confluencia.getQuery((session, cb) -> {
+                CriteriaQuery<ProjectTypesEntity> q = cb.createQuery(ProjectTypesEntity.class);
+                Root<ProjectTypesEntity> entity = q.from(ProjectTypesEntity.class);
+                ParameterExpression<GamesEntity> gameParam = cb.parameter(GamesEntity.class);
+
+                q.select(entity);
+                q.where(cb.equal(entity.get("game"), gameParam));
+
+                TypedQuery<ProjectTypesEntity> query = session.createQuery(q);
+                query.setParameter(gameParam, new GamesEntity(gameSlug));
+                return query.getResultList();
+            });
+        }
+        catch (Exception e) {
+            return Collections.emptyList();
+        }
+    }
+
     public boolean insertGame (GamesEntity entity) {
 
         Transaction transaction = null;

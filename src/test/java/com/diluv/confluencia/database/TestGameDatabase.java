@@ -46,6 +46,12 @@ public class TestGameDatabase extends ConfluenciaTest {
     }
 
     @Test
+    public void findAllProjectTypesByGameSlug () {
+
+        Assertions.assertEquals(2, Confluencia.GAME.findAllProjectTypesByGameSlug("minecraft-je").size());
+    }
+
+    @Test
     public void insertGame () {
 
         GamesEntity game = new GamesEntity();
