@@ -1,12 +1,12 @@
 package com.diluv.confluencia.database.record;
 
-import java.sql.Timestamp;
-import java.util.List;
-import java.util.Objects;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 
-import org.hibernate.annotations.DynamicInsert;
+import java.sql.Timestamp;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
 @DynamicInsert
@@ -68,6 +68,9 @@ public class ProjectsEntity {
 
     @OneToMany(mappedBy = "project", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     private List<ProjectAuthorsEntity> authors;
+
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    private List<ProjectReviewEntity> reviews;
 
     public ProjectsEntity () {
 
@@ -236,6 +239,22 @@ public class ProjectsEntity {
     public void setGame (GamesEntity game) {
 
         this.game = game;
+    }
+
+    public List<ProjectReviewEntity> getReviews () {
+
+        return this.reviews;
+    }
+
+    public void setReviews (List<ProjectReviewEntity> reviews) {
+
+        this.reviews = reviews;
+    }
+
+    public void addReview (ProjectReviewEntity review) {
+
+        review.setProject(this);
+        this.reviews.add(review);
     }
 
     @Override

@@ -542,4 +542,22 @@ public class ProjectDatabase {
             return Collections.emptyList();
         }
     }
+
+    public boolean insertProjectReview(ProjectReviewEntity entity) {
+        Transaction transaction = null;
+        try (Session session = Confluencia.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.save(entity);
+            transaction.commit();
+            return true;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        }
+
+        return false;
+    }
 }

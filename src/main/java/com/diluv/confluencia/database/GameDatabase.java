@@ -212,7 +212,7 @@ public class GameDatabase {
         return false;
     }
 
-    public boolean updateDefaultProjectType(GameDefaultProjectTypeEntity entity){
+    public boolean updateGame (GamesEntity entity) {
         Transaction transaction = null;
         try (Session session = Confluencia.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
