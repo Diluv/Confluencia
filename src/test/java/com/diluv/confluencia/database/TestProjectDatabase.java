@@ -127,7 +127,7 @@ public class TestProjectDatabase extends ConfluenciaTest {
         ProjectsEntity project = Confluencia.PROJECT.findOneProjectByProjectId(5);
         project.setName("Testing");
 
-        Assertions.assertTrue(Confluencia.PROJECT.updateProject(project));
+        Assertions.assertTrue(Confluencia.update(project));
     }
 
     @Test

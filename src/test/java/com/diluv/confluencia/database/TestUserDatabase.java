@@ -41,7 +41,7 @@ public class TestUserDatabase extends ConfluenciaTest {
 
         UsersEntity user = Confluencia.USER.findOneByUsername("darkhax");
         user.setDisplayName("Darkhax");
-        Assertions.assertTrue(Confluencia.USER.updateUser(user));
+        Assertions.assertTrue(Confluencia.update(user));
     }
 
     @Test

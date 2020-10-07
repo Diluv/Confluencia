@@ -50,7 +50,6 @@ public class Confluencia {
         settings.put(Environment.DIALECT, "org.hibernate.dialect.MariaDB103Dialect");
         settings.put(Environment.CONNECTION_PROVIDER, FlywayConnectionProvider.class.getName());
         settings.put(Environment.SHOW_SQL, true);
-        settings.put(Environment.ENABLE_LAZY_LOAD_NO_TRANS, true);
         configuration.setProperties(settings);
 
         List<Class<?>> classes = EntityScanner.scanPackages("com.diluv.confluencia.database.record").result();
@@ -72,12 +71,12 @@ public class Confluencia {
 
     public static <R> R getQuery (BiFunction<Session, CriteriaBuilder, R> call) {
 
-        Transaction transaction = null;
+        Transaction tx = null;
         try (Session session = Confluencia.getSessionFactory().openSession()) {
-            transaction = session.beginTransaction();
+            tx = session.beginTransaction();
             CriteriaBuilder cb = session.getCriteriaBuilder();
             R r = call.apply(session, cb);
-            transaction.commit();
+            tx.commit();
             return r;
         }
         catch (NoResultException e) {
@@ -85,10 +84,30 @@ public class Confluencia {
         }
         catch (Exception e) {
             e.printStackTrace();
-            if (transaction != null) {
-                transaction.rollback();
+            if (tx != null) {
+                tx.rollback();
             }
             throw e;
         }
+    }
+
+    public static boolean update (Object o) {
+
+        Transaction transaction = null;
+        try (Session session = Confluencia.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.update(o);
+            transaction.commit();
+            return true;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+
+        return false;
     }
 }

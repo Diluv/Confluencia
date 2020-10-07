@@ -1,17 +1,21 @@
 package com.diluv.confluencia.database.record;
 
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
 import java.sql.Timestamp;
 import java.util.Objects;
 
 import javax.persistence.*;
 
 @Entity
+@DynamicUpdate
 @Table(name = "project_review")
 public class ProjectReviewEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id", insertable = false, updatable = false)
     private long id;
 
     @ManyToOne

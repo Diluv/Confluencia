@@ -4,6 +4,9 @@ VALUES ('minecraft-je', 'Minecraft Java Edition', 'https://www.minecraft.net'),
        ('subnautica', 'Subnautica', 'https://unknownworlds.com/subnautica/'),
        ('stardewvalley', 'Stardew Valley', 'https://unknownworlds.com/subnautica/');
 
+INSERT INTO games(slug, name, url, deleted)
+VALUES ('banned', 'Banned', 'https://www.example.com', TRUE);
+
 INSERT INTO project_types(game_slug, slug, name, max_file_size)
 VALUES ('minecraft-je', 'mods', 'Mods', 25000000),
        ('minecraft-je', 'maps', 'Maps', 25000000),

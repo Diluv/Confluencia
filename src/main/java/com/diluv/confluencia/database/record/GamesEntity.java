@@ -1,20 +1,33 @@
 package com.diluv.confluencia.database.record;
 
-import org.hibernate.annotations.DynamicInsert;
-
-import javax.persistence.*;
-
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Objects;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.SelectBeforeUpdate;
+import org.hibernate.annotations.Where;
+
 @Entity
 @DynamicInsert
+@DynamicUpdate
+@SelectBeforeUpdate
+@Where(clause = "deleted=0")
 @Table(name = "games")
 public class GamesEntity {
 
     @Id
-    @Column(name = "slug")
+    @Column(name = "slug", updatable = false)
     private String slug;
 
     @Column(name = "name")
@@ -23,7 +36,7 @@ public class GamesEntity {
     @Column(name = "url")
     private String url;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", insertable = false, updatable = false)
     private Timestamp createdAt;
 
     @OneToMany(mappedBy = "game", cascade = {CascadeType.ALL})

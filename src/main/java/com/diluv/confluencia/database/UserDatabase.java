@@ -83,26 +83,6 @@ public class UserDatabase {
         }
     }
 
-    public boolean updateUser (UsersEntity user) {
-
-        Transaction transaction = null;
-        try (Session session = Confluencia.getSessionFactory().openSession()) {
-            transaction = session.beginTransaction();
-            session.update(user);
-            transaction.commit();
-            return true;
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            e.printStackTrace();
-        }
-
-        return false;
-    }
-
     public boolean insertUserMFARecovery (List<UserMfaRecoveryEntity> entities) {
 
         Transaction transaction = null;

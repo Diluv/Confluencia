@@ -430,26 +430,6 @@ public class ProjectDatabase {
         return false;
     }
 
-    public boolean updateProject (ProjectsEntity project) {
-
-        Transaction transaction = null;
-        try (Session session = Confluencia.getSessionFactory().openSession()) {
-            transaction = session.beginTransaction();
-            session.update(project);
-            transaction.commit();
-            return true;
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            e.printStackTrace();
-        }
-
-        return false;
-    }
-
     public List<ProjectsEntity> findProjectsByProjectFileHash (String projectFileHash, long page, int limit, Sort sort) {
 
         try {
@@ -543,7 +523,8 @@ public class ProjectDatabase {
         }
     }
 
-    public boolean insertProjectReview(ProjectReviewEntity entity) {
+    public boolean insertProjectReview (ProjectReviewEntity entity) {
+
         Transaction transaction = null;
         try (Session session = Confluencia.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
@@ -560,4 +541,6 @@ public class ProjectDatabase {
 
         return false;
     }
+
+
 }

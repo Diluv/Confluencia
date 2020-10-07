@@ -15,7 +15,7 @@ public class ProjectsEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id", insertable = false, updatable = false)
     private long id;
 
     @Column(name = "name")
@@ -39,7 +39,7 @@ public class ProjectsEntity {
     @Column(name = "released")
     private boolean released;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", insertable = false)
     private Timestamp createdAt;
 
     @Column(name = "updated_at")
