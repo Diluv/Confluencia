@@ -111,4 +111,24 @@ public class Confluencia {
 
         return false;
     }
+
+    public static boolean insert (Object o) {
+
+        Transaction transaction = null;
+        try (Session session = Confluencia.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.save(o);
+            transaction.commit();
+            return true;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+
+        return false;
+    }
 }

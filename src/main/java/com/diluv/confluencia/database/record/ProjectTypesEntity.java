@@ -99,6 +99,11 @@ public class ProjectTypesEntity {
         this.tags = tags;
     }
 
+    public void addTag(TagsEntity tag){
+        tag.setProjectType(this);
+        this.tags.add(tag);
+    }
+
     public List<ProjectTypeLoadersEntity> getProjectTypeLoaders () {
 
         return this.projectTypeLoaders;

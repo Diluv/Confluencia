@@ -1,21 +1,16 @@
 package com.diluv.confluencia.database.record;
 
-import java.util.Objects;
+import javax.persistence.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import java.util.Objects;
 
 @Entity
 @Table(name = "tags")
 public class TagsEntity {
 
     @Id
-    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", insertable = false)
     private long id;
 
     @Column(name = "slug")
@@ -34,6 +29,16 @@ public class TagsEntity {
     @ManyToOne
     @JoinColumn(name = "game_slug", insertable = false, updatable = false)
     private GamesEntity game;
+
+    public TagsEntity () {
+
+    }
+
+    public TagsEntity (String slug, String name) {
+
+        this.slug = slug;
+        this.name = name;
+    }
 
     public long getId () {
 

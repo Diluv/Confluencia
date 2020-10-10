@@ -1,20 +1,15 @@
 package com.diluv.confluencia.database.record;
 
-import java.util.Objects;
+import javax.persistence.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import java.util.Objects;
 
 @Entity
 @Table(name = "project_type_loaders")
 public class ProjectTypeLoadersEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private long id;
 
@@ -30,6 +25,16 @@ public class ProjectTypeLoadersEntity {
         @JoinColumn(name = "game_slug")
     })
     private ProjectTypesEntity projectType;
+
+    public ProjectTypeLoadersEntity () {
+
+    }
+
+    public ProjectTypeLoadersEntity (String slug, String name) {
+
+        this.slug = slug;
+        this.name = name;
+    }
 
     public long getId () {
 
