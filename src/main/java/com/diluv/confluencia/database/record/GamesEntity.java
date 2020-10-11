@@ -1,6 +1,7 @@
 package com.diluv.confluencia.database.record;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -40,10 +41,10 @@ public class GamesEntity {
     private Timestamp createdAt;
 
     @OneToMany(mappedBy = "game", cascade = {CascadeType.ALL})
-    private List<ProjectTypesEntity> projectTypes;
+    private List<ProjectTypesEntity> projectTypes = new ArrayList<>();
 
     @OneToMany(mappedBy = "game", cascade = {CascadeType.ALL})
-    private List<GameVersionsEntity> gameVersions;
+    private List<GameVersionsEntity> gameVersions= new ArrayList<>();
 
     @OneToOne(mappedBy = "game", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     private GameDefaultProjectTypeEntity defaultProjectTypeEntity;
