@@ -37,7 +37,10 @@ public class ProjectDatabase {
 
                 q.select(cb.count(entity));
 
-                q.where(cb.like(entityGame.get("slug"), gameSlugParam));
+                q.where(cb.and(
+                    cb.isTrue(entity.get("released")),
+                    cb.like(entityGame.get("slug"), gameSlugParam)
+                ));
 
                 TypedQuery<Long> query = session.createQuery(q);
                 query.setParameter(gameSlugParam, "%" + gameSlug + "%");
