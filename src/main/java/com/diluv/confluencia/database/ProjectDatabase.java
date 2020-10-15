@@ -289,9 +289,9 @@ public class ProjectDatabase {
 
                 q.select(entity);
                 List<Predicate> predicates = new ArrayList<>();
+                predicates.add(cb.isTrue(entity.get("released")));
                 predicates.add(cb.like(entity.get("name"), nameParam));
                 predicates.add(cb.equal(entity.get("projectType"), projectTypeSlugParam));
-
                 if (tags != null && tags.length > 0) {
 
                     Subquery<ProjectsEntity> projectTagsSubQuery = q.subquery(ProjectsEntity.class);
