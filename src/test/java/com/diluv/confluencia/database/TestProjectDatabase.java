@@ -19,7 +19,7 @@ public class TestProjectDatabase extends ConfluenciaTest {
     @Test
     public void countAllProjectsBySlug () {
 
-        Assertions.assertEquals(130, Confluencia.PROJECT.countAllByGameSlug("minecraft-je"));
+        Assertions.assertEquals(128, Confluencia.PROJECT.countAllByGameSlug("minecraft-je"));
     }
 
     @Test
