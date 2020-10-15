@@ -1,5 +1,9 @@
 package com.diluv.confluencia.database.record;
 
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.SelectBeforeUpdate;
+import org.hibernate.annotations.Where;
+
 import java.sql.Timestamp;
 import java.util.Objects;
 
@@ -13,12 +17,15 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
+@DynamicUpdate
+@SelectBeforeUpdate
+@Where(clause = "deleted=0")
 @Table(name = "users")
 public class UsersEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id", updatable = false)
     private long id;
 
     @Column(name = "email")

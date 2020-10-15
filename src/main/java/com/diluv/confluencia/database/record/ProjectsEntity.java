@@ -1,6 +1,9 @@
 package com.diluv.confluencia.database.record;
 
 import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.SelectBeforeUpdate;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
@@ -10,6 +13,9 @@ import java.util.Objects;
 
 @Entity
 @DynamicInsert
+@DynamicUpdate
+@SelectBeforeUpdate
+@Where(clause = "deleted=0")
 @Table(name = "projects")
 public class ProjectsEntity {
 
