@@ -1,12 +1,11 @@
 package com.diluv.confluencia.database.record;
 
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-
 import java.sql.Timestamp;
 import java.util.Objects;
 
 import javax.persistence.*;
+
+import org.hibernate.annotations.DynamicUpdate;
 
 @Entity
 @DynamicUpdate
@@ -26,7 +25,7 @@ public class ProjectReviewEntity {
     @JoinColumn(name = "reviewed_by")
     private UsersEntity reviewedBy;
 
-    @Column(name = "created_at", insertable = false)
+    @Column(name = "created_at", updatable = false)
     private Timestamp createdAt;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "projectReview")

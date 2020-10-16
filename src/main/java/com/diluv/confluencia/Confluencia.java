@@ -2,10 +2,8 @@ package com.diluv.confluencia;
 
 import java.util.List;
 import java.util.Properties;
-import java.util.function.BiFunction;
-
-import javax.persistence.NoResultException;
-import javax.persistence.criteria.CriteriaBuilder;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -50,7 +48,6 @@ public class Confluencia {
         settings.put(Environment.DIALECT, "org.hibernate.dialect.MariaDB103Dialect");
         settings.put(Environment.CONNECTION_PROVIDER, FlywayConnectionProvider.class.getName());
         settings.put(Environment.SHOW_SQL, true);
-        settings.put(Environment.ENABLE_LAZY_LOAD_NO_TRANS, true);
         configuration.setProperties(settings);
 
         List<Class<?>> classes = EntityScanner.scanPackages("com.diluv.confluencia.database.record").result();
@@ -70,18 +67,13 @@ public class Confluencia {
         return sessionFactory;
     }
 
-    public static <R> R getQuery (BiFunction<Session, CriteriaBuilder, R> call) {
+    public static void getTransaction (Consumer<Session> call) {
 
         Transaction tx = null;
         try (Session session = Confluencia.getSessionFactory().openSession()) {
             tx = session.beginTransaction();
-            CriteriaBuilder cb = session.getCriteriaBuilder();
-            R r = call.apply(session, cb);
+            call.accept(session);
             tx.commit();
-            return r;
-        }
-        catch (NoResultException e) {
-            throw e;
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -92,43 +84,21 @@ public class Confluencia {
         }
     }
 
-    public static boolean update (Object o) {
+    public static <R> R getTransaction (Function<Session, R> call) {
 
-        Transaction transaction = null;
+        Transaction tx = null;
         try (Session session = Confluencia.getSessionFactory().openSession()) {
-            transaction = session.beginTransaction();
-            session.update(o);
-            transaction.commit();
-            return true;
+            tx = session.beginTransaction();
+            R r = call.apply(session);
+            tx.commit();
+            return r;
         }
         catch (Exception e) {
             e.printStackTrace();
-            if (transaction != null) {
-                transaction.rollback();
+            if (tx != null) {
+                tx.rollback();
             }
-            e.printStackTrace();
+            throw e;
         }
-
-        return false;
-    }
-
-    public static boolean insert (Object o) {
-
-        Transaction transaction = null;
-        try (Session session = Confluencia.getSessionFactory().openSession()) {
-            transaction = session.beginTransaction();
-            session.save(o);
-            transaction.commit();
-            return true;
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            e.printStackTrace();
-        }
-
-        return false;
     }
 }
