@@ -721,7 +721,7 @@ This project is sponsored by Nodecraft! Use code Darkhax for 30% off your first 
         FROM_UNIXTIME(1435188634), FROM_UNIXTIME(1439913880), 2, 'minecraft-je', 'mods'),
        ('Fluxed-Core', 'fluxed-core',
         'A mod that contains helper functions for all of my mods',
-        'A mod that contains helper functions for all of my mods', 0, TRUE, TRUE,
+        'A mod that contains helper functions for all of my mods', 0, FALSE, TRUE,
         FROM_UNIXTIME(1444912766), FROM_UNIXTIME(1460629442), 2, 'minecraft-je', 'mods'),
        ('JAIM - Just Another Information Mod', 'jaim-just-another-information-mod',
         'Overhauls the select world screen and displays extra information!',
