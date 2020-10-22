@@ -5,9 +5,11 @@ import java.util.Objects;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 @Entity
+@DynamicInsert
 @DynamicUpdate
 @Table(name = "project_review")
 public class ProjectReviewEntity {

@@ -50,6 +50,7 @@ public class Confluencia {
         settings.put(Environment.DIALECT, "org.hibernate.dialect.MariaDB103Dialect");
         settings.put(Environment.CONNECTION_PROVIDER, FlywayConnectionProvider.class.getName());
         settings.put(Environment.SHOW_SQL, true);
+        settings.put(Environment.ENABLE_LAZY_LOAD_NO_TRANS, true);
         configuration.setProperties(settings);
 
         List<Class<?>> classes = EntityScanner.scanPackages("com.diluv.confluencia.database.record").result();
