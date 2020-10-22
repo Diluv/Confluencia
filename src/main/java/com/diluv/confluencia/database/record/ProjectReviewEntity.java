@@ -25,6 +25,9 @@ public class ProjectReviewEntity {
     @JoinColumn(name = "reviewed_by")
     private UsersEntity reviewedBy;
 
+    @Column(name = "completed")
+    private boolean completed;
+
     @Column(name = "created_at", updatable = false)
     private Timestamp createdAt;
 
@@ -59,6 +62,16 @@ public class ProjectReviewEntity {
     public void setReviewedBy (UsersEntity reviewedBy) {
 
         this.reviewedBy = reviewedBy;
+    }
+
+    public boolean isCompleted () {
+
+        return this.completed;
+    }
+
+    public void setCompleted (boolean completed) {
+
+        this.completed = completed;
     }
 
     public Timestamp getCreatedAt () {

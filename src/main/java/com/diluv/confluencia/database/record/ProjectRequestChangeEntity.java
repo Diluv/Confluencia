@@ -23,6 +23,15 @@ public class ProjectRequestChangeEntity implements Serializable {
     @Column(name = "reason")
     private String reason;
 
+    public ProjectRequestChangeEntity () {
+
+    }
+
+    public ProjectRequestChangeEntity (String reason) {
+
+        this.reason = reason;
+    }
+
     public ProjectReviewEntity getProjectReview () {
 
         return this.projectReview;
