@@ -1,103 +1,123 @@
 package com.diluv.confluencia.database;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 import com.diluv.confluencia.Confluencia;
 import com.diluv.confluencia.ConfluenciaTest;
 import com.diluv.confluencia.database.record.UserChangeEmail;
 import com.diluv.confluencia.database.record.UserMfaRecoveryEntity;
 import com.diluv.confluencia.database.record.UsersEntity;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
-import java.util.List;
-
 public class TestUserDatabase extends ConfluenciaTest {
 
     @Test
     public void countAll () {
 
-        Assertions.assertEquals(4, Confluencia.USER.countAll());
+        Confluencia.getTransaction(session -> {
+            Assertions.assertEquals(4, Confluencia.USER.countAll(session));
+        });
     }
 
     @Test
     public void findOneByUsername () {
 
-        Assertions.assertNull(Confluencia.USER.findOneByUsername("invalid"));
-        Assertions.assertNotNull(Confluencia.USER.findOneByUsername("darkhax"));
-        Assertions.assertNotNull(Confluencia.USER.findOneByUsername("jaredlll08"));
+        Confluencia.getTransaction(session -> {
+            Assertions.assertNull(Confluencia.USER.findOneByUsername(session, "invalid"));
+            Assertions.assertNotNull(Confluencia.USER.findOneByUsername(session, "darkhax"));
+            Assertions.assertNotNull(Confluencia.USER.findOneByUsername(session, "jaredlll08"));
+        });
     }
 
     @Test
     public void findOneByUserId () {
 
-        Assertions.assertNull(Confluencia.USER.findOneByUserId(0));
-        Assertions.assertNotNull(Confluencia.USER.findOneByUserId(1));
-        Assertions.assertNotNull(Confluencia.USER.findOneByUserId(2));
+        Confluencia.getTransaction(session -> {
+            Assertions.assertNull(Confluencia.USER.findOneByUserId(session, 0));
+            Assertions.assertNotNull(Confluencia.USER.findOneByUserId(session, 1));
+            Assertions.assertNotNull(Confluencia.USER.findOneByUserId(session, 2));
+        });
     }
 
     @Test
     public void updateUser () {
 
-        UsersEntity user = Confluencia.USER.findOneByUsername("darkhax");
-        user.setDisplayName("Darkhax");
-        Assertions.assertTrue(Confluencia.update(user));
+        Confluencia.getTransaction(session -> {
+            UsersEntity user = Confluencia.USER.findOneByUsername(session, "darkhax");
+            user.setDisplayName("DARKHAX");
+            session.update(user);
+            Assertions.assertEquals("DARKHAX", Confluencia.USER.findOneByUsername(session, "darkhax").getDisplayName());
+        });
     }
 
     @Test
     public void insertUserMFARecovery () {
 
-        UsersEntity user = Confluencia.USER.findOneByUsername("lclc98");
-
-        List<UserMfaRecoveryEntity> entities = new ArrayList<>();
-        entities.add(new UserMfaRecoveryEntity(user, "11111111"));
-        Assertions.assertTrue(Confluencia.USER.insertUserMFARecovery(entities));
+        Confluencia.getTransaction(session -> {
+            UsersEntity user = Confluencia.USER.findOneByUsername(session, "lclc98");
+            session.save(new UserMfaRecoveryEntity(user, "11111111"));
+            Assertions.assertEquals(3, Confluencia.USER.findAllUserMfaRecoveryByUser(session, user).size());
+        });
     }
 
     @Test
     public void deleteUserMFARecovery () {
 
-        UsersEntity user = Confluencia.USER.findOneByUsername("lclc98");
-        Assertions.assertTrue(Confluencia.USER.deleteUserMFARecovery(user));
-        Assertions.assertEquals(0, Confluencia.USER.findAllUserMfaRecoveryByUser(user).size());
+        Confluencia.getTransaction(session -> {
+            UsersEntity user = Confluencia.USER.findOneByUsername(session, "lclc98");
+            Assertions.assertTrue(Confluencia.USER.deleteUserMFARecovery(session, user));
+            Assertions.assertEquals(0, Confluencia.USER.findAllUserMfaRecoveryByUser(session, user).size());
+        });
     }
 
     @Test
     public void existsByEmail () {
 
-        Assertions.assertTrue(Confluencia.USER.existsByEmail("lclc98@diluv.com"));
-        Assertions.assertFalse(Confluencia.USER.existsByEmail("tempuser2@diluv.com"));
+        Confluencia.getTransaction(session -> {
+            Assertions.assertTrue(Confluencia.USER.existsByEmail(session, "lclc98@diluv.com"));
+            Assertions.assertFalse(Confluencia.USER.existsByEmail(session, "tempuser2@diluv.com"));
+        });
     }
 
     @Test
     public void existsTempUserByEmail () {
 
-        Assertions.assertTrue(Confluencia.USER.existsTempUserByEmail("tempuser@diluv.com"));
-        Assertions.assertFalse(Confluencia.USER.existsTempUserByEmail("lclc98@diluv.com"));
+        Confluencia.getTransaction(session -> {
+            Assertions.assertTrue(Confluencia.USER.existsTempUserByEmail(session, "tempuser@diluv.com"));
+            Assertions.assertFalse(Confluencia.USER.existsTempUserByEmail(session, "lclc98@diluv.com"));
+        });
     }
 
     @Test
     public void existUserChangeEmailByUser () {
 
-        Assertions.assertTrue(Confluencia.USER.existUserChangeEmailByUser(new UsersEntity(4)));
-        Assertions.assertFalse(Confluencia.USER.existUserChangeEmailByUser(new UsersEntity(1)));
+        Confluencia.getTransaction(session -> {
+            Assertions.assertTrue(Confluencia.USER.existUserChangeEmailByUser(session, new UsersEntity(4)));
+            Assertions.assertFalse(Confluencia.USER.existUserChangeEmailByUser(session, new UsersEntity(1)));
+        });
     }
 
     @Test
     public void existUserChangeEmailByEmail () {
 
-        Assertions.assertTrue(Confluencia.USER.existUserChangeEmailByEmail("newemail@diluv.com"));
-        Assertions.assertFalse(Confluencia.USER.existUserChangeEmailByEmail("lclc98@diluv.com"));
+        Confluencia.getTransaction(session -> {
+            Assertions.assertTrue(Confluencia.USER.existUserChangeEmailByEmail(session, "newemail@diluv.com"));
+            Assertions.assertFalse(Confluencia.USER.existUserChangeEmailByEmail(session, "lclc98@diluv.com"));
+        });
     }
 
     @Test
     public void insertUserChangeEmail () {
 
-        UserChangeEmail userEmail = new UserChangeEmail();
-        userEmail.setUser(new UsersEntity(3));
-        userEmail.setEmail("newnew@diluv.com");
-        userEmail.setCode("12345678");
+        Confluencia.getTransaction(session -> {
+            UserChangeEmail userEmail = new UserChangeEmail();
+            userEmail.setUser(new UsersEntity(3));
+            userEmail.setEmail("newnew@diluv.com");
+            userEmail.setCode("12345678");
 
-        Assertions.assertTrue(Confluencia.USER.insertUserChangeEmail(userEmail));
+            session.save(userEmail);
+
+            Assertions.assertTrue(Confluencia.USER.existUserChangeEmailByEmail(session, "newnew@diluv.com"));
+        });
     }
 }

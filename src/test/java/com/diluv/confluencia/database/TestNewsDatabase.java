@@ -12,13 +12,17 @@ public class TestNewsDatabase extends ConfluenciaTest {
     @Test
     public void findAll () {
 
-        Assertions.assertEquals(1, Confluencia.NEWS.findAll(1, 1, NewsSort.NEW).size());
+        Confluencia.getTransaction(session -> {
+            Assertions.assertEquals(1, Confluencia.NEWS.findAll(session, 1, 1, NewsSort.NEW).size());
+        });
     }
 
     @Test
     public void findOneByNewsSlug () {
 
-        Assertions.assertNotNull(Confluencia.NEWS.findOneByNewsSlug("example"));
-        Assertions.assertNull(Confluencia.NEWS.findOneByNewsSlug("invalid"));
+        Confluencia.getTransaction(session -> {
+            Assertions.assertNotNull(Confluencia.NEWS.findOneByNewsSlug(session, "example"));
+            Assertions.assertNull(Confluencia.NEWS.findOneByNewsSlug(session, "invalid"));
+        });
     }
 }

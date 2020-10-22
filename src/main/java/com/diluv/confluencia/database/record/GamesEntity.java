@@ -1,7 +1,6 @@
 package com.diluv.confluencia.database.record;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -16,13 +15,11 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SelectBeforeUpdate;
 import org.hibernate.annotations.Where;
 
 @Entity
 @DynamicInsert
 @DynamicUpdate
-@SelectBeforeUpdate
 @Where(clause = "deleted=0")
 @Table(name = "games")
 public class GamesEntity {
@@ -37,14 +34,14 @@ public class GamesEntity {
     @Column(name = "url")
     private String url;
 
-    @Column(name = "created_at", insertable = false, updatable = false)
+    @Column(name = "created_at", updatable = false)
     private Timestamp createdAt;
 
     @OneToMany(mappedBy = "game", cascade = {CascadeType.ALL})
-    private List<ProjectTypesEntity> projectTypes = new ArrayList<>();
+    private List<ProjectTypesEntity> projectTypes;
 
     @OneToMany(mappedBy = "game", cascade = {CascadeType.ALL})
-    private List<GameVersionsEntity> gameVersions= new ArrayList<>();
+    private List<GameVersionsEntity> gameVersions;
 
     @OneToOne(mappedBy = "game", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     private GameDefaultProjectTypeEntity defaultProjectTypeEntity;

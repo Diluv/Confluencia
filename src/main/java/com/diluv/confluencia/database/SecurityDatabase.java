@@ -1,103 +1,67 @@
 package com.diluv.confluencia.database;
 
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Root;
 
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 
-import com.diluv.confluencia.Confluencia;
 import com.diluv.confluencia.database.record.NodeCDNCommitsEntity;
 import com.diluv.confluencia.database.record.PersistedGrantsEntity;
+import com.diluv.confluencia.utils.DatabaseUtil;
 
 public class SecurityDatabase {
 
-    public PersistedGrantsEntity findPersistedGrantByKeyAndType (String key, String type) {
+    public PersistedGrantsEntity findPersistedGrantByKeyAndType (Session session, String key, String type) {
 
-        try {
-            return Confluencia.getQuery((session, cb) -> {
-                CriteriaQuery<PersistedGrantsEntity> q = cb.createQuery(PersistedGrantsEntity.class);
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<PersistedGrantsEntity> q = cb.createQuery(PersistedGrantsEntity.class);
 
-                ParameterExpression<String> keyParam = cb.parameter(String.class);
-                ParameterExpression<String> typeParam = cb.parameter(String.class);
+        ParameterExpression<String> keyParam = cb.parameter(String.class);
+        ParameterExpression<String> typeParam = cb.parameter(String.class);
 
-                Root<PersistedGrantsEntity> entity = q.from(PersistedGrantsEntity.class);
-                q.select(entity);
-                q.where(cb.and(cb.equal(entity.get("key"), keyParam), cb.equal(entity.get("type"), typeParam)));
+        Root<PersistedGrantsEntity> entity = q.from(PersistedGrantsEntity.class);
+        q.select(entity);
+        q.where(cb.and(cb.equal(entity.get("key"), keyParam), cb.equal(entity.get("type"), typeParam)));
 
-                TypedQuery<PersistedGrantsEntity> query = session.createQuery(q);
-                query.setParameter(keyParam, key);
-                query.setParameter(typeParam, type);
-                return query.getSingleResult();
-            });
-        }
-        catch (Exception e) {
-            return null;
-        }
+        TypedQuery<PersistedGrantsEntity> query = session.createQuery(q);
+        query.setParameter(keyParam, key);
+        query.setParameter(typeParam, type);
+        return DatabaseUtil.findOne(query.getResultList());
     }
 
-    public NodeCDNCommitsEntity findOneNodeCDNCommitsByHash (String hash) {
+    public NodeCDNCommitsEntity findOneNodeCDNCommitsByHash (Session session, String hash) {
 
-        try {
-            return Confluencia.getQuery((session, cb) -> {
-                CriteriaQuery<NodeCDNCommitsEntity> q = cb.createQuery(NodeCDNCommitsEntity.class);
+        CriteriaBuilder cb = session.getCriteriaBuilder();
 
-                ParameterExpression<String> hashParam = cb.parameter(String.class);
+        CriteriaQuery<NodeCDNCommitsEntity> q = cb.createQuery(NodeCDNCommitsEntity.class);
 
-                Root<NodeCDNCommitsEntity> entity = q.from(NodeCDNCommitsEntity.class);
-                q.select(entity);
-                q.where(cb.and(cb.isFalse(entity.get("completed")), cb.equal(entity.get("hash"), hashParam)));
+        ParameterExpression<String> hashParam = cb.parameter(String.class);
 
-                TypedQuery<NodeCDNCommitsEntity> query = session.createQuery(q);
-                query.setParameter(hashParam, hash);
-                query.setMaxResults(1);
-                return query.getSingleResult();
-            });
-        }
-        catch (Exception e) {
-            return null;
-        }
+        Root<NodeCDNCommitsEntity> entity = q.from(NodeCDNCommitsEntity.class);
+        q.select(entity);
+        q.where(cb.and(cb.isFalse(entity.get("completed")), cb.equal(entity.get("hash"), hashParam)));
+
+        TypedQuery<NodeCDNCommitsEntity> query = session.createQuery(q);
+        query.setParameter(hashParam, hash);
+        query.setMaxResults(1);
+        return DatabaseUtil.findOne(query.getResultList());
     }
 
-    public NodeCDNCommitsEntity findOneNodeCDNCommits () {
+    public NodeCDNCommitsEntity findLatestNodeCDNCommits (Session session) {
 
-        try {
-            return Confluencia.getQuery((session, cb) -> {
-                CriteriaQuery<NodeCDNCommitsEntity> q = cb.createQuery(NodeCDNCommitsEntity.class);
+        CriteriaBuilder cb = session.getCriteriaBuilder();
 
-                Root<NodeCDNCommitsEntity> entity = q.from(NodeCDNCommitsEntity.class);
-                q.select(entity);
-                q.where(cb.isFalse(entity.get("completed")));
+        CriteriaQuery<NodeCDNCommitsEntity> q = cb.createQuery(NodeCDNCommitsEntity.class);
 
-                TypedQuery<NodeCDNCommitsEntity> query = session.createQuery(q);
-                query.setMaxResults(1);
-                return query.getSingleResult();
-            });
-        }
-        catch (Exception e) {
-            return null;
-        }
-    }
+        Root<NodeCDNCommitsEntity> entity = q.from(NodeCDNCommitsEntity.class);
+        q.select(entity);
+        q.where(cb.isFalse(entity.get("completed")));
 
-    public boolean insertNodeCDNCommits (NodeCDNCommitsEntity entity) {
-
-        Transaction transaction = null;
-        try (Session session = Confluencia.getSessionFactory().openSession()) {
-            transaction = session.beginTransaction();
-            session.save(entity);
-            transaction.commit();
-            return true;
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            e.printStackTrace();
-        }
-
-        return false;
+        TypedQuery<NodeCDNCommitsEntity> query = session.createQuery(q);
+        query.setMaxResults(1);
+        return DatabaseUtil.findOne(query.getResultList());
     }
 }

@@ -841,7 +841,7 @@ INSERT INTO project_files(id, version, name, size, changelog, sha512, release_ty
 VALUES (10, '1.0.0', 'forge_mod.jar', 100, 'Project file changelog',
         '5E96A9A98839D073C298BBD0AC73A510E1F13A64151E2C4895440ECDBCD6D483EDA994D2CD5E69C5C00A96783280F7BC1E933667B4A25C53CE3918007D5C77E3',
         'release', 'binary', 2, FALSE, 1, 1),
-     (11, '1.0.1', 'forge_mod_signed.jar', 101, 'Project file changelog',
+       (11, '1.0.1', 'forge_mod_signed.jar', 101, 'Project file changelog',
         '5E96A9A98839D073C298BBD0AC73A510E1F13A64151E2C4895440ECDBCD6D483EDA994D2CD5E69C5C00A96783280F7BC1E933667B4A25C53CE3918007D5C77E3',
         'release', 'binary', 0, FALSE, 1, 1),
        (12, '1.0.2', 'forge_mod_tampered.jar', 1000, 'Changing',
@@ -917,3 +917,6 @@ VALUES ('d9f5bb5b-22af-4f58-bb15-f6c8a373aae9');
 
 INSERT INTO user_change_email (user_id, email, code)
 VALUES (4, 'newemail@diluv.com', '12345678');
+
+INSERT INTO images(url)
+VALUES ('/minecraft-je/logo.webp')

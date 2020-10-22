@@ -1,20 +1,19 @@
 package com.diluv.confluencia.database.record;
 
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SelectBeforeUpdate;
-import org.hibernate.annotations.Where;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.*;
 
-import java.sql.Timestamp;
-import java.util.List;
-import java.util.Objects;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.Where;
 
 @Entity
 @DynamicInsert
 @DynamicUpdate
-@SelectBeforeUpdate
 @Where(clause = "deleted=0")
 @Table(name = "projects")
 public class ProjectsEntity {
@@ -45,7 +44,7 @@ public class ProjectsEntity {
     @Column(name = "released")
     private boolean released;
 
-    @Column(name = "created_at", insertable = false)
+    @Column(name = "created_at", updatable = false)
     private Timestamp createdAt;
 
     @Column(name = "updated_at")
@@ -66,17 +65,17 @@ public class ProjectsEntity {
     @JoinColumn(name = "game_slug", insertable = false, updatable = false)
     private GamesEntity game;
 
-    @OneToMany(mappedBy = "project", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
-    private List<ProjectTagsEntity> tags;
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProjectTagsEntity> tags = new ArrayList<>();
 
-    @OneToMany(mappedBy = "project", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
-    private List<ProjectLinksEntity> links;
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProjectLinksEntity> links = new ArrayList<>();
 
-    @OneToMany(mappedBy = "project", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
-    private List<ProjectAuthorsEntity> authors;
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProjectAuthorsEntity> authors = new ArrayList<>();
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
-    private List<ProjectReviewEntity> reviews;
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProjectReviewEntity> reviews = new ArrayList<>();
 
     public ProjectsEntity () {
 
@@ -215,6 +214,12 @@ public class ProjectsEntity {
     public void setTags (List<ProjectTagsEntity> tags) {
 
         this.tags = tags;
+    }
+
+    public void addTag (ProjectTagsEntity tag) {
+
+        tag.setProject(this);
+        this.tags.add(tag);
     }
 
     public List<ProjectLinksEntity> getLinks () {

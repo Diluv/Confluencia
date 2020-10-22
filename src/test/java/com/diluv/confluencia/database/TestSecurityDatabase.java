@@ -14,35 +14,49 @@ public class TestSecurityDatabase extends ConfluenciaTest {
     @Test
     public void findPersistedGrantByKeyAndType () {
 
-        Assertions.assertNull(Confluencia.SECURITY.findPersistedGrantByKeyAndType("invalid", "invalid"));
-        Assertions.assertNull(Confluencia.SECURITY.findPersistedGrantByKeyAndType("w36TSM/IUyxY5P2pA1WaE3bWW8aI8YV43ne+Up2K2w4=", "invalid"));
-        Assertions.assertNotNull(Confluencia.SECURITY.findPersistedGrantByKeyAndType("w36TSM/IUyxY5P2pA1WaE3bWW8aI8YV43ne+Up2K2w4=", "reference_token"));
+        Confluencia.getTransaction(session -> {
+            Assertions.assertNull(Confluencia.SECURITY.findPersistedGrantByKeyAndType(session, "invalid", "invalid"));
+            Assertions.assertNull(Confluencia.SECURITY.findPersistedGrantByKeyAndType(session, "w36TSM/IUyxY5P2pA1WaE3bWW8aI8YV43ne+Up2K2w4=", "invalid"));
+            Assertions.assertNotNull(Confluencia.SECURITY.findPersistedGrantByKeyAndType(session, "w36TSM/IUyxY5P2pA1WaE3bWW8aI8YV43ne+Up2K2w4=", "reference_token"));
+        });
     }
 
     @Test
-    public void findAllNodeCDNCommits () {
+    public void findLatestNodeCDNCommits () {
 
-        Assertions.assertNotNull(Confluencia.SECURITY.findOneNodeCDNCommits());
+        Confluencia.getTransaction(session -> {
+            Assertions.assertNotNull(Confluencia.SECURITY.findLatestNodeCDNCommits(session));
+        });
     }
 
     @Test
     public void findOneNodeCDNCommitsByHash () {
 
-        Assertions.assertNotNull(Confluencia.SECURITY.findOneNodeCDNCommitsByHash("d9f5bb5b-22af-4f58-bb15-f6c8a373aae9"));
+        Confluencia.getTransaction(session -> {
+            Assertions.assertNotNull(Confluencia.SECURITY.findOneNodeCDNCommitsByHash(session, "d9f5bb5b-22af-4f58-bb15-f6c8a373aae9"));
+        });
     }
 
     @Test
     public void insertNodeCDNCommits () {
 
-        NodeCDNCommitsEntity entity = new NodeCDNCommitsEntity();
-        entity.setHash(UUID.randomUUID().toString());
-        Assertions.assertTrue(Confluencia.SECURITY.insertNodeCDNCommits(entity));
+        Confluencia.getTransaction(session -> {
+            NodeCDNCommitsEntity entity = new NodeCDNCommitsEntity();
+            entity.setHash(UUID.randomUUID().toString());
+            Assertions.assertNotNull(session.save(entity));
+        });
     }
 
     @Test
     public void updateNodeCDNCommits () {
 
-        NodeCDNCommitsEntity entity = Confluencia.SECURITY.findOneNodeCDNCommitsByHash("d9f5bb5b-22af-4f58-bb15-f6c8a373aae9");
-        Assertions.assertTrue(Confluencia.update(entity));
+        Confluencia.getTransaction(session -> {
+            NodeCDNCommitsEntity entity = Confluencia.SECURITY.findOneNodeCDNCommitsByHash(session, "d9f5bb5b-22af-4f58-bb15-f6c8a373aae9");
+            entity.setCompleted(true);
+            session.update(entity);
+
+            NodeCDNCommitsEntity e2 = Confluencia.SECURITY.findOneNodeCDNCommitsByHash(session, "d9f5bb5b-22af-4f58-bb15-f6c8a373aae9");
+            Assertions.assertNull(e2);
+        });
     }
 }

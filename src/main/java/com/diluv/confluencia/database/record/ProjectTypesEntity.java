@@ -1,18 +1,15 @@
 package com.diluv.confluencia.database.record;
 
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SelectBeforeUpdate;
-import org.hibernate.annotations.Where;
-
 import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.Where;
+
 @Entity
 @DynamicUpdate
-@SelectBeforeUpdate
 @Where(clause = "deleted=0")
 @Table(name = "project_types")
 @IdClass(ProjectTypesEntityPK.class)
@@ -99,7 +96,8 @@ public class ProjectTypesEntity {
         this.tags = tags;
     }
 
-    public void addTag(TagsEntity tag){
+    public void addTag (TagsEntity tag) {
+
         tag.setProjectType(this);
         this.tags.add(tag);
     }

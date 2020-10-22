@@ -13,51 +13,66 @@ public class TestGameDatabase extends ConfluenciaTest {
     @Test
     public void countAllBySearch () {
 
-        Assertions.assertEquals(4, Confluencia.GAME.countAllBySearch(""));
-        Assertions.assertEquals(1, Confluencia.GAME.countAllBySearch("bedrock"));
+        Confluencia.getTransaction(session -> {
+            Assertions.assertEquals(4, Confluencia.GAME.countAllBySearch(session, ""));
+            Assertions.assertEquals(1, Confluencia.GAME.countAllBySearch(session, "bedrock"));
+        });
     }
 
     @Test
     public void findOneBySlug () {
 
-        // Allowed
-        Assertions.assertNotNull(Confluencia.GAME.findOneBySlug("minecraft-je"));
+        Confluencia.getTransaction(session -> {
+            // Allowed
+            Assertions.assertNotNull(Confluencia.GAME.findOneBySlug(session, "minecraft-je"));
 
-        // Not found
-        Assertions.assertNull(Confluencia.GAME.findOneBySlug("notfound"));
+            // Not found
+            Assertions.assertNull(Confluencia.GAME.findOneBySlug(session, "notfound"));
+        });
     }
 
     @Test
     public void findAll () {
 
-        Assertions.assertEquals(4, Confluencia.GAME.findAll(1, 25, GameSort.NEW, "").size());
+        Confluencia.getTransaction(session -> {
+            Assertions.assertEquals(4, Confluencia.GAME.findAll(session, 1, 25, GameSort.NEW, "").size());
+        });
     }
 
     @Test
     public void findFeaturedGames () {
 
-        Assertions.assertEquals(2, Confluencia.GAME.findFeaturedGames().size());
+        Confluencia.getTransaction(session -> {
+            Assertions.assertEquals(2, Confluencia.GAME.findFeaturedGames(session).size());
+        });
     }
 
     @Test
     public void countAllProjectTypes () {
 
-        Assertions.assertEquals(5, Confluencia.GAME.countAllProjectTypes());
+        Confluencia.getTransaction(session -> {
+            Assertions.assertEquals(5, Confluencia.GAME.countAllProjectTypes(session));
+        });
     }
 
     @Test
     public void findAllProjectTypesByGameSlug () {
 
-        Assertions.assertEquals(2, Confluencia.GAME.findAllProjectTypesByGameSlug("minecraft-je").size());
+        Confluencia.getTransaction(session -> {
+            Assertions.assertEquals(2, Confluencia.GAME.findAllProjectTypesByGameSlug(session, "minecraft-je").size());
+        });
     }
 
     @Test
     public void insertGame () {
 
-        GamesEntity game = new GamesEntity();
-        game.setSlug("testing");
-        game.setName("Testing");
-        game.setUrl("https://example.com");
-        Assertions.assertTrue(Confluencia.GAME.insertGame(game));
+        Confluencia.getTransaction(session -> {
+            GamesEntity game = new GamesEntity();
+            game.setSlug("testing");
+            game.setName("Testing");
+            game.setUrl("https://example.com");
+            session.save(game);
+            Assertions.assertNotNull(Confluencia.GAME.findOneBySlug(session, "testing"));
+        });
     }
 }
