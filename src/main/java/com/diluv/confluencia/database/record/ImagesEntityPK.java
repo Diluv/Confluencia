@@ -1,21 +1,12 @@
 package com.diluv.confluencia.database.record;
 
-import java.sql.Timestamp;
+import javax.persistence.Column;
+import javax.persistence.Id;
+
+import java.io.Serializable;
 import java.util.Objects;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
-import javax.persistence.Table;
-
-import org.hibernate.annotations.DynamicUpdate;
-
-@Entity
-@DynamicUpdate
-@IdClass(ImagesEntityPK.class)
-@Table(name = "images")
-public class ImagesEntity {
+public class ImagesEntityPK implements Serializable {
 
     @Id
     @Column(name = "id")
@@ -28,12 +19,6 @@ public class ImagesEntity {
     @Id
     @Column(name = "width")
     private int width;
-
-    @Column(name = "released")
-    private boolean released;
-
-    @Column(name = "created_at")
-    private Timestamp createdAt;
 
     public String getId () {
 
@@ -65,32 +50,12 @@ public class ImagesEntity {
         this.width = width;
     }
 
-    public boolean isReleased () {
-
-        return this.released;
-    }
-
-    public void setReleased (boolean released) {
-
-        this.released = released;
-    }
-
-    public Timestamp getCreatedAt () {
-
-        return this.createdAt;
-    }
-
-    public void setCreatedAt (Timestamp createdAt) {
-
-        this.createdAt = createdAt;
-    }
-
     @Override
     public boolean equals (Object o) {
 
         if (this == o) return true;
-        if (!(o instanceof ImagesEntity)) return false;
-        ImagesEntity that = (ImagesEntity) o;
+        if (!(o instanceof ImagesEntityPK)) return false;
+        ImagesEntityPK that = (ImagesEntityPK) o;
         return Objects.equals(getId(), that.getId()) &&
             Objects.equals(getExt(), that.getExt()) &&
             Objects.equals(getWidth(), that.getWidth());

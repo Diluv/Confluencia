@@ -882,25 +882,29 @@ VALUES (1, 89),
 
 ## Client
 INSERT INTO Clients(Id, ClientId, ClientName, RequireConsent, RequirePkce, RequireClientSecret, AllowOfflineAccess)
-VALUES (1, 'DILUV_WEBSITE', 'Diluv Website', FALSE, FALSE, FALSE, TRUE);
+VALUES (1, 'DILUV_WEBSITE', 'Diluv Website', FALSE, FALSE, FALSE, TRUE),
+       (2, 'DILUV_ADMIN', 'Diluv Website', FALSE, FALSE, FALSE, TRUE);
 INSERT INTO ClientGrantTypes(ClientId, GrantType)
-VALUES (1, 'authorization_code');
+VALUES (1, 'authorization_code'),
+       (2, 'authorization_code');
 INSERT INTO ClientRedirectUris(ClientId, RedirectUri)
-VALUES (1, 'http://localhost:3000/api/auth/callback/DILUV');
+VALUES (1, 'http://localhost:3000/api/auth/callback/DILUV'),
+       (2, 'http://localhost:3000/api/auth/callback/DILUV');
+
 INSERT INTO ClientScopes(ClientId, Scope)
 VALUES (1, 'openid'),
        (1, 'profile'),
-       (1, 'email');
+       (1, 'email'),
+       (2, 'openid'),
+       (2, 'profile'),
+       (2, 'email');
 
 INSERT INTO IdentityResources(Id, Name, DisplayName, Required)
-VALUES (1, 'openid', 'Your user identifier', TRUE);
+VALUES (1, 'openid', 'Your user identifier', TRUE),
+       (2, 'profile', 'User profile', TRUE);
 INSERT INTO IdentityResourceClaims(IdentityResourceId, Type)
-VALUES (1, 'sub');
-
-INSERT INTO IdentityResources(Id, Name, DisplayName, Emphasize)
-VALUES (2, 'profile', 'User profile', TRUE);
-INSERT INTO IdentityResourceClaims(IdentityResourceId, Type)
-VALUES (2, 'username'),
+VALUES (1, 'sub'),
+       (2, 'username'),
        (2, 'preferred_username'),
        (2, 'email');
 
@@ -918,8 +922,8 @@ VALUES ('d9f5bb5b-22af-4f58-bb15-f6c8a373aae9');
 INSERT INTO user_change_email (user_id, email, code)
 VALUES (4, 'newemail@diluv.com', '12345678');
 
-INSERT INTO images(url)
-VALUES ('/minecraft-je/logo.webp');
+INSERT INTO images(id, ext, width)
+VALUES ('games-minecraft-je', 'png', -1);
 
 INSERT INTO project_review(project_id, reviewed_by)
 VALUES (29, 1);
