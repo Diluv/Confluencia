@@ -906,7 +906,8 @@ INSERT INTO IdentityResourceClaims(IdentityResourceId, Type)
 VALUES (1, 'sub'),
        (2, 'username'),
        (2, 'preferred_username'),
-       (2, 'email');
+       (2, 'email'),
+       (2, 'role');
 
 INSERT INTO PersistedGrants(`Key`, Type, SubjectId, ClientId, CreationTime, Expiration, Data)
 VALUES ('w36TSM/IUyxY5P2pA1WaE3bWW8aI8YV43ne+Up2K2w4=', 'reference_token', '1', 'DILUV_WEBSITE',
