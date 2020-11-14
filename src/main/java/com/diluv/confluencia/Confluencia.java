@@ -1,9 +1,7 @@
 package com.diluv.confluencia;
 
-import java.util.List;
-import java.util.Properties;
-import java.util.function.Consumer;
-import java.util.function.Function;
+import com.diluv.confluencia.database.*;
+import com.diluv.confluencia.utils.FlywayConnectionProvider;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,15 +13,9 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
 import org.hibernate.service.ServiceRegistry;
 
-import com.diluv.confluencia.database.FileDatabase;
-import com.diluv.confluencia.database.GameDatabase;
-import com.diluv.confluencia.database.MiscDatabase;
-import com.diluv.confluencia.database.NewsDatabase;
-import com.diluv.confluencia.database.ProjectDatabase;
-import com.diluv.confluencia.database.SecurityDatabase;
-import com.diluv.confluencia.database.UserDatabase;
-import com.diluv.confluencia.utils.FlywayConnectionProvider;
-import com.github.fluent.hibernate.cfg.scanner.EntityScanner;
+import java.util.Properties;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class Confluencia {
 
@@ -53,11 +45,46 @@ public class Confluencia {
         settings.put(Environment.ENABLE_LAZY_LOAD_NO_TRANS, true);
         configuration.setProperties(settings);
 
-        List<Class<?>> classes = EntityScanner.scanPackages("com.diluv.confluencia.database.record").result();
-
-        for (Class<?> annotatedClass : classes) {
-            configuration.addAnnotatedClass(annotatedClass);
-        }
+        configuration.addAnnotatedClass(com.diluv.confluencia.database.record.ContainsUsernameBlockListEntity.class);
+        configuration.addAnnotatedClass(com.diluv.confluencia.database.record.EmailBlockListEntity.class);
+        configuration.addAnnotatedClass(com.diluv.confluencia.database.record.EmailBounceEntity.class);
+        configuration.addAnnotatedClass(com.diluv.confluencia.database.record.EmailDomainBlocklistEntity.class);
+        configuration.addAnnotatedClass(com.diluv.confluencia.database.record.EmailSentEntity.class);
+        configuration.addAnnotatedClass(com.diluv.confluencia.database.record.FeaturedGamesEntity.class);
+        configuration.addAnnotatedClass(com.diluv.confluencia.database.record.FeaturedProjectsEntity.class);
+        configuration.addAnnotatedClass(com.diluv.confluencia.database.record.GameDefaultProjectTypeEntity.class);
+        configuration.addAnnotatedClass(com.diluv.confluencia.database.record.GamesEntity.class);
+        configuration.addAnnotatedClass(com.diluv.confluencia.database.record.GameVersionsEntity.class);
+        configuration.addAnnotatedClass(com.diluv.confluencia.database.record.ImagesEntity.class);
+        configuration.addAnnotatedClass(com.diluv.confluencia.database.record.NewsEntity.class);
+        configuration.addAnnotatedClass(com.diluv.confluencia.database.record.NodeCDNCommitsEntity.class);
+        configuration.addAnnotatedClass(com.diluv.confluencia.database.record.PasswordResetEntity.class);
+        configuration.addAnnotatedClass(com.diluv.confluencia.database.record.PersistedGrantsEntity.class);
+        configuration.addAnnotatedClass(com.diluv.confluencia.database.record.ProjectAuthorPermissionsEntity.class);
+        configuration.addAnnotatedClass(com.diluv.confluencia.database.record.ProjectAuthorsEntity.class);
+        configuration.addAnnotatedClass(com.diluv.confluencia.database.record.ProjectFileAntivirusEntity.class);
+        configuration.addAnnotatedClass(com.diluv.confluencia.database.record.ProjectFileDependenciesEntity.class);
+        configuration.addAnnotatedClass(com.diluv.confluencia.database.record.ProjectFileDownloadsEntity.class);
+        configuration.addAnnotatedClass(com.diluv.confluencia.database.record.ProjectFileGameVersionsEntity.class);
+        configuration.addAnnotatedClass(com.diluv.confluencia.database.record.ProjectFileLoadersEntity.class);
+        configuration.addAnnotatedClass(com.diluv.confluencia.database.record.ProjectFilesEntity.class);
+        configuration.addAnnotatedClass(com.diluv.confluencia.database.record.ProjectLinksEntity.class);
+        configuration.addAnnotatedClass(com.diluv.confluencia.database.record.ProjectRequestChangeEntity.class);
+        configuration.addAnnotatedClass(com.diluv.confluencia.database.record.ProjectReviewEntity.class);
+        configuration.addAnnotatedClass(com.diluv.confluencia.database.record.ProjectsEntity.class);
+        configuration.addAnnotatedClass(com.diluv.confluencia.database.record.ProjectTagsEntity.class);
+        configuration.addAnnotatedClass(com.diluv.confluencia.database.record.ProjectTypeLoadersEntity.class);
+        configuration.addAnnotatedClass(com.diluv.confluencia.database.record.ProjectTypesEntity.class);
+        configuration.addAnnotatedClass(com.diluv.confluencia.database.record.RolesEntity.class);
+        configuration.addAnnotatedClass(com.diluv.confluencia.database.record.TagsEntity.class);
+        configuration.addAnnotatedClass(com.diluv.confluencia.database.record.TempUsersEntity.class);
+        configuration.addAnnotatedClass(com.diluv.confluencia.database.record.UserChangeEmail.class);
+        configuration.addAnnotatedClass(com.diluv.confluencia.database.record.UserCompromisedPasswordsEntity.class);
+        configuration.addAnnotatedClass(com.diluv.confluencia.database.record.UserMfaEmailEntity.class);
+        configuration.addAnnotatedClass(com.diluv.confluencia.database.record.UserMfaRecoveryEntity.class);
+        configuration.addAnnotatedClass(com.diluv.confluencia.database.record.UsernameBlocklistEntity.class);
+        configuration.addAnnotatedClass(com.diluv.confluencia.database.record.UserRolesEntity.class);
+        configuration.addAnnotatedClass(com.diluv.confluencia.database.record.UsersEntity.class);
 
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
             .applySettings(configuration.getProperties()).build();
