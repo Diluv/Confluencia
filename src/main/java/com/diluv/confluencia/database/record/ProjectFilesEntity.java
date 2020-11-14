@@ -70,7 +70,7 @@ public class ProjectFilesEntity {
     @OneToMany(mappedBy = "projectFile", cascade = CascadeType.ALL)
     private List<ProjectFileGameVersionsEntity> gameVersions;
 
-    @OneToMany(mappedBy = "dependencyProject", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "projectFile", cascade = CascadeType.ALL)
     private List<ProjectFileDependenciesEntity> dependencies;
 
     @OneToMany(mappedBy = "projectFile", cascade = CascadeType.ALL)
