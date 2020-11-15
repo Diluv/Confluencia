@@ -284,7 +284,7 @@ public class ProjectsEntity {
             Objects.equals(getDescription(), that.getDescription()) &&
             Objects.equals(getCreatedAt(), that.getCreatedAt()) &&
             Objects.equals(getUpdatedAt(), that.getUpdatedAt()) &&
-            Objects.equals(user, that.user) &&
+            Objects.equals(getOwner(), that.getOwner()) &&
             Objects.equals(getProjectType(), that.getProjectType()) &&
             Objects.equals(getTags(), that.getTags()) &&
             Objects.equals(getLinks(), that.getLinks()) &&

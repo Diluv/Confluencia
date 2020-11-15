@@ -3,6 +3,7 @@ package com.diluv.confluencia.database.record;
 import java.io.Serializable;
 import java.util.Objects;
 
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -10,12 +11,12 @@ import javax.persistence.ManyToOne;
 public class ProjectFileDependenciesEntityPK implements Serializable {
 
     @Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_file_id")
     private ProjectFilesEntity projectFile;
 
     @Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dependency_project_id")
     private ProjectsEntity dependencyProject;
 

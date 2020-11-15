@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
@@ -16,12 +17,12 @@ import javax.persistence.Table;
 public class ProjectFileDependenciesEntity {
 
     @Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_file_id")
     private ProjectFilesEntity projectFile;
 
     @Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dependency_project_id")
     private ProjectsEntity dependencyProject;
 
