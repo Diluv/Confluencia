@@ -15,6 +15,7 @@ import com.diluv.confluencia.database.record.ProjectFilesEntity;
 import com.diluv.confluencia.database.record.ProjectsEntity;
 import com.diluv.confluencia.database.record.UsersEntity;
 import com.diluv.confluencia.database.sort.ProjectFileSort;
+import com.diluv.confluencia.database.sort.ProjectSort;
 
 public class TestFileDatabase extends ConfluenciaTest {
 
@@ -109,6 +110,14 @@ public class TestFileDatabase extends ConfluenciaTest {
         Confluencia.getTransaction(session -> {
             Assertions.assertTrue(Confluencia.FILE.existsByProjectIdAndVersion(session, 1, "1.0.0"));
             Assertions.assertFalse(Confluencia.FILE.existsByProjectIdAndVersion(session, 1, "invalid"));
+        });
+    }
+
+    @Test
+    public void findProjectFilesByHash () {
+
+        Confluencia.getTransaction(session -> {
+            Assertions.assertEquals(8, Confluencia.FILE.findProjectFilesByHash(session, "5E96A9A98839D073C298BBD0AC73A510E1F13A64151E2C4895440ECDBCD6D483EDA994D2CD5E69C5C00A96783280F7BC1E933667B4A25C53CE3918007D5C77E3", 1, 10, ProjectSort.NEW).size());
         });
     }
 

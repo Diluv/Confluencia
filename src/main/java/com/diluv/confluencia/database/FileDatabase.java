@@ -203,4 +203,28 @@ public class FileDatabase {
 
         return session.createQuery(q).executeUpdate();
     }
+
+    public List<ProjectFilesEntity> findProjectFilesByHash (Session session, String projectFileHash, long page, int limit, Sort sort) {
+
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<ProjectFilesEntity> q = cb.createQuery(ProjectFilesEntity.class);
+        Root<ProjectFilesEntity> entity = q.from(ProjectFilesEntity.class);
+
+        ParameterExpression<String> hashParam = cb.parameter(String.class);
+
+        q.select(entity);
+        q.where(cb.equal(entity.get("sha512"), hashParam));
+        if (sort.getOrder() == Order.ASC) {
+            q.orderBy(cb.asc(entity.get(sort.getColumn())));
+        }
+        else {
+            q.orderBy(cb.desc(entity.get(sort.getColumn())));
+        }
+
+        TypedQuery<ProjectFilesEntity> query = session.createQuery(q);
+        query.setParameter(hashParam, projectFileHash);
+        query.setFirstResult((int) ((page - 1) * limit));
+        query.setMaxResults(limit);
+        return query.getResultList();
+    }
 }

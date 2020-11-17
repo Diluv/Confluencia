@@ -1,7 +1,8 @@
 package com.diluv.confluencia;
 
-import com.diluv.confluencia.database.*;
-import com.diluv.confluencia.utils.FlywayConnectionProvider;
+import java.util.Properties;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,9 +14,14 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
 import org.hibernate.service.ServiceRegistry;
 
-import java.util.Properties;
-import java.util.function.Consumer;
-import java.util.function.Function;
+import com.diluv.confluencia.database.FileDatabase;
+import com.diluv.confluencia.database.GameDatabase;
+import com.diluv.confluencia.database.MiscDatabase;
+import com.diluv.confluencia.database.NewsDatabase;
+import com.diluv.confluencia.database.ProjectDatabase;
+import com.diluv.confluencia.database.SecurityDatabase;
+import com.diluv.confluencia.database.UserDatabase;
+import com.diluv.confluencia.utils.FlywayConnectionProvider;
 
 public class Confluencia {
 

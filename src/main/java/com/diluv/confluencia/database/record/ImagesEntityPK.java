@@ -1,10 +1,10 @@
 package com.diluv.confluencia.database.record;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-
 import java.io.Serializable;
 import java.util.Objects;
+
+import javax.persistence.Column;
+import javax.persistence.Id;
 
 public class ImagesEntityPK implements Serializable {
 

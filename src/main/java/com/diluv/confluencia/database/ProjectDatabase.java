@@ -352,39 +352,6 @@ public class ProjectDatabase {
         return query.getResultList();
     }
 
-    public List<ProjectsEntity> findProjectsByProjectFileHash (Session session, String projectFileHash, long page, int limit, Sort sort) {
-
-        CriteriaBuilder cb = session.getCriteriaBuilder();
-        CriteriaQuery<ProjectsEntity> q = cb.createQuery(ProjectsEntity.class);
-        Root<ProjectsEntity> entity = q.from(ProjectsEntity.class);
-
-        ParameterExpression<String> hashParam = cb.parameter(String.class);
-
-        q.select(entity);
-        List<Predicate> predicates = new ArrayList<>();
-
-        Subquery<ProjectsEntity> projectSubQuery = q.subquery(ProjectsEntity.class);
-        Root<ProjectFilesEntity> entityProjectFiles = projectSubQuery.from(ProjectFilesEntity.class);
-
-        projectSubQuery.select(entityProjectFiles.get("project"));
-        projectSubQuery.where(cb.equal(entityProjectFiles.get("sha512"), hashParam));
-        predicates.add(cb.in(entity).value(projectSubQuery));
-
-        q.where(cb.and(predicates.toArray(new Predicate[0])));
-        if (sort.getOrder() == Order.ASC) {
-            q.orderBy(cb.asc(entity.get(sort.getColumn())));
-        }
-        else {
-            q.orderBy(cb.desc(entity.get(sort.getColumn())));
-        }
-
-        TypedQuery<ProjectsEntity> query = session.createQuery(q);
-        query.setParameter(hashParam, projectFileHash);
-        query.setFirstResult((int) ((page - 1) * limit));
-        query.setMaxResults(limit);
-        return query.getResultList();
-    }
-
     public List<TagsEntity> findAllTagsByGameSlugAndProjectTypeSlug (Session session, ProjectTypesEntity projectType) {
 
         CriteriaBuilder cb = session.getCriteriaBuilder();
