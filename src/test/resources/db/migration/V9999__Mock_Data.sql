@@ -280,7 +280,7 @@ This project is sponsored by Nodecraft! Use code Darkhax for 30% off your first 
         'An open source resource and data loader for Minecraft.', 0, FALSE, TRUE,
         FROM_UNIXTIME(1576035011), FROM_UNIXTIME(1580592340), 1, 'minecraft-je', 'mods'),
        ('Nightmares', 'nightmares',
-        'Adds nightmares and nightmare mobs', 'Adds nightmares and nightmare mobs', 0, FALSE, TRUE,
+        'Adds nightmares and nightmare mobs', 'Adds nightmares and nightmare mobs', 0, FALSE, FALSE,
         FROM_UNIXTIME(1507134742), FROM_UNIXTIME(1582146181), 1, 'minecraft-je', 'mods'),
        ('Better Burning', 'better-burning',
         'Improves the burning and fire mechanics of Minecraft.',
@@ -861,7 +861,10 @@ VALUES (10, '1.0.0', 'forge_mod.jar', 100, 'Project file changelog',
         'release', 'binary', 0, FALSE, 1, 1),
        (17, '1.0.7', 'non_existing_file.txt', 1000, 'Changing',
         '5E96A9A98839D073C298BBD0AC73A510E1F13A64151E2C4895440ECDBCD6D483EDA994D2CD5E69C5C00A96783280F7BC1E933667B4A25C53CE3918007D5C77E3',
-        'release', 'binary', 2, TRUE, 17, 1);
+        'release', 'binary', 2, TRUE, 17, 1),
+       (18, '1.0.8', 'zip_archive.zip', 1000, 'Changing',
+        '5E96A9A98839D073C298BBD0AC73A510E1F13A64151E2C4895440ECDBCD6D483EDA994D2CD5E69C5C00A96783280F7BC1E933667B4A25C53CE3918007D5C77E3',
+        'release', 'binary', 0, FALSE, 16, 1);
 
 INSERT INTO project_file_dependencies(project_file_id, dependency_project_id)
 VALUES (1, 2),

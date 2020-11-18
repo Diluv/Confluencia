@@ -20,7 +20,7 @@ public class TestProjectDatabase extends ConfluenciaTest {
     public void countAllProjectsBySlug () {
 
         Confluencia.getTransaction(session -> {
-            Assertions.assertEquals(128, Confluencia.PROJECT.countAllByGameSlug(session, "minecraft-je"));
+            Assertions.assertEquals(127, Confluencia.PROJECT.countAllByGameSlug(session, "minecraft-je"));
         });
     }
 
@@ -70,7 +70,7 @@ public class TestProjectDatabase extends ConfluenciaTest {
 
         Confluencia.getTransaction(session -> {
             Assertions.assertEquals(0, Confluencia.PROJECT.countAllByUsername(session, "invalid", false));
-            Assertions.assertEquals(83, Confluencia.PROJECT.countAllByUsername(session, "darkhax", false));
+            Assertions.assertEquals(82, Confluencia.PROJECT.countAllByUsername(session, "darkhax", false));
             Assertions.assertEquals(51, Confluencia.PROJECT.countAllByUsername(session, "jaredlll08", false));
         });
     }
@@ -80,7 +80,7 @@ public class TestProjectDatabase extends ConfluenciaTest {
 
         Confluencia.getTransaction(session -> {
             Assertions.assertEquals(0, Confluencia.PROJECT.findAllByUsername(session, "invalid", false, 1, 200, ProjectSort.NEW).size());
-            Assertions.assertEquals(83, Confluencia.PROJECT.findAllByUsername(session, "darkhax", false, 1, 200, ProjectSort.NEW).size());
+            Assertions.assertEquals(82, Confluencia.PROJECT.findAllByUsername(session, "darkhax", false, 1, 200, ProjectSort.NEW).size());
             Assertions.assertEquals(51, Confluencia.PROJECT.findAllByUsername(session, "jaredlll08", false, 1, 200, ProjectSort.NEW).size());
         });
     }

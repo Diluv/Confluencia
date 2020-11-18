@@ -1,29 +1,19 @@
 package com.diluv.confluencia.database;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.LockModeType;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.CriteriaUpdate;
-import javax.persistence.criteria.ParameterExpression;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-
-import org.hibernate.Session;
-
-import com.diluv.confluencia.database.record.FileProcessingStatus;
-import com.diluv.confluencia.database.record.GameVersionsEntity;
-import com.diluv.confluencia.database.record.GamesEntity;
-import com.diluv.confluencia.database.record.ProjectFileGameVersionsEntity;
-import com.diluv.confluencia.database.record.ProjectFilesEntity;
-import com.diluv.confluencia.database.record.ProjectsEntity;
+import com.diluv.confluencia.database.record.*;
 import com.diluv.confluencia.database.sort.Order;
 import com.diluv.confluencia.database.sort.Sort;
 import com.diluv.confluencia.utils.DatabaseUtil;
+
+import org.hibernate.Session;
+
+import javax.persistence.LockModeType;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.*;
+
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FileDatabase {
 
@@ -62,10 +52,16 @@ public class FileDatabase {
 
         ParameterExpression<FileProcessingStatus> s = cb.parameter(FileProcessingStatus.class);
 
+        Subquery<ProjectsEntity> projectSubquery = q.subquery(ProjectsEntity.class);
+        Root<ProjectsEntity> project = projectSubquery.from(ProjectsEntity.class);
+        projectSubquery.select(project.get("id"));
+        projectSubquery.where(cb.isTrue(project.get("released")));
+
         q.select(entity);
         q.where(cb.and(
             cb.equal(entity.get("processingStatus"), s),
-            cb.isFalse(entity.get("released")))
+            cb.isFalse(entity.get("released"))),
+            cb.in(entity.get("project")).value(projectSubquery)
         );
         q.orderBy(cb.asc(entity.get("createdAt")));
 
@@ -83,8 +79,16 @@ public class FileDatabase {
 
         ParameterExpression<FileProcessingStatus> s = cb.parameter(FileProcessingStatus.class);
 
+        Subquery<ProjectsEntity> projectSubquery = q.subquery(ProjectsEntity.class);
+        Root<ProjectsEntity> project = projectSubquery.from(ProjectsEntity.class);
+        projectSubquery.select(project.get("id"));
+        projectSubquery.where(cb.isTrue(project.get("released")));
+
         q.select(entity);
-        q.where(cb.equal(entity.get("processingStatus"), s));
+        q.where(cb.and(
+            cb.equal(entity.get("processingStatus"), s),
+            cb.in(entity.get("project")).value(projectSubquery)
+        ));
         q.orderBy(cb.asc(entity.get("createdAt")));
 
         TypedQuery<ProjectFilesEntity> query = session.createQuery(q);
@@ -213,7 +217,10 @@ public class FileDatabase {
         ParameterExpression<String> hashParam = cb.parameter(String.class);
 
         q.select(entity);
-        q.where(cb.equal(entity.get("sha512"), hashParam));
+        q.where(cb.and(
+            cb.equal(entity.get("sha512"), hashParam),
+            cb.isTrue(entity.get("released"))
+        ));
         if (sort.getOrder() == Order.ASC) {
             q.orderBy(cb.asc(entity.get(sort.getColumn())));
         }
