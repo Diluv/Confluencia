@@ -1,6 +1,8 @@
 package com.diluv.confluencia.database;
 
+import java.sql.Timestamp;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
@@ -14,6 +16,7 @@ import org.hibernate.Session;
 
 import com.diluv.confluencia.database.record.TempUsersEntity;
 import com.diluv.confluencia.database.record.UserChangeEmail;
+import com.diluv.confluencia.database.record.UserMfaEmailEntity;
 import com.diluv.confluencia.database.record.UserMfaRecoveryEntity;
 import com.diluv.confluencia.database.record.UsersEntity;
 import com.diluv.confluencia.utils.DatabaseUtil;
@@ -164,5 +167,46 @@ public class UserDatabase {
 
         Query query = session.createQuery(q);
         return query.executeUpdate() >= 0;
+    }
+
+    public UserMfaRecoveryEntity findUserMFARecovery (Session session, UsersEntity user, String code) {
+
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<UserMfaRecoveryEntity> q = cb.createQuery(UserMfaRecoveryEntity.class);
+        Root<UserMfaRecoveryEntity> entity = q.from(UserMfaRecoveryEntity.class);
+        ParameterExpression<UsersEntity> userParam = cb.parameter(UsersEntity.class);
+        ParameterExpression<String> codeParam = cb.parameter(String.class);
+        q.select(entity);
+        q.where(cb.and(
+            cb.equal(entity.get("user"), userParam),
+            cb.equal(entity.get("code"), codeParam),
+            cb.isTrue(entity.get("valid"))
+        ));
+
+        TypedQuery<UserMfaRecoveryEntity> query = session.createQuery(q);
+        query.setMaxResults(1);
+        query.setParameter(userParam, user);
+        query.setParameter(codeParam, code);
+        return DatabaseUtil.findOne(query.getResultList());
+    }
+
+    public UserMfaEmailEntity findUserMFAEmail (Session session, UsersEntity user, String code) {
+
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<UserMfaEmailEntity> q = cb.createQuery(UserMfaEmailEntity.class);
+        Root<UserMfaEmailEntity> entity = q.from(UserMfaEmailEntity.class);
+        ParameterExpression<UsersEntity> userParam = cb.parameter(UsersEntity.class);
+        ParameterExpression<String> codeParam = cb.parameter(String.class);
+        q.select(entity);
+        q.where(cb.and(
+            cb.equal(entity.get("user"), userParam),
+            cb.equal(entity.get("code"), codeParam)
+        ));
+
+        TypedQuery<UserMfaEmailEntity> query = session.createQuery(q);
+        query.setMaxResults(1);
+        query.setParameter(userParam, user);
+        query.setParameter(codeParam, code);
+        return DatabaseUtil.findOne(query.getResultList());
     }
 }

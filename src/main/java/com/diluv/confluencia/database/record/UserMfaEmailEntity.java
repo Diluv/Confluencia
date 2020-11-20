@@ -1,5 +1,7 @@
 package com.diluv.confluencia.database.record;
 
+import org.hibernate.annotations.DynamicInsert;
+
 import java.sql.Timestamp;
 import java.util.Objects;
 
@@ -12,6 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
+@DynamicInsert
 @Table(name = "user_mfa_email")
 @IdClass(UserMfaEmailEntityPK.class)
 public class UserMfaEmailEntity {
