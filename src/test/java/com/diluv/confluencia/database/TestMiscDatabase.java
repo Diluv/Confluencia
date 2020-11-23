@@ -11,6 +11,14 @@ import com.diluv.confluencia.ConfluenciaTest;
 public class TestMiscDatabase extends ConfluenciaTest {
 
     @Test
+    public void existsImagesForRelease () {
+
+        Confluencia.getTransaction(session -> {
+            Assertions.assertTrue(Confluencia.MISC.existsImagesForRelease(session));
+        });
+    }
+
+    @Test
     public void updateAllImagesForRelease () {
 
         Confluencia.getTransaction(session -> {

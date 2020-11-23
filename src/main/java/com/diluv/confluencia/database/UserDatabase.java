@@ -1,8 +1,6 @@
 package com.diluv.confluencia.database;
 
-import java.sql.Timestamp;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
@@ -226,6 +224,7 @@ public class UserDatabase {
     }
 
     public TempUsersEntity findTempUserByUsername (Session session, String username) {
+
         CriteriaBuilder cb = session.getCriteriaBuilder();
         CriteriaQuery<TempUsersEntity> q = cb.createQuery(TempUsersEntity.class);
 
@@ -241,6 +240,7 @@ public class UserDatabase {
     }
 
     public TempUsersEntity findTempUserByEmail (Session session, String email) {
+
         CriteriaBuilder cb = session.getCriteriaBuilder();
         CriteriaQuery<TempUsersEntity> q = cb.createQuery(TempUsersEntity.class);
 

@@ -30,6 +30,16 @@ public class TestUserDatabase extends ConfluenciaTest {
     }
 
     @Test
+    public void findOneByEmail () {
+
+        Confluencia.getTransaction(session -> {
+            Assertions.assertNull(Confluencia.USER.findOneByEmail(session, "invalid"));
+            Assertions.assertNotNull(Confluencia.USER.findOneByEmail(session, "darkhax@diluv.com"));
+            Assertions.assertNotNull(Confluencia.USER.findOneByEmail(session, "jaredlll08@diluv.com"));
+        });
+    }
+
+    @Test
     public void findOneByUserId () {
 
         Confluencia.getTransaction(session -> {
@@ -118,6 +128,24 @@ public class TestUserDatabase extends ConfluenciaTest {
             session.save(userEmail);
 
             Assertions.assertTrue(Confluencia.USER.existUserChangeEmailByEmail(session, "newnew@diluv.com"));
+        });
+    }
+
+    @Test
+    public void findTempUserByUsername () {
+
+        Confluencia.getTransaction(session -> {
+            Assertions.assertNull(Confluencia.USER.findTempUserByUsername(session, "invalid"));
+            Assertions.assertNotNull(Confluencia.USER.findTempUserByUsername(session, "tempuser2"));
+        });
+    }
+
+    @Test
+    public void findTempUserByEmail () {
+
+        Confluencia.getTransaction(session -> {
+            Assertions.assertNull(Confluencia.USER.findTempUserByEmail(session, "invalid"));
+            Assertions.assertNotNull(Confluencia.USER.findTempUserByEmail(session, "tempuser3@diluv.com"));
         });
     }
 }
