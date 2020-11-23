@@ -35,6 +35,22 @@ public class UserDatabase {
         return DatabaseUtil.findOne(query.getResultList(), 0L);
     }
 
+    public UsersEntity findOneByEmail (Session session, String email) {
+
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<UsersEntity> q = cb.createQuery(UsersEntity.class);
+
+        ParameterExpression<String> emailParam = cb.parameter(String.class);
+
+        Root<UsersEntity> entity = q.from(UsersEntity.class);
+        q.select(entity);
+        q.where(cb.equal(entity.get("email"), emailParam));
+
+        TypedQuery<UsersEntity> query = session.createQuery(q);
+        query.setParameter(emailParam, email);
+        return DatabaseUtil.findOne(query.getResultList());
+    }
+
     public UsersEntity findOneByUsername (Session session, String username) {
 
         CriteriaBuilder cb = session.getCriteriaBuilder();
@@ -65,7 +81,6 @@ public class UserDatabase {
         TypedQuery<UsersEntity> query = session.createQuery(q);
         query.setParameter(userParam, userId);
         return DatabaseUtil.findOne(query.getResultList());
-
     }
 
     public boolean deleteUserMFARecovery (Session session, UsersEntity user) {
@@ -207,6 +222,36 @@ public class UserDatabase {
         query.setMaxResults(1);
         query.setParameter(userParam, user);
         query.setParameter(codeParam, code);
+        return DatabaseUtil.findOne(query.getResultList());
+    }
+
+    public TempUsersEntity findTempUserByUsername (Session session, String username) {
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<TempUsersEntity> q = cb.createQuery(TempUsersEntity.class);
+
+        ParameterExpression<String> userParam = cb.parameter(String.class);
+
+        Root<TempUsersEntity> entity = q.from(TempUsersEntity.class);
+        q.select(entity);
+        q.where(cb.equal(entity.get("username"), userParam));
+
+        TypedQuery<TempUsersEntity> query = session.createQuery(q);
+        query.setParameter(userParam, username);
+        return DatabaseUtil.findOne(query.getResultList());
+    }
+
+    public TempUsersEntity findTempUserByEmail (Session session, String email) {
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<TempUsersEntity> q = cb.createQuery(TempUsersEntity.class);
+
+        ParameterExpression<String> emailParam = cb.parameter(String.class);
+
+        Root<TempUsersEntity> entity = q.from(TempUsersEntity.class);
+        q.select(entity);
+        q.where(cb.equal(entity.get("email"), emailParam));
+
+        TypedQuery<TempUsersEntity> query = session.createQuery(q);
+        query.setParameter(emailParam, email);
         return DatabaseUtil.findOne(query.getResultList());
     }
 }
