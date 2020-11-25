@@ -9,26 +9,24 @@ import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 
 import com.diluv.confluencia.database.record.NodeCDNCommitsEntity;
-import com.diluv.confluencia.database.record.PersistedGrantsEntity;
+import com.diluv.confluencia.database.record.APITokensEntity;
 import com.diluv.confluencia.utils.DatabaseUtil;
 
 public class SecurityDatabase {
 
-    public PersistedGrantsEntity findPersistedGrantByKeyAndType (Session session, String key, String type) {
+    public APITokensEntity findAPITokensByToken (Session session, String token) {
 
         CriteriaBuilder cb = session.getCriteriaBuilder();
-        CriteriaQuery<PersistedGrantsEntity> q = cb.createQuery(PersistedGrantsEntity.class);
+        CriteriaQuery<APITokensEntity> q = cb.createQuery(APITokensEntity.class);
 
-        ParameterExpression<String> keyParam = cb.parameter(String.class);
-        ParameterExpression<String> typeParam = cb.parameter(String.class);
+        ParameterExpression<String> tokenParam = cb.parameter(String.class);
 
-        Root<PersistedGrantsEntity> entity = q.from(PersistedGrantsEntity.class);
+        Root<APITokensEntity> entity = q.from(APITokensEntity.class);
         q.select(entity);
-        q.where(cb.and(cb.equal(entity.get("key"), keyParam), cb.equal(entity.get("type"), typeParam)));
+        q.where(cb.equal(entity.get("token"), tokenParam));
 
-        TypedQuery<PersistedGrantsEntity> query = session.createQuery(q);
-        query.setParameter(keyParam, key);
-        query.setParameter(typeParam, type);
+        TypedQuery<APITokensEntity> query = session.createQuery(q);
+        query.setParameter(tokenParam, token);
         return DatabaseUtil.findOne(query.getResultList());
     }
 

@@ -4,6 +4,7 @@ import java.util.Properties;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import com.diluv.confluencia.database.record.APITokensEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
@@ -65,7 +66,7 @@ public class Confluencia {
         configuration.addAnnotatedClass(com.diluv.confluencia.database.record.NewsEntity.class);
         configuration.addAnnotatedClass(com.diluv.confluencia.database.record.NodeCDNCommitsEntity.class);
         configuration.addAnnotatedClass(com.diluv.confluencia.database.record.PasswordResetEntity.class);
-        configuration.addAnnotatedClass(com.diluv.confluencia.database.record.PersistedGrantsEntity.class);
+        configuration.addAnnotatedClass(APITokensEntity.class);
         configuration.addAnnotatedClass(com.diluv.confluencia.database.record.ProjectAuthorPermissionsEntity.class);
         configuration.addAnnotatedClass(com.diluv.confluencia.database.record.ProjectAuthorsEntity.class);
         configuration.addAnnotatedClass(com.diluv.confluencia.database.record.ProjectFileAntivirusEntity.class);

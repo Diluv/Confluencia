@@ -12,12 +12,12 @@ import com.diluv.confluencia.database.record.NodeCDNCommitsEntity;
 public class TestSecurityDatabase extends ConfluenciaTest {
 
     @Test
-    public void findPersistedGrantByKeyAndType () {
+    public void findAPITokensByToken () {
 
         Confluencia.getTransaction(session -> {
-            Assertions.assertNull(Confluencia.SECURITY.findPersistedGrantByKeyAndType(session, "invalid", "invalid"));
-            Assertions.assertNull(Confluencia.SECURITY.findPersistedGrantByKeyAndType(session, "w36TSM/IUyxY5P2pA1WaE3bWW8aI8YV43ne+Up2K2w4=", "invalid"));
-            Assertions.assertNotNull(Confluencia.SECURITY.findPersistedGrantByKeyAndType(session, "w36TSM/IUyxY5P2pA1WaE3bWW8aI8YV43ne+Up2K2w4=", "reference_token"));
+            Assertions.assertNull(Confluencia.SECURITY.findAPITokensByToken(session, "invalid"));
+            Assertions.assertNotNull(Confluencia.SECURITY.findAPITokensByToken(session, "91e048664cf660bf7005b4002bece81b5099888fa8771654621fdfbf5702ceba4e7c447c301b11bdd64b19016ac4c57aca1b77cde97fbc016f74a2235293b9e3"));
+            Assertions.assertNotNull(Confluencia.SECURITY.findAPITokensByToken(session, "50c42db342f7f7d403fce41c79fb4010fb2cc4fb9d061914c5836ae5af432eed0f1aa468cc363509b7b931c28687c215df835a6cfc9fdded5ec828a614a11be8"));
         });
     }
 
