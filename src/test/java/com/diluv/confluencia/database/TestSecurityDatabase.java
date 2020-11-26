@@ -59,4 +59,44 @@ public class TestSecurityDatabase extends ConfluenciaTest {
             Assertions.assertNull(e2);
         });
     }
+
+    @Test
+    public void existsUsernameBlockList () {
+
+        Confluencia.getTransaction(session -> {
+            Assertions.assertFalse(Confluencia.SECURITY.existsUsernameBlockList(session, "valid"));
+            Assertions.assertTrue(Confluencia.SECURITY.existsUsernameBlockList(session, "blocked"));
+        });
+    }
+
+    @Test
+    public void existsContainsUsernameBlockList () {
+
+        Confluencia.getTransaction(session -> {
+            Assertions.assertFalse(Confluencia.SECURITY.existsContainsUsernameBlockList(session, "adminaccount"));
+            Assertions.assertTrue(Confluencia.SECURITY.existsContainsUsernameBlockList(session, "admindiluvaccount"));
+            Assertions.assertTrue(Confluencia.SECURITY.existsContainsUsernameBlockList(session, "admindiluv"));
+            Assertions.assertTrue(Confluencia.SECURITY.existsContainsUsernameBlockList(session, "diluvaccount"));
+            Assertions.assertTrue(Confluencia.SECURITY.existsContainsUsernameBlockList(session, "diluvstaff"));
+        });
+    }
+
+    @Test
+    public void existsEmailDomainBlockList () {
+
+        Confluencia.getTransaction(session -> {
+            Assertions.assertFalse(Confluencia.SECURITY.existsEmailDomainBlockList(session, "diluv.com"));
+            Assertions.assertTrue(Confluencia.SECURITY.existsEmailDomainBlockList(session, "banned.com"));
+            Assertions.assertTrue(Confluencia.SECURITY.existsEmailDomainBlockList(session, "banned2.com"));
+        });
+    }
+
+    @Test
+    public void existsEmailBlockList () {
+
+        Confluencia.getTransaction(session -> {
+            Assertions.assertFalse(Confluencia.SECURITY.existsEmailBlockList(session, "email@diluv.com"));
+            Assertions.assertTrue(Confluencia.SECURITY.existsEmailBlockList(session, "blocked@diluv.com"));
+        });
+    }
 }

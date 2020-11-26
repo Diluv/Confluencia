@@ -4,7 +4,6 @@ import java.util.Properties;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import com.diluv.confluencia.database.record.APITokensEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
@@ -22,6 +21,7 @@ import com.diluv.confluencia.database.NewsDatabase;
 import com.diluv.confluencia.database.ProjectDatabase;
 import com.diluv.confluencia.database.SecurityDatabase;
 import com.diluv.confluencia.database.UserDatabase;
+import com.diluv.confluencia.database.record.APITokensEntity;
 import com.diluv.confluencia.utils.FlywayConnectionProvider;
 
 public class Confluencia {
