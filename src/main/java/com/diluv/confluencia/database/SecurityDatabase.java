@@ -8,27 +8,29 @@ import javax.persistence.criteria.Root;
 
 import org.hibernate.Session;
 
+import com.diluv.confluencia.database.record.APITokensEntity;
+import com.diluv.confluencia.database.record.ContainsUsernameBlockListEntity;
+import com.diluv.confluencia.database.record.EmailBlockListEntity;
+import com.diluv.confluencia.database.record.EmailDomainBlocklistEntity;
 import com.diluv.confluencia.database.record.NodeCDNCommitsEntity;
-import com.diluv.confluencia.database.record.PersistedGrantsEntity;
+import com.diluv.confluencia.database.record.UsernameBlocklistEntity;
 import com.diluv.confluencia.utils.DatabaseUtil;
 
 public class SecurityDatabase {
 
-    public PersistedGrantsEntity findPersistedGrantByKeyAndType (Session session, String key, String type) {
+    public APITokensEntity findAPITokensByToken (Session session, String token) {
 
         CriteriaBuilder cb = session.getCriteriaBuilder();
-        CriteriaQuery<PersistedGrantsEntity> q = cb.createQuery(PersistedGrantsEntity.class);
+        CriteriaQuery<APITokensEntity> q = cb.createQuery(APITokensEntity.class);
 
-        ParameterExpression<String> keyParam = cb.parameter(String.class);
-        ParameterExpression<String> typeParam = cb.parameter(String.class);
+        ParameterExpression<String> tokenParam = cb.parameter(String.class);
 
-        Root<PersistedGrantsEntity> entity = q.from(PersistedGrantsEntity.class);
+        Root<APITokensEntity> entity = q.from(APITokensEntity.class);
         q.select(entity);
-        q.where(cb.and(cb.equal(entity.get("key"), keyParam), cb.equal(entity.get("type"), typeParam)));
+        q.where(cb.equal(entity.get("token"), tokenParam));
 
-        TypedQuery<PersistedGrantsEntity> query = session.createQuery(q);
-        query.setParameter(keyParam, key);
-        query.setParameter(typeParam, type);
+        TypedQuery<APITokensEntity> query = session.createQuery(q);
+        query.setParameter(tokenParam, token);
         return DatabaseUtil.findOne(query.getResultList());
     }
 
@@ -63,5 +65,73 @@ public class SecurityDatabase {
         TypedQuery<NodeCDNCommitsEntity> query = session.createQuery(q);
         query.setMaxResults(1);
         return DatabaseUtil.findOne(query.getResultList());
+    }
+
+    public boolean existsUsernameBlockList (Session session, String username) {
+
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+
+        CriteriaQuery<UsernameBlocklistEntity> q = cb.createQuery(UsernameBlocklistEntity.class);
+        ParameterExpression<String> userParam = cb.parameter(String.class);
+
+        Root<UsernameBlocklistEntity> entity = q.from(UsernameBlocklistEntity.class);
+        q.select(entity);
+        q.where(cb.equal(entity.get("username"), userParam));
+
+        TypedQuery<UsernameBlocklistEntity> query = session.createQuery(q);
+        query.setMaxResults(1);
+        query.setParameter(userParam, username);
+        return DatabaseUtil.findOne(query.getResultList()) != null;
+    }
+
+    public boolean existsContainsUsernameBlockList (Session session, String username) {
+
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+
+        CriteriaQuery<ContainsUsernameBlockListEntity> q = cb.createQuery(ContainsUsernameBlockListEntity.class);
+        ParameterExpression<String> userParam = cb.parameter(String.class);
+
+        Root<ContainsUsernameBlockListEntity> entity = q.from(ContainsUsernameBlockListEntity.class);
+        q.select(entity);
+        q.where(cb.like(userParam, cb.concat("%", cb.concat(entity.get("username"), "%"))));
+
+        TypedQuery<ContainsUsernameBlockListEntity> query = session.createQuery(q);
+        query.setMaxResults(1);
+        query.setParameter(userParam, username);
+        return DatabaseUtil.findOne(query.getResultList()) != null;
+    }
+
+    public boolean existsEmailDomainBlockList (Session session, String domain) {
+
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+
+        CriteriaQuery<EmailDomainBlocklistEntity> q = cb.createQuery(EmailDomainBlocklistEntity.class);
+        ParameterExpression<String> domainParam = cb.parameter(String.class);
+
+        Root<EmailDomainBlocklistEntity> entity = q.from(EmailDomainBlocklistEntity.class);
+        q.select(entity);
+        q.where(cb.equal(entity.get("domain"), domainParam));
+
+        TypedQuery<EmailDomainBlocklistEntity> query = session.createQuery(q);
+        query.setMaxResults(1);
+        query.setParameter(domainParam, domain);
+        return DatabaseUtil.findOne(query.getResultList()) != null;
+    }
+
+    public boolean existsEmailBlockList (Session session, String email) {
+
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+
+        CriteriaQuery<EmailBlockListEntity> q = cb.createQuery(EmailBlockListEntity.class);
+        ParameterExpression<String> emailParam = cb.parameter(String.class);
+
+        Root<EmailBlockListEntity> entity = q.from(EmailBlockListEntity.class);
+        q.select(entity);
+        q.where(cb.equal(entity.get("email"), emailParam));
+
+        TypedQuery<EmailBlockListEntity> query = session.createQuery(q);
+        query.setMaxResults(1);
+        query.setParameter(emailParam, email);
+        return DatabaseUtil.findOne(query.getResultList()) != null;
     }
 }

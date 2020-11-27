@@ -1,13 +1,13 @@
 package com.diluv.confluencia.database;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import com.diluv.confluencia.Confluencia;
 import com.diluv.confluencia.ConfluenciaTest;
 import com.diluv.confluencia.database.record.UserChangeEmail;
 import com.diluv.confluencia.database.record.UserMfaRecoveryEntity;
 import com.diluv.confluencia.database.record.UsersEntity;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class TestUserDatabase extends ConfluenciaTest {
 
@@ -128,6 +128,33 @@ public class TestUserDatabase extends ConfluenciaTest {
             session.save(userEmail);
 
             Assertions.assertTrue(Confluencia.USER.existUserChangeEmailByEmail(session, "newnew@diluv.com"));
+        });
+    }
+
+    @Test
+    public void deleteUserChangeEmail () {
+
+        Confluencia.getTransaction(session -> {
+            Assertions.assertTrue(Confluencia.USER.deleteUserChangeEmail(session, new UsersEntity(1)));
+            Assertions.assertTrue(Confluencia.USER.deleteUserChangeEmail(session, new UsersEntity(3)));
+        });
+    }
+
+    @Test
+    public void findUserMFARecovery () {
+
+        Confluencia.getTransaction(session -> {
+            Assertions.assertNull(Confluencia.USER.findUserMFARecovery(session, new UsersEntity(1), "22222222"));
+            Assertions.assertNotNull(Confluencia.USER.findUserMFARecovery(session, new UsersEntity(4), "99999999"));
+        });
+    }
+
+    @Test
+    public void findUserMFAEmail () {
+
+        Confluencia.getTransaction(session -> {
+            Assertions.assertNull(Confluencia.USER.findUserMFAEmail(session, new UsersEntity(1), "22222222"));
+            Assertions.assertNotNull(Confluencia.USER.findUserMFAEmail(session, new UsersEntity(2), "22222222"));
         });
     }
 

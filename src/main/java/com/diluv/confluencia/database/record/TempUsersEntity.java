@@ -22,9 +22,6 @@ public class TempUsersEntity {
     @Column(name = "username")
     private String username;
 
-    @Column(name = "display_name")
-    private String displayName;
-
     @Column(name = "email")
     private String email;
 
@@ -36,9 +33,6 @@ public class TempUsersEntity {
 
     @Column(name = "created_at")
     private Timestamp createdAt;
-
-    @Column(name = "code")
-    private String code;
 
     public long getId () {
 
@@ -58,16 +52,6 @@ public class TempUsersEntity {
     public void setUsername (String username) {
 
         this.username = username;
-    }
-
-    public String getDisplayName () {
-
-        return this.displayName;
-    }
-
-    public void setDisplayName (String displayName) {
-
-        this.displayName = displayName;
     }
 
     public String getEmail () {
@@ -110,16 +94,6 @@ public class TempUsersEntity {
         this.createdAt = createdAt;
     }
 
-    public String getCode () {
-
-        return this.code;
-    }
-
-    public void setCode (String code) {
-
-        this.code = code;
-    }
-
     @Override
     public boolean equals (Object o) {
 
@@ -128,17 +102,15 @@ public class TempUsersEntity {
         TempUsersEntity that = (TempUsersEntity) o;
         return getId() == that.getId() &&
             Objects.equals(getUsername(), that.getUsername()) &&
-            Objects.equals(getDisplayName(), that.getDisplayName()) &&
             Objects.equals(getEmail(), that.getEmail()) &&
             Objects.equals(getPassword(), that.getPassword()) &&
             Objects.equals(getPasswordType(), that.getPasswordType()) &&
-            Objects.equals(getCreatedAt(), that.getCreatedAt()) &&
-            Objects.equals(getCode(), that.getCode());
+            Objects.equals(getCreatedAt(), that.getCreatedAt());
     }
 
     @Override
     public int hashCode () {
 
-        return Objects.hash(getId(), getUsername(), getDisplayName(), getEmail(), getPassword(), getPasswordType(), getCreatedAt(), getCode());
+        return Objects.hash(getId(), getUsername(), getEmail(), getPassword(), getPasswordType(), getCreatedAt());
     }
 }

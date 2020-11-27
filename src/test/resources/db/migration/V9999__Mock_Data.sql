@@ -172,16 +172,22 @@ VALUES (1, 'darkhax', 'Darkhax', 'darkhax@diluv.com',
        (4, 'noprojects', 'noprojects', 'abc@diluv.com',
         '$2y$12$Y09/RQkc7icbiOonlBqTeegjtk9VYPKamMTJqkFVtfKDawRwifc8i', 'bcrypt', FALSE, NULL, NOW());
 
-INSERT INTO user_mfa_recovery(user_id, code)
-VALUES (3, '22222222'),
-       (3, '33333333');
+INSERT INTO user_mfa_recovery(user_id, code, valid)
+VALUES (3, '22222222', TRUE),
+       (3, '33333333', TRUE),
+       (4, '99999999', TRUE);
+
+INSERT INTO user_mfa_email(user_id, code)
+VALUES (2, '22222222'),
+       (2, '33333333');
+
 INSERT INTO user_roles(user_id, role_id)
 VALUES (2, 1);
 
-INSERT INTO temp_users(id, username, display_name, email, password, password_type, created_at, code)
-VALUES (1, 'tempuser', 'TestUser', 'tempuser@diluv.com', '', '', NOW(), '26757111'),
-       (2, 'tempuser2', 'TempUSER2', 'tempuser2@diluv.com', '', '', NOW(), '10931681'),
-       (3, 'tempuser3', 'TEMPUSER3', 'tempuser3@diluv.com', '', '', NOW(), '51601365');
+INSERT INTO temp_users(id, username, email, password, password_type, created_at)
+VALUES (1, 'tempuser', 'tempuser@diluv.com', '', '', NOW()),
+       (2, 'tempuser2', 'tempuser2@diluv.com', '', '', NOW()),
+       (3, 'tempuser3', 'tempuser3@diluv.com', '', '', NOW());
 
 INSERT INTO projects(name, slug, summary, description, cached_downloads, review, released, created_at, updated_at,
                      user_id, game_slug, project_type_slug)
@@ -778,6 +784,12 @@ VALUES (2, 'daf1f148-effd-400e-9b65-a4bf96e5215d', NOW());
 INSERT INTO user_compromised_passwords(password_hash, occurrences)
 VALUES ('025160DEE13179BC80BB05102CE5B3CD3FE', 11);
 
+INSERT INTO username_blocklist(username)
+VALUES ('blocked');
+
+INSERT INTO contains_username_blocklist(username)
+VALUES ('diluv');
+
 INSERT INTO email_domain_blocklist(domain)
 VALUES ('banned.com'),
        ('banned2.com');
@@ -881,44 +893,11 @@ VALUES (1, 89),
        (8, 121),
        (9, 124);
 
-# IS4
-
-## Client
-INSERT INTO Clients(Id, ClientId, ClientName, RequireConsent, RequirePkce, RequireClientSecret, AllowOfflineAccess)
-VALUES (1, 'DILUV_WEBSITE', 'Diluv Website', FALSE, FALSE, FALSE, TRUE),
-       (2, 'DILUV_ADMIN', 'Diluv Website', FALSE, FALSE, FALSE, TRUE);
-INSERT INTO ClientGrantTypes(ClientId, GrantType)
-VALUES (1, 'authorization_code'),
-       (2, 'authorization_code');
-INSERT INTO ClientRedirectUris(ClientId, RedirectUri)
-VALUES (1, 'http://localhost:3000/api/auth/callback/DILUV'),
-       (2, 'http://localhost:3000/api/auth/callback/DILUV');
-
-INSERT INTO ClientScopes(ClientId, Scope)
-VALUES (1, 'openid'),
-       (1, 'profile'),
-       (1, 'email'),
-       (2, 'openid'),
-       (2, 'profile'),
-       (2, 'email');
-
-INSERT INTO IdentityResources(Id, Name, DisplayName, Required)
-VALUES (1, 'openid', 'Your user identifier', TRUE),
-       (2, 'profile', 'User profile', TRUE);
-INSERT INTO IdentityResourceClaims(IdentityResourceId, Type)
-VALUES (1, 'sub'),
-       (2, 'username'),
-       (2, 'preferred_username'),
-       (2, 'email'),
-       (2, 'role');
-
-INSERT INTO PersistedGrants(`Key`, Type, SubjectId, ClientId, CreationTime, Expiration, Data)
-VALUES ('w36TSM/IUyxY5P2pA1WaE3bWW8aI8YV43ne+Up2K2w4=', 'reference_token', '1', 'DILUV_WEBSITE',
-        NOW() - INTERVAL 1 MONTH, NOW() + INTERVAL 1 YEAR,
-        '{"Audiences":[],"Issuer":"http://localhost:5000","CreationTime":"2020-04-29T03:38:37Z","Lifetime":3600,"Type":"access_token","ClientId":"DILUV_WEBSITE","AccessTokenType":1,"Claims":[{"Type":"client_id","Value":"DILUV_WEBSITE","ValueType":"http://www.w3.org/2001/XMLSchema#string"},{"Type":"scope","Value":"openid","ValueType":"http://www.w3.org/2001/XMLSchema#string"},{"Type":"scope","Value":"profile","ValueType":"http://www.w3.org/2001/XMLSchema#string"},{"Type":"scope","Value":"offline_access","ValueType":"http://www.w3.org/2001/XMLSchema#string"},{"Type": "sub","Value":"1","ValueType":"http://www.w3.org/2001/XMLSchema#string"},{"Type":"auth_time","Value":"1587912601","ValueType":"http://www.w3.org/2001/XMLSchema#integer64"},{"Type":"idp","Value":"local","ValueType":"http://www.w3.org/2001/XMLSchema#string"},{"Type":"amr","Value":"pwd","ValueType":"http://www.w3.org/2001/XMLSchema#string"}],"Version":4}'),
-       ('u/lvMINQ0CqNfZQOaK342mxeIaRvRe3x+5pIzi3i4GE=', 'reference_token', '2', 'DILUV_WEBSITE',
-        NOW() - INTERVAL 1 MONTH, NOW() + INTERVAL 1 YEAR,
-        '{"Audiences":[],"Issuer":"http://localhost:5000","CreationTime":"2020-04-29T03:38:37Z","Lifetime":3600,"Type":"access_token","ClientId":"DILUV_WEBSITE","AccessTokenType":1,"Claims":[{"Type":"client_id","Value":"DILUV_WEBSITE","ValueType":"http://www.w3.org/2001/XMLSchema#string"},{"Type":"scope","Value":"openid","ValueType":"http://www.w3.org/2001/XMLSchema#string"},{"Type":"scope","Value":"profile","ValueType":"http://www.w3.org/2001/XMLSchema#string"},{"Type":"scope","Value":"offline_access","ValueType":"http://www.w3.org/2001/XMLSchema#string"},{"Type": "sub","Value":"2","ValueType":"http://www.w3.org/2001/XMLSchema#string"},{"Type":"auth_time","Value":"1587912601","ValueType":"http://www.w3.org/2001/XMLSchema#integer64"},{"Type":"idp","Value":"local","ValueType":"http://www.w3.org/2001/XMLSchema#string"},{"Type":"amr","Value":"pwd","ValueType":"http://www.w3.org/2001/XMLSchema#string"}],"Version":4}');
+INSERT INTO api_tokens(token, name, user_id)
+VALUES ('91e048664cf660bf7005b4002bece81b5099888fa8771654621fdfbf5702ceba4e7c447c301b11bdd64b19016ac4c57aca1b77cde97fbc016f74a2235293b9e3',
+        'Testing', 1),
+       ('50c42db342f7f7d403fce41c79fb4010fb2cc4fb9d061914c5836ae5af432eed0f1aa468cc363509b7b931c28687c215df835a6cfc9fdded5ec828a614a11be8',
+        'Testing', 2);
 
 INSERT INTO nodecdn_commits(hash)
 VALUES ('d9f5bb5b-22af-4f58-bb15-f6c8a373aae9');

@@ -21,6 +21,7 @@ import com.diluv.confluencia.database.NewsDatabase;
 import com.diluv.confluencia.database.ProjectDatabase;
 import com.diluv.confluencia.database.SecurityDatabase;
 import com.diluv.confluencia.database.UserDatabase;
+import com.diluv.confluencia.database.record.APITokensEntity;
 import com.diluv.confluencia.utils.FlywayConnectionProvider;
 
 public class Confluencia {
@@ -65,7 +66,7 @@ public class Confluencia {
         configuration.addAnnotatedClass(com.diluv.confluencia.database.record.NewsEntity.class);
         configuration.addAnnotatedClass(com.diluv.confluencia.database.record.NodeCDNCommitsEntity.class);
         configuration.addAnnotatedClass(com.diluv.confluencia.database.record.PasswordResetEntity.class);
-        configuration.addAnnotatedClass(com.diluv.confluencia.database.record.PersistedGrantsEntity.class);
+        configuration.addAnnotatedClass(APITokensEntity.class);
         configuration.addAnnotatedClass(com.diluv.confluencia.database.record.ProjectAuthorPermissionsEntity.class);
         configuration.addAnnotatedClass(com.diluv.confluencia.database.record.ProjectAuthorsEntity.class);
         configuration.addAnnotatedClass(com.diluv.confluencia.database.record.ProjectFileAntivirusEntity.class);
