@@ -1,5 +1,8 @@
 package com.diluv.confluencia.database.record;
 
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
 import java.util.Objects;
 
 import javax.persistence.Column;
@@ -13,6 +16,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
+@DynamicInsert
+@DynamicUpdate
 @Table(name = "tags")
 public class TagsEntity {
 
