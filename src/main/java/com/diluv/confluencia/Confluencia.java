@@ -82,6 +82,7 @@ public class Confluencia {
         configuration.addAnnotatedClass(ProjectTagsEntity.class);
         configuration.addAnnotatedClass(ProjectTypeLoadersEntity.class);
         configuration.addAnnotatedClass(ProjectTypesEntity.class);
+        configuration.addAnnotatedClass(RegistrationCodesEntity.class);
         configuration.addAnnotatedClass(RolesEntity.class);
         configuration.addAnnotatedClass(TagsEntity.class);
         configuration.addAnnotatedClass(TempUsersEntity.class);

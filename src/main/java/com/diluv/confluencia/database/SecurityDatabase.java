@@ -13,6 +13,7 @@ import com.diluv.confluencia.database.record.ContainsUsernameBlockListEntity;
 import com.diluv.confluencia.database.record.EmailBlockListEntity;
 import com.diluv.confluencia.database.record.EmailDomainBlocklistEntity;
 import com.diluv.confluencia.database.record.NodeCDNCommitsEntity;
+import com.diluv.confluencia.database.record.RegistrationCodesEntity;
 import com.diluv.confluencia.database.record.UsernameBlocklistEntity;
 import com.diluv.confluencia.utils.DatabaseUtil;
 
@@ -133,5 +134,22 @@ public class SecurityDatabase {
         query.setMaxResults(1);
         query.setParameter(emailParam, email);
         return DatabaseUtil.findOne(query.getResultList()) != null;
+    }
+
+    public RegistrationCodesEntity findRegistrationCode (Session session, String code) {
+
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+
+        CriteriaQuery<RegistrationCodesEntity> q = cb.createQuery(RegistrationCodesEntity.class);
+        ParameterExpression<String> codeParam = cb.parameter(String.class);
+
+        Root<RegistrationCodesEntity> entity = q.from(RegistrationCodesEntity.class);
+        q.select(entity);
+        q.where(cb.equal(entity.get("code"), codeParam));
+
+        TypedQuery<RegistrationCodesEntity> query = session.createQuery(q);
+        query.setMaxResults(1);
+        query.setParameter(codeParam, code);
+        return DatabaseUtil.findOne(query.getResultList());
     }
 }
