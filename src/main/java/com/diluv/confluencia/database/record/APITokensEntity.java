@@ -15,6 +15,9 @@ import javax.persistence.Table;
 public class APITokensEntity {
 
     @Id
+    @Column(name = "id")
+    private long id;
+
     @Column(name = "token")
     private String token;
 
@@ -27,6 +30,16 @@ public class APITokensEntity {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UsersEntity user;
+
+    public long getId () {
+
+        return this.id;
+    }
+
+    public void setId (long id) {
+
+        this.id = id;
+    }
 
     public String getToken () {
 
@@ -74,12 +87,12 @@ public class APITokensEntity {
         if (this == o) return true;
         if (!(o instanceof APITokensEntity)) return false;
         APITokensEntity that = (APITokensEntity) o;
-        return Objects.equals(getToken(), that.getToken());
+        return Objects.equals(getId(), that.getId());
     }
 
     @Override
     public int hashCode () {
 
-        return Objects.hash(getToken());
+        return Objects.hash(getId());
     }
 }
