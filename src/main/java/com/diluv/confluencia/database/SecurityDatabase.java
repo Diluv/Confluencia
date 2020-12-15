@@ -1,5 +1,7 @@
 package com.diluv.confluencia.database;
 
+import java.util.List;
+
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -15,9 +17,42 @@ import com.diluv.confluencia.database.record.EmailDomainBlocklistEntity;
 import com.diluv.confluencia.database.record.NodeCDNCommitsEntity;
 import com.diluv.confluencia.database.record.RegistrationCodesEntity;
 import com.diluv.confluencia.database.record.UsernameBlocklistEntity;
+import com.diluv.confluencia.database.record.UsersEntity;
 import com.diluv.confluencia.utils.DatabaseUtil;
 
 public class SecurityDatabase {
+
+    public APITokensEntity findAPITokensById (Session session, long id) {
+
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<APITokensEntity> q = cb.createQuery(APITokensEntity.class);
+
+        ParameterExpression<Long> idParam = cb.parameter(Long.class);
+
+        Root<APITokensEntity> entity = q.from(APITokensEntity.class);
+        q.select(entity);
+        q.where(cb.equal(entity.get("id"), idParam));
+
+        TypedQuery<APITokensEntity> query = session.createQuery(q);
+        query.setParameter(idParam, id);
+        return DatabaseUtil.findOne(query.getResultList());
+    }
+
+    public List<APITokensEntity> findAPITokensByUserId (Session session, UsersEntity usersEntity) {
+
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<APITokensEntity> q = cb.createQuery(APITokensEntity.class);
+
+        ParameterExpression<UsersEntity> userParam = cb.parameter(UsersEntity.class);
+
+        Root<APITokensEntity> entity = q.from(APITokensEntity.class);
+        q.select(entity);
+        q.where(cb.equal(entity.get("user"), userParam));
+
+        TypedQuery<APITokensEntity> query = session.createQuery(q);
+        query.setParameter(userParam, usersEntity);
+        return query.getResultList();
+    }
 
     public APITokensEntity findAPITokensByToken (Session session, String token) {
 

@@ -893,11 +893,14 @@ VALUES (1, 89),
        (8, 121),
        (9, 124);
 
+# dbfb6b1c-a8cc-4a41-995b-b9949a14394f
 INSERT INTO api_tokens(token, name, user_id)
 VALUES ('91e048664cf660bf7005b4002bece81b5099888fa8771654621fdfbf5702ceba4e7c447c301b11bdd64b19016ac4c57aca1b77cde97fbc016f74a2235293b9e3',
         'Testing', 1),
        ('50c42db342f7f7d403fce41c79fb4010fb2cc4fb9d061914c5836ae5af432eed0f1aa468cc363509b7b931c28687c215df835a6cfc9fdded5ec828a614a11be8',
-        'Testing', 2);
+        'Testing', 2),
+       ('ec7f484ea5c13a89f9ee28fe0f4d4510d188c8fc48d76564427545d33d5f9c3ec1c9a301a2fcb509eeafd0d7353fcc785c682a25c89952fd948d92f6cd75d18d',
+        'Testing', 1);
 
 INSERT INTO nodecdn_commits(hash)
 VALUES ('d9f5bb5b-22af-4f58-bb15-f6c8a373aae9');

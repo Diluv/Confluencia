@@ -1,5 +1,9 @@
 package com.diluv.confluencia.database.record;
 
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.Where;
+
 import java.sql.Timestamp;
 import java.util.Objects;
 
@@ -11,6 +15,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
+@DynamicInsert
+@DynamicUpdate
+@Where(clause = "deleted=0")
 @Table(name = "api_tokens")
 public class APITokensEntity {
 
@@ -26,6 +33,12 @@ public class APITokensEntity {
 
     @Column(name = "created_at", updatable = false)
     private Timestamp createdAt;
+
+    @Column(name = "last_used")
+    private Timestamp lastUsed;
+
+    @Column(name = "deleted")
+    private boolean deleted;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -69,6 +82,26 @@ public class APITokensEntity {
     public void setCreatedAt (Timestamp createdAt) {
 
         this.createdAt = createdAt;
+    }
+
+    public Timestamp getLastUsed () {
+
+        return this.lastUsed;
+    }
+
+    public void setLastUsed (Timestamp lastUsed) {
+
+        this.lastUsed = lastUsed;
+    }
+
+    public boolean isDeleted () {
+
+        return this.deleted;
+    }
+
+    public void setDeleted (boolean deleted) {
+
+        this.deleted = deleted;
     }
 
     public UsersEntity getUser () {

@@ -1,15 +1,24 @@
 package com.diluv.confluencia.database;
 
-import java.util.UUID;
+import com.diluv.confluencia.Confluencia;
+import com.diluv.confluencia.ConfluenciaTest;
+import com.diluv.confluencia.database.record.NodeCDNCommitsEntity;
+import com.diluv.confluencia.database.record.UsersEntity;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import com.diluv.confluencia.Confluencia;
-import com.diluv.confluencia.ConfluenciaTest;
-import com.diluv.confluencia.database.record.NodeCDNCommitsEntity;
+import java.util.UUID;
 
 public class TestSecurityDatabase extends ConfluenciaTest {
+
+    @Test
+    public void findAPITokensByUserId () {
+
+        Confluencia.getTransaction(session -> {
+            Assertions.assertEquals(1, Confluencia.SECURITY.findAPITokensByUserId(session, new UsersEntity(1)).size());
+        });
+    }
 
     @Test
     public void findAPITokensByToken () {
