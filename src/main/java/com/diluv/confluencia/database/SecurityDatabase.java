@@ -16,6 +16,7 @@ import com.diluv.confluencia.database.record.EmailBlockListEntity;
 import com.diluv.confluencia.database.record.EmailDomainBlocklistEntity;
 import com.diluv.confluencia.database.record.NodeCDNCommitsEntity;
 import com.diluv.confluencia.database.record.RegistrationCodesEntity;
+import com.diluv.confluencia.database.record.UserCompromisedPasswordsEntity;
 import com.diluv.confluencia.database.record.UsernameBlocklistEntity;
 import com.diluv.confluencia.database.record.UsersEntity;
 import com.diluv.confluencia.utils.DatabaseUtil;
@@ -186,5 +187,22 @@ public class SecurityDatabase {
         query.setMaxResults(1);
         query.setParameter(codeParam, code);
         return DatabaseUtil.findOne(query.getResultList());
+    }
+
+    public List<UserCompromisedPasswordsEntity> findAllPasswordByHash (Session session, String hash) {
+
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+
+        CriteriaQuery<UserCompromisedPasswordsEntity> q = cb.createQuery(UserCompromisedPasswordsEntity.class);
+        ParameterExpression<String> hashParam = cb.parameter(String.class);
+
+        Root<UserCompromisedPasswordsEntity> entity = q.from(UserCompromisedPasswordsEntity.class);
+        q.select(entity);
+        q.where(cb.equal(entity.get("password_hash"), hashParam));
+
+        TypedQuery<UserCompromisedPasswordsEntity> query = session.createQuery(q);
+        query.setMaxResults(1);
+        query.setParameter(hashParam, hash + "%");
+        return query.getResultList();
     }
 }

@@ -782,7 +782,7 @@ INSERT INTO password_reset(user_id, code, created_at)
 VALUES (2, 'daf1f148-effd-400e-9b65-a4bf96e5215d', NOW());
 
 INSERT INTO user_compromised_passwords(password_hash, occurrences)
-VALUES ('025160DEE13179BC80BB05102CE5B3CD3FE', 11);
+VALUES ('5BAA61E4C9B93F3F0682250B6CF8331B7EE68FD8', 3861493);
 
 INSERT INTO username_blocklist(username)
 VALUES ('blocked');
