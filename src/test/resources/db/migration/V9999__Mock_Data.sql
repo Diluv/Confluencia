@@ -157,7 +157,9 @@ VALUES ('minecraft-je', 'rd-132211', 'old_alpha', STR_TO_DATE('2009-05-13T20:11:
        ('minecraft-je', '1.16', 'release', STR_TO_DATE('2020-06-23T16:20:52', '%Y-%m-%dT%H:%i:%s')),
        ('minecraft-je', '1.16.1', 'release', STR_TO_DATE('2020-06-24T10:31:40', '%Y-%m-%dT%H:%i:%s')),
        ('minecraft-je', '1.16.2', 'release', STR_TO_DATE('2020-08-11T10:13:46', '%Y-%m-%dT%H:%i:%s')),
-       ('minecraft-je', '1.16.3', 'release', STR_TO_DATE('2020-09-10T13:42:37', '%Y-%m-%dT%H:%i:%s'));
+       ('minecraft-je', '1.16.3', 'release', STR_TO_DATE('2020-09-10T13:42:37', '%Y-%m-%dT%H:%i:%s')),
+       ('minecraft-je', '1.16.4', 'release', STR_TO_DATE('2020-10-29T15:49:37', '%Y-%m-%dT%H:%i:%s'));
+
 
 INSERT INTO roles(name)
 VALUES ('admin');
