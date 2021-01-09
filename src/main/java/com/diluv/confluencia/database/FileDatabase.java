@@ -61,7 +61,7 @@ public class FileDatabase {
         CriteriaQuery<ProjectFilesEntity> q = cb.createQuery(ProjectFilesEntity.class);
         Root<ProjectFilesEntity> entity = q.from(ProjectFilesEntity.class);
 
-        ParameterExpression<FileProcessingStatus> s = cb.parameter(FileProcessingStatus.class);
+        ParameterExpression<FileProcessingStatus> statusParam = cb.parameter(FileProcessingStatus.class);
 
         Subquery<ProjectsEntity> projectSubquery = q.subquery(ProjectsEntity.class);
         Root<ProjectsEntity> project = projectSubquery.from(ProjectsEntity.class);
@@ -70,14 +70,14 @@ public class FileDatabase {
 
         q.select(entity);
         q.where(cb.and(
-            cb.equal(entity.get("processingStatus"), s),
+            cb.equal(entity.get("processingStatus"), statusParam),
             cb.isFalse(entity.get("released"))),
             cb.in(entity.get("project")).value(projectSubquery)
         );
         q.orderBy(cb.asc(entity.get("createdAt")));
 
         TypedQuery<ProjectFilesEntity> query = session.createQuery(q);
-        query.setParameter(s, status);
+        query.setParameter(statusParam, status);
         query.setMaxResults(amount);
         return query.getResultList();
     }
@@ -88,7 +88,7 @@ public class FileDatabase {
         CriteriaQuery<ProjectFilesEntity> q = cb.createQuery(ProjectFilesEntity.class);
         Root<ProjectFilesEntity> entity = q.from(ProjectFilesEntity.class);
 
-        ParameterExpression<FileProcessingStatus> s = cb.parameter(FileProcessingStatus.class);
+        ParameterExpression<FileProcessingStatus> statusParam = cb.parameter(FileProcessingStatus.class);
 
         Subquery<ProjectsEntity> projectSubquery = q.subquery(ProjectsEntity.class);
         Root<ProjectsEntity> project = projectSubquery.from(ProjectsEntity.class);
@@ -97,13 +97,13 @@ public class FileDatabase {
 
         q.select(entity);
         q.where(cb.and(
-            cb.equal(entity.get("processingStatus"), s),
+            cb.equal(entity.get("processingStatus"), statusParam),
             cb.in(entity.get("project")).value(projectSubquery)
         ));
         q.orderBy(cb.asc(entity.get("createdAt")));
 
         TypedQuery<ProjectFilesEntity> query = session.createQuery(q);
-        query.setParameter(s, FileProcessingStatus.PENDING);
+        query.setParameter(statusParam, FileProcessingStatus.PENDING);
         query.setMaxResults(amount);
         query.setLockMode(LockModeType.PESSIMISTIC_WRITE);
         List<ProjectFilesEntity> fileQueue = query.getResultList();
@@ -141,7 +141,7 @@ public class FileDatabase {
         return DatabaseUtil.findOne(query.getResultList());
     }
 
-    public List<ProjectFilesEntity> findAllByProject (Session session, ProjectsEntity project, boolean authorized, long page, int limit, Sort sort, String gameVersion) {
+    public List<ProjectFilesEntity> findAllByProject (Session session, ProjectsEntity project, boolean authorized, long page, int limit, Sort sort, String gameVersion, String search) {
 
         CriteriaBuilder cb = session.getCriteriaBuilder();
 
@@ -151,10 +151,12 @@ public class FileDatabase {
         ParameterExpression<ProjectsEntity> projectParam = cb.parameter(ProjectsEntity.class);
         ParameterExpression<String> versionParam = cb.parameter(String.class);
         ParameterExpression<GamesEntity> gameParam = cb.parameter(GamesEntity.class);
+        ParameterExpression<String> searchParam = cb.parameter(String.class);
 
         q.select(entity);
         List<Predicate> predicates = new ArrayList<>();
         predicates.add(cb.equal(entity.get("project"), projectParam));
+        predicates.add(cb.like(entity.get("name"), searchParam));
         if (!authorized) {
             predicates.add(cb.isTrue(entity.get("released")));
         }
@@ -177,6 +179,7 @@ public class FileDatabase {
 
         TypedQuery<ProjectFilesEntity> query = session.createQuery(q);
         query.setParameter(projectParam, project);
+        query.setParameter(searchParam, "%" + search + "%");
         if (gameVersion != null) {
             query.setParameter(gameParam, project.getGame());
             query.setParameter(versionParam, gameVersion);
@@ -246,26 +249,45 @@ public class FileDatabase {
         return query.getResultList();
     }
 
-    public long countFilesByProject (Session session, ProjectsEntity project, boolean authorized) {
+    public long countByProjectParams (Session session, ProjectsEntity project, boolean authorized, String gameVersion, String search) {
 
         CriteriaBuilder cb = session.getCriteriaBuilder();
 
         CriteriaQuery<Long> q = cb.createQuery(Long.class);
 
         ParameterExpression<ProjectsEntity> projectParam = cb.parameter(ProjectsEntity.class);
+        ParameterExpression<String> versionParam = cb.parameter(String.class);
+        ParameterExpression<GamesEntity> gameParam = cb.parameter(GamesEntity.class);
+        ParameterExpression<String> searchParam = cb.parameter(String.class);
 
         Root<ProjectFilesEntity> entity = q.from(ProjectFilesEntity.class);
         q.select(cb.count(entity));
 
         List<Predicate> predicates = new ArrayList<>();
         predicates.add(cb.equal(entity.get("project"), projectParam));
+        predicates.add(cb.like(entity.get("name"), searchParam));
+
         if (!authorized) {
             predicates.add(cb.isTrue(entity.get("released")));
+        }
+
+        if (gameVersion != null) {
+            Root<ProjectFileGameVersionsEntity> entityProjectFileGameVersions = q.from(ProjectFileGameVersionsEntity.class);
+            Root<GameVersionsEntity> entityGameVersions = q.from(GameVersionsEntity.class);
+            predicates.add(cb.equal(entityProjectFileGameVersions.get("projectFile"), entity));
+            predicates.add(cb.equal(entityProjectFileGameVersions.get("gameVersion"), entityGameVersions));
+            predicates.add(cb.equal(entityGameVersions.get("game"), gameParam));
+            predicates.add(cb.equal(entityGameVersions.get("version"), versionParam));
         }
         q.where(cb.and(predicates.toArray(new Predicate[0])));
 
         TypedQuery<Long> query = session.createQuery(q);
         query.setParameter(projectParam, project);
+        query.setParameter(searchParam, "%" + search + "%");
+        if (gameVersion != null) {
+            query.setParameter(gameParam, project.getGame());
+            query.setParameter(versionParam, gameVersion);
+        }
         return DatabaseUtil.findOne(query.getResultList(), 0L);
     }
 }

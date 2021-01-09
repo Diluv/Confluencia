@@ -99,13 +99,13 @@ public class UserDatabase {
         CriteriaQuery<UserMfaRecoveryEntity> q = cb.createQuery(UserMfaRecoveryEntity.class);
         Root<UserMfaRecoveryEntity> entity = q.from(UserMfaRecoveryEntity.class);
 
-        ParameterExpression<UsersEntity> s = cb.parameter(UsersEntity.class);
+        ParameterExpression<UsersEntity> userParam = cb.parameter(UsersEntity.class);
 
         q.select(entity);
-        q.where(cb.equal(entity.get("user"), s));
+        q.where(cb.equal(entity.get("user"), userParam));
 
         TypedQuery<UserMfaRecoveryEntity> query = session.createQuery(q);
-        query.setParameter(s, user);
+        query.setParameter(userParam, user);
         return query.getResultList();
     }
 

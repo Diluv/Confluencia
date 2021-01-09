@@ -25,14 +25,14 @@ public class GameDatabase {
 
         CriteriaQuery<Long> q = cb.createQuery(Long.class);
 
-        ParameterExpression<String> s = cb.parameter(String.class);
+        ParameterExpression<String> searchParam = cb.parameter(String.class);
 
         Root<GamesEntity> entity = q.from(GamesEntity.class);
         q.select(cb.count(entity));
-        q.where(cb.like(entity.get("name"), s));
+        q.where(cb.like(entity.get("name"), searchParam));
 
         TypedQuery<Long> query = session.createQuery(q);
-        query.setParameter(s, "%" + search + "%");
+        query.setParameter(searchParam, "%" + search + "%");
         return DatabaseUtil.findOne(query.getResultList(), 0L);
     }
 
@@ -43,10 +43,10 @@ public class GameDatabase {
         CriteriaQuery<GamesEntity> q = cb.createQuery(GamesEntity.class);
         Root<GamesEntity> entity = q.from(GamesEntity.class);
 
-        ParameterExpression<String> s = cb.parameter(String.class);
+        ParameterExpression<String> searchParam = cb.parameter(String.class);
 
         q.select(entity);
-        q.where(cb.like(entity.get("name"), s));
+        q.where(cb.like(entity.get("name"), searchParam));
         if (sort.getOrder() == Order.ASC) {
             q.orderBy(cb.asc(entity.get(sort.getColumn())));
         }
@@ -55,7 +55,7 @@ public class GameDatabase {
         }
 
         TypedQuery<GamesEntity> query = session.createQuery(q);
-        query.setParameter(s, "%" + search + "%");
+        query.setParameter(searchParam, "%" + search + "%");
         query.setFirstResult((int) ((page - 1) * limit));
         query.setMaxResults(limit);
         return query.getResultList();
@@ -66,14 +66,14 @@ public class GameDatabase {
         CriteriaBuilder cb = session.getCriteriaBuilder();
         CriteriaQuery<GamesEntity> q = cb.createQuery(GamesEntity.class);
 
-        ParameterExpression<String> s = cb.parameter(String.class);
+        ParameterExpression<String> slugParam = cb.parameter(String.class);
 
         Root<GamesEntity> entity = q.from(GamesEntity.class);
         q.select(entity);
-        q.where(cb.like(entity.get("slug"), s));
+        q.where(cb.like(entity.get("slug"), slugParam));
 
         TypedQuery<GamesEntity> query = session.createQuery(q);
-        query.setParameter(s, slug);
+        query.setParameter(slugParam, slug);
         return DatabaseUtil.findOne(query.getResultList());
     }
 

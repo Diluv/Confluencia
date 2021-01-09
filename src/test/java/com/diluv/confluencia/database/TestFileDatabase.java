@@ -1,6 +1,7 @@
 package com.diluv.confluencia.database;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -76,7 +77,7 @@ public class TestFileDatabase extends ConfluenciaTest {
             projectFile.setSha512("sha512");
             projectFile.setReleaseType("release");
             projectFile.setClassifier("binary");
-            projectFile.setProject(new ProjectsEntity(1));
+            projectFile.setProject(new ProjectsEntity(2));
             projectFile.setUser(new UsersEntity(1));
             session.save(projectFile);
             Assertions.assertTrue(projectFile.getId() > 1L);
@@ -93,14 +94,16 @@ public class TestFileDatabase extends ConfluenciaTest {
     }
 
     @Test
-    public void findAllByProjectId () {
+    public void findAllByProject () {
 
         Confluencia.getTransaction(session -> {
             ProjectsEntity project = new ProjectsEntity(1);
             project.setGame(new GamesEntity("minecraft-je"));
-            Assertions.assertEquals(16, Confluencia.FILE.findAllByProject(session, project, true, 1, 25, ProjectFileSort.NEW, null).size());
-            Assertions.assertEquals(1, Confluencia.FILE.findAllByProject(session, project, true, 1, 25, ProjectFileSort.NEW, "1.12.2").size());
-            Assertions.assertEquals(0, Confluencia.FILE.findAllByProject(session, project, true, 1, 25, ProjectFileSort.NEW, "invalid").size());
+            Assertions.assertEquals(16, Confluencia.FILE.findAllByProject(session, project, true, 1, 25, ProjectFileSort.NEW, null, "").size());
+            Assertions.assertEquals(1, Confluencia.FILE.findAllByProject(session, project, true, 1, 25, ProjectFileSort.NEW, "1.12.2", "").size());
+            Assertions.assertEquals(0, Confluencia.FILE.findAllByProject(session, project, true, 1, 25, ProjectFileSort.NEW, "invalid", "").size());
+            Assertions.assertEquals(9, Confluencia.FILE.findAllByProject(session, project, true, 1, 25, ProjectFileSort.NEW, null, "Book").size());
+            Assertions.assertEquals(1, Confluencia.FILE.findAllByProject(session, project, true, 1, 25, ProjectFileSort.NEW, null, "Bookshelf-1.9.4").size());
         });
     }
 
@@ -136,6 +139,20 @@ public class TestFileDatabase extends ConfluenciaTest {
 
         Confluencia.getTransaction(session -> {
             Assertions.assertEquals(1, Confluencia.FILE.updateAllForRelease(session, new Timestamp(System.currentTimeMillis())));
+        });
+    }
+
+    @Test
+    public void countByProjectParams () {
+
+        Confluencia.getTransaction(session -> {
+            ProjectsEntity project = new ProjectsEntity(1);
+            project.setGame(new GamesEntity("minecraft-je"));
+            Assertions.assertEquals(16, Confluencia.FILE.countByProjectParams(session, project, true, null, ""));
+            Assertions.assertEquals(1, Confluencia.FILE.countByProjectParams(session, project, true, "1.12.2", ""));
+            Assertions.assertEquals(0, Confluencia.FILE.countByProjectParams(session, project, true, "invalid", ""));
+            Assertions.assertEquals(9, Confluencia.FILE.countByProjectParams(session, project, true, null, "Book"));
+            Assertions.assertEquals(1, Confluencia.FILE.countByProjectParams(session, project, true, null, "Bookshelf-1.9.4"));
         });
     }
 }

@@ -6,7 +6,6 @@ public class Sort {
     private final String displayName;
     private final String column;
     private final Order order;
-    private final String orderName;
 
     public Sort (String slug, String displayName, String column, Order order) {
 
@@ -14,7 +13,6 @@ public class Sort {
         this.displayName = displayName;
         this.column = column;
         this.order = order;
-        this.orderName = order.name;
     }
 
     public String getSlug () {
