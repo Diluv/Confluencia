@@ -245,4 +245,27 @@ public class FileDatabase {
         query.setMaxResults(limit);
         return query.getResultList();
     }
+
+    public long countFilesByProject (Session session, ProjectsEntity project, boolean authorized) {
+
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+
+        CriteriaQuery<Long> q = cb.createQuery(Long.class);
+
+        ParameterExpression<ProjectsEntity> projectParam = cb.parameter(ProjectsEntity.class);
+
+        Root<ProjectFilesEntity> entity = q.from(ProjectFilesEntity.class);
+        q.select(cb.count(entity));
+
+        List<Predicate> predicates = new ArrayList<>();
+        predicates.add(cb.equal(entity.get("project"), projectParam));
+        if (!authorized) {
+            predicates.add(cb.isTrue(entity.get("released")));
+        }
+        q.where(cb.and(predicates.toArray(new Predicate[0])));
+
+        TypedQuery<Long> query = session.createQuery(q);
+        query.setParameter(projectParam, project);
+        return DatabaseUtil.findOne(query.getResultList(), 0L);
+    }
 }
