@@ -918,7 +918,10 @@ VALUES (10, '1.0.0', 'forge_mod.jar', 100, 'Project file changelog',
         'release', 'binary', 2, TRUE, 17, 1),
        (18, '1.0.8', 'zip_archive.zip', 1000, 'Changing',
         '5E96A9A98839D073C298BBD0AC73A510E1F13A64151E2C4895440ECDBCD6D483EDA994D2CD5E69C5C00A96783280F7BC1E933667B4A25C53CE3918007D5C77E3',
-        'release', 'binary', 0, FALSE, 16, 1);
+        'release', 'binary', 0, FALSE, 16, 1),
+       (19, '1.5.8', 'zip_archive.zip', 1000, 'Changing',
+        '5E96A9A98839D073C298BBD0AC73A510E1F13A64151E2C4895440ECDBCD6D483EDA994D2CD5E69C5C00A96783280F7BC1E933667B4A25C53CE3918007D5C77E3',
+        'release', 'binary', 0, FALSE, 70, 1);
 
 INSERT INTO project_file_dependencies(project_file_id, dependency_project_id)
 VALUES (1, 2),
