@@ -11,7 +11,7 @@ public abstract class ConfluenciaTest {
     static final MariaDBContainer CONTAINER;
 
     static {
-        CONTAINER = new MariaDBContainer<>();
+        CONTAINER = new MariaDBContainer<>("mariadb:10.3.29");
         CONTAINER.start();
     }
 

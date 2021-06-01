@@ -4,6 +4,7 @@ import java.util.Properties;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
@@ -114,7 +115,7 @@ public class Confluencia {
             tx.commit();
         }
         catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.ERROR, e);
             if (tx != null) {
                 tx.rollback();
             }
@@ -132,7 +133,7 @@ public class Confluencia {
             return r;
         }
         catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.ERROR, e);
             if (tx != null) {
                 tx.rollback();
             }
