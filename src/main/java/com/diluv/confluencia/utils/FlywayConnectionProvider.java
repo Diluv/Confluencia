@@ -23,18 +23,15 @@ public class FlywayConnectionProvider implements ConnectionProvider, Configurabl
 
     private static final Logger LOGGER = Logger.getLogger(HikariCPConnectionProvider.class);
 
-    private HikariConfig hcfg = null;
-
     private HikariDataSource hds = null;
 
-    @SuppressWarnings("rawtypes")
     @Override
     public void configure (Map props) throws HibernateException {
 
         try {
             LOGGER.debug("Configuring HikariCP");
 
-            hcfg = HikariConfigurationUtil.loadConfiguration(props);
+            final HikariConfig hcfg = HikariConfigurationUtil.loadConfiguration(props);
             hds = new HikariDataSource(hcfg);
 
             Flyway flyway = Flyway.configure().dataSource(hds).load();
@@ -71,7 +68,6 @@ public class FlywayConnectionProvider implements ConnectionProvider, Configurabl
     }
 
     @Override
-    @SuppressWarnings("rawtypes")
     public boolean isUnwrappableAs (Class unwrapType) {
 
         return ConnectionProvider.class.equals(unwrapType)
