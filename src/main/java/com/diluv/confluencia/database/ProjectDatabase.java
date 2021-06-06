@@ -22,6 +22,22 @@ import com.diluv.confluencia.utils.DatabaseUtil;
 
 public class ProjectDatabase {
 
+    public long countAll (Session session, boolean released) {
+
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+
+        CriteriaQuery<Long> q = cb.createQuery(Long.class);
+
+        Root<ProjectsEntity> entity = q.from(ProjectsEntity.class);
+
+        q.select(cb.count(entity));
+
+        q.where(cb.equal(entity.get("released"), released));
+
+        TypedQuery<Long> query = session.createQuery(q);
+        return DatabaseUtil.findOne(query.getResultList(), 0L);
+    }
+
     public long countAllByGameSlug (Session session, String gameSlug) {
 
         CriteriaBuilder cb = session.getCriteriaBuilder();

@@ -33,6 +33,18 @@ public class UserDatabase {
         return DatabaseUtil.findOne(query.getResultList(), 0L);
     }
 
+    public long countAllTempUsers(Session session) {
+
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<Long> q = cb.createQuery(Long.class);
+
+        Root<TempUsersEntity> entity = q.from(TempUsersEntity.class);
+        q.select(cb.count(entity));
+
+        TypedQuery<Long> query = session.createQuery(q);
+        return DatabaseUtil.findOne(query.getResultList(), 0L);
+    }
+
     public UsersEntity findOneByEmail (Session session, String email) {
 
         CriteriaBuilder cb = session.getCriteriaBuilder();
