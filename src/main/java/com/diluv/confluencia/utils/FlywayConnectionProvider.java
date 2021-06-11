@@ -34,7 +34,7 @@ public class FlywayConnectionProvider implements ConnectionProvider, Configurabl
             final HikariConfig hcfg = HikariConfigurationUtil.loadConfiguration(props);
             hds = new HikariDataSource(hcfg);
 
-            Flyway flyway = Flyway.configure().dataSource(hds).load();
+            Flyway flyway = Flyway.configure(getClass().getClassLoader()).dataSource(hds).load();
             flyway.migrate();
         }
         catch (Exception e) {
