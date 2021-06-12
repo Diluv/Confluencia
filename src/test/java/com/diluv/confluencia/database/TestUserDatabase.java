@@ -15,7 +15,7 @@ public class TestUserDatabase extends ConfluenciaTest {
     public void countAll () {
 
         Confluencia.getTransaction(session -> {
-            Assertions.assertEquals(4, Confluencia.USER.countAll(session));
+            Assertions.assertEquals(5, Confluencia.USER.countAll(session));
         });
     }
 
