@@ -13,11 +13,14 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.ResultCheckStyle;
+import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 @Entity
 @DynamicUpdate
 @Where(clause = "deleted=0")
+@SQLDelete(sql = "UPDATE users SET deleted=1 WHERE id = ?", check = ResultCheckStyle.COUNT)
 @Table(name = "users")
 public class UsersEntity {
 

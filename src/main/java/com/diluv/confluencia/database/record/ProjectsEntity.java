@@ -9,12 +9,15 @@ import javax.persistence.*;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.ResultCheckStyle;
+import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 @Entity
 @DynamicInsert
 @DynamicUpdate
 @Where(clause = "deleted=0")
+@SQLDelete(sql = "UPDATE projects SET deleted=1 WHERE id = ?", check = ResultCheckStyle.COUNT)
 @Table(name = "projects")
 public class ProjectsEntity {
 
@@ -76,6 +79,9 @@ public class ProjectsEntity {
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProjectReviewEntity> reviews = new ArrayList<>();
+
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProjectFilesEntity> files = new ArrayList<>();
 
     public ProjectsEntity () {
 

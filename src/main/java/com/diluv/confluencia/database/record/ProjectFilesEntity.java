@@ -7,11 +7,14 @@ import java.util.Objects;
 import javax.persistence.*;
 
 import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.ResultCheckStyle;
+import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 @Entity
 @DynamicInsert
 @Where(clause = "deleted=0")
+@SQLDelete(sql = "UPDATE project_files SET deleted=1 WHERE id = ?", check = ResultCheckStyle.COUNT)
 @Table(name = "project_files")
 public class ProjectFilesEntity {
 
