@@ -25,4 +25,12 @@ public class TestMiscDatabase extends ConfluenciaTest {
             Assertions.assertEquals(1, Confluencia.MISC.updateAllImagesForRelease(session, new Timestamp(System.currentTimeMillis())));
         });
     }
+
+    @Test
+    public void findAllUnusedRegistrationCodes () {
+
+        Confluencia.getTransaction(session -> {
+            Assertions.assertEquals(1, Confluencia.MISC.findAllRegistrationCodesByUser(session, 1).size());
+        });
+    }
 }

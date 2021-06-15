@@ -1,13 +1,21 @@
 package com.diluv.confluencia.database.record;
 
+import java.sql.Timestamp;
 import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
 @Entity
+@DynamicInsert
+@DynamicUpdate
 @Table(name = "registration_codes")
 public class RegistrationCodesEntity {
 
@@ -16,7 +24,24 @@ public class RegistrationCodesEntity {
     private String code;
 
     @Column(name = "valid")
-    private boolean valid;
+    private boolean valid = true;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UsersEntity user;
+
+    @Column(name = "created_at", updatable = false)
+    private Timestamp createdAt;
+
+    public RegistrationCodesEntity () {
+
+    }
+
+    public RegistrationCodesEntity (String code, UsersEntity user) {
+
+        this.code = code;
+        this.user = user;
+    }
 
     public String getCode () {
 
@@ -36,6 +61,21 @@ public class RegistrationCodesEntity {
     public void setValid (boolean valid) {
 
         this.valid = valid;
+    }
+
+    public UsersEntity getUser () {
+
+        return this.user;
+    }
+
+    public void setUser (UsersEntity user) {
+
+        this.user = user;
+    }
+
+    public Timestamp getCreatedAt () {
+
+        return this.createdAt;
     }
 
     @Override

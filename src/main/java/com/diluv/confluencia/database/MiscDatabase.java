@@ -1,6 +1,11 @@
 package com.diluv.confluencia.database;
 
-import java.sql.Timestamp;
+import com.diluv.confluencia.database.record.ImagesEntity;
+import com.diluv.confluencia.database.record.RegistrationCodesEntity;
+import com.diluv.confluencia.database.record.UsersEntity;
+import com.diluv.confluencia.utils.DatabaseUtil;
+
+import org.hibernate.Session;
 
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -8,10 +13,8 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.CriteriaUpdate;
 import javax.persistence.criteria.Root;
 
-import org.hibernate.Session;
-
-import com.diluv.confluencia.database.record.ImagesEntity;
-import com.diluv.confluencia.utils.DatabaseUtil;
+import java.sql.Timestamp;
+import java.util.List;
 
 public class MiscDatabase {
 
@@ -41,5 +44,21 @@ public class MiscDatabase {
         );
 
         return session.createQuery(q).executeUpdate();
+    }
+
+    public List<RegistrationCodesEntity> findAllRegistrationCodesByUser (Session session, long userId) {
+
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<RegistrationCodesEntity> q = cb.createQuery(RegistrationCodesEntity.class);
+        Root<RegistrationCodesEntity> entity = q.from(RegistrationCodesEntity.class);
+
+        q.select(entity);
+        q.where(cb.and(
+            cb.isTrue(entity.get("valid")),
+            cb.equal(entity.get("user"), new UsersEntity(userId))
+        ));
+
+        TypedQuery<RegistrationCodesEntity> query = session.createQuery(q);
+        return query.getResultList();
     }
 }
