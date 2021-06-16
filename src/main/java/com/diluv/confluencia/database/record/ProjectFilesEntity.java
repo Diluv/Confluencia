@@ -1,18 +1,21 @@
 package com.diluv.confluencia.database.record;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.*;
 
 import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.ResultCheckStyle;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 @Entity
 @DynamicInsert
+@DynamicUpdate
 @Where(clause = "deleted=0")
 @SQLDelete(sql = "UPDATE project_files SET deleted=1 WHERE id = ?", check = ResultCheckStyle.COUNT)
 @Table(name = "project_files")
@@ -28,6 +31,9 @@ public class ProjectFilesEntity {
 
     @Column(name = "name")
     private String name;
+
+    @Column(name = "display_name")
+    private String displayName;
 
     @Column(name = "size")
     private long size;
@@ -70,14 +76,14 @@ public class ProjectFilesEntity {
     @JoinColumn(name = "user_id")
     private UsersEntity user;
 
-    @OneToMany(mappedBy = "projectFile", cascade = CascadeType.ALL)
-    private List<ProjectFileGameVersionsEntity> gameVersions;
+    @OneToMany(mappedBy = "projectFile", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProjectFileGameVersionsEntity> gameVersions = new ArrayList<>();
 
-    @OneToMany(mappedBy = "projectFile", cascade = CascadeType.ALL)
-    private List<ProjectFileDependenciesEntity> dependencies;
+    @OneToMany(mappedBy = "projectFile", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProjectFileDependenciesEntity> dependencies = new ArrayList<>();
 
-    @OneToMany(mappedBy = "projectFile", cascade = CascadeType.ALL)
-    private List<ProjectFileLoadersEntity> loaders;
+    @OneToMany(mappedBy = "projectFile", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProjectFileLoadersEntity> loaders = new ArrayList<>();
 
     public ProjectFilesEntity () {
 
@@ -116,6 +122,16 @@ public class ProjectFilesEntity {
     public void setName (String name) {
 
         this.name = name;
+    }
+
+    public String getDisplayName () {
+
+        return this.displayName;
+    }
+
+    public void setDisplayName (String displayName) {
+
+        this.displayName = displayName;
     }
 
     public long getSize () {
@@ -253,9 +269,9 @@ public class ProjectFilesEntity {
         return this.gameVersions;
     }
 
-    public void setGameVersions (List<ProjectFileGameVersionsEntity> gameVersions) {
+    public void addGameVersion (ProjectFileGameVersionsEntity gameVersions) {
 
-        this.gameVersions = gameVersions;
+        this.gameVersions.add(gameVersions);
     }
 
     public List<ProjectFileDependenciesEntity> getDependencies () {
@@ -263,9 +279,9 @@ public class ProjectFilesEntity {
         return this.dependencies;
     }
 
-    public void setDependencies (List<ProjectFileDependenciesEntity> dependencies) {
+    public void addDependencies (ProjectFileDependenciesEntity dependencies) {
 
-        this.dependencies = dependencies;
+        this.dependencies.add(dependencies);
     }
 
     public List<ProjectFileLoadersEntity> getLoaders () {
@@ -273,9 +289,9 @@ public class ProjectFilesEntity {
         return this.loaders;
     }
 
-    public void setLoaders (List<ProjectFileLoadersEntity> loaders) {
+    public void addLoader (ProjectFileLoadersEntity loaders) {
 
-        this.loaders = loaders;
+        this.loaders.add(loaders);
     }
 
     @Override

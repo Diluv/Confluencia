@@ -37,13 +37,13 @@ public class GamesEntity {
     @Column(name = "created_at", updatable = false)
     private Timestamp createdAt;
 
-    @OneToMany(mappedBy = "game", cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
     private List<ProjectTypesEntity> projectTypes;
 
-    @OneToMany(mappedBy = "game", cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
     private List<GameVersionsEntity> gameVersions;
 
-    @OneToOne(mappedBy = "game", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+    @OneToOne(mappedBy = "game", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private GameDefaultProjectTypeEntity defaultProjectTypeEntity;
 
     public GamesEntity () {

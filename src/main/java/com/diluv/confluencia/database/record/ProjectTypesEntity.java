@@ -30,10 +30,10 @@ public class ProjectTypesEntity {
     @Column(name = "max_file_size")
     private long maxFileSize;
 
-    @OneToMany(mappedBy = "projectType", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @OneToMany(mappedBy = "projectType", cascade = CascadeType.ALL)
     private List<TagsEntity> tags;
 
-    @OneToMany(mappedBy = "projectType", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @OneToMany(mappedBy = "projectType", cascade = CascadeType.ALL)
     private List<ProjectTypeLoadersEntity> projectTypeLoaders;
 
     public ProjectTypesEntity () {

@@ -31,7 +31,7 @@ public class ProjectAuthorsEntity {
     @Column(name = "role")
     private String role;
 
-    @OneToMany(mappedBy = "author", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     private List<ProjectAuthorPermissionsEntity> permissions;
 
     public long getId () {
