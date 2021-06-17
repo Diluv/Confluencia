@@ -1,30 +1,19 @@
 package com.diluv.confluencia.database;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.LockModeType;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.CriteriaUpdate;
-import javax.persistence.criteria.ParameterExpression;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Subquery;
-
-import org.hibernate.Session;
-
-import com.diluv.confluencia.database.record.FileProcessingStatus;
-import com.diluv.confluencia.database.record.GameVersionsEntity;
-import com.diluv.confluencia.database.record.GamesEntity;
-import com.diluv.confluencia.database.record.ProjectFileGameVersionsEntity;
-import com.diluv.confluencia.database.record.ProjectFilesEntity;
-import com.diluv.confluencia.database.record.ProjectsEntity;
+import com.diluv.confluencia.database.record.*;
 import com.diluv.confluencia.database.sort.Order;
 import com.diluv.confluencia.database.sort.Sort;
 import com.diluv.confluencia.utils.DatabaseUtil;
+
+import org.hibernate.Session;
+
+import javax.persistence.LockModeType;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.*;
+
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FileDatabase {
 
@@ -288,6 +277,18 @@ public class FileDatabase {
             query.setParameter(gameParam, project.getGame());
             query.setParameter(versionParam, gameVersion);
         }
+        return DatabaseUtil.findOne(query.getResultList(), 0L);
+    }
+
+    public long countAllFileSize (Session session) {
+
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<Long> q = cb.createQuery(Long.class);
+        Root<ProjectFilesEntity> entity = q.from(ProjectFilesEntity.class);
+
+        q.select(cb.sum(entity.get("size")));
+
+        TypedQuery<Long> query = session.createQuery(q);
         return DatabaseUtil.findOne(query.getResultList(), 0L);
     }
 }

@@ -1,22 +1,15 @@
 package com.diluv.confluencia.database;
 
-import java.sql.Timestamp;
-import java.util.List;
+import com.diluv.confluencia.Confluencia;
+import com.diluv.confluencia.ConfluenciaTest;
+import com.diluv.confluencia.database.record.*;
+import com.diluv.confluencia.database.sort.ProjectFileSort;
+import com.diluv.confluencia.database.sort.ProjectSort;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import com.diluv.confluencia.Confluencia;
-import com.diluv.confluencia.ConfluenciaTest;
-import com.diluv.confluencia.database.record.FileProcessingStatus;
-import com.diluv.confluencia.database.record.GamesEntity;
-import com.diluv.confluencia.database.record.ProjectFileAntivirusEntity;
-import com.diluv.confluencia.database.record.ProjectFileDownloadsEntity;
-import com.diluv.confluencia.database.record.ProjectFilesEntity;
-import com.diluv.confluencia.database.record.ProjectsEntity;
-import com.diluv.confluencia.database.record.UsersEntity;
-import com.diluv.confluencia.database.sort.ProjectFileSort;
-import com.diluv.confluencia.database.sort.ProjectSort;
+import java.sql.Timestamp;
 
 public class TestFileDatabase extends ConfluenciaTest {
 
@@ -153,6 +146,14 @@ public class TestFileDatabase extends ConfluenciaTest {
             Assertions.assertEquals(0, Confluencia.FILE.countByProjectParams(session, project, true, "invalid", ""));
             Assertions.assertEquals(9, Confluencia.FILE.countByProjectParams(session, project, true, null, "Book"));
             Assertions.assertEquals(1, Confluencia.FILE.countByProjectParams(session, project, true, null, "Bookshelf-1.9.4"));
+        });
+    }
+
+    @Test
+    public void countAllFileSize () {
+
+        Confluencia.getTransaction(session -> {
+            Assertions.assertTrue(Confluencia.FILE.countAllFileSize(session) > 0);
         });
     }
 }
