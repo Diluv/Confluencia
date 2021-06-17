@@ -15,6 +15,10 @@ public class DatabaseUtil {
             return defaultReturn;
         }
 
-        return resultList.get(0);
+        R result = resultList.get(0);
+        if (result == null) {
+            return defaultReturn;
+        }
+        return result;
     }
 }
