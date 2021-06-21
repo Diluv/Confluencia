@@ -1,6 +1,8 @@
 package com.diluv.confluencia.database;
 
+import java.sql.Timestamp;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
@@ -212,6 +214,25 @@ public class UserDatabase {
         query.setMaxResults(1);
         query.setParameter(userParam, user);
         query.setParameter(codeParam, code);
+        return DatabaseUtil.findOne(query.getResultList());
+    }
+
+
+    public UserMfaEmailEntity findUserMFAEmail (Session session, UsersEntity user) {
+
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<UserMfaEmailEntity> q = cb.createQuery(UserMfaEmailEntity.class);
+        Root<UserMfaEmailEntity> entity = q.from(UserMfaEmailEntity.class);
+        ParameterExpression<UsersEntity> userParam = cb.parameter(UsersEntity.class);
+        q.select(entity);
+        q.where(cb.and(
+            cb.equal(entity.get("user"), userParam),
+            cb.greaterThanOrEqualTo(entity.get("createdAt"), new Timestamp(System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(10)))
+        ));
+
+        TypedQuery<UserMfaEmailEntity> query = session.createQuery(q);
+        query.setMaxResults(1);
+        query.setParameter(userParam, user);
         return DatabaseUtil.findOne(query.getResultList());
     }
 
