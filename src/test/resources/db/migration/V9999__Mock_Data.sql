@@ -785,6 +785,7 @@ VALUES (94, 1, 'Coauthor'),
        (44, 2, 'Coauthor'),
        (48, 2, 'Coauthor'),
        (60, 2, 'Coauthor'),
+       (29, 2, 'Coauthor'),
        (6, 2, 'Coauthor'),
        (1, 2, 'Testing'),
        (1, 3, 'Testing');
