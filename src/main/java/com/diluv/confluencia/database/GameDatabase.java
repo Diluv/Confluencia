@@ -2,18 +2,11 @@ package com.diluv.confluencia.database;
 
 import java.util.List;
 
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.ParameterExpression;
-import javax.persistence.criteria.Root;
-
 import org.hibernate.Session;
 
 import com.diluv.confluencia.database.record.FeaturedGamesEntity;
 import com.diluv.confluencia.database.record.GamesEntity;
 import com.diluv.confluencia.database.record.ProjectTypesEntity;
-import com.diluv.confluencia.database.sort.Order;
 import com.diluv.confluencia.database.sort.Sort;
 import com.diluv.confluencia.utils.DatabaseUtil;
 
@@ -21,102 +14,57 @@ public class GameDatabase {
 
     public long countAllBySearch (Session session, String search) {
 
-        CriteriaBuilder cb = session.getCriteriaBuilder();
+        final String hql = "SELECT COUNT(*) FROM GamesEntity WHERE name LIKE :search";
 
-        CriteriaQuery<Long> q = cb.createQuery(Long.class);
-
-        ParameterExpression<String> searchParam = cb.parameter(String.class);
-
-        Root<GamesEntity> entity = q.from(GamesEntity.class);
-        q.select(cb.count(entity));
-        q.where(cb.like(entity.get("name"), searchParam));
-
-        TypedQuery<Long> query = session.createQuery(q);
-        query.setParameter(searchParam, "%" + search + "%");
-        return DatabaseUtil.findOne(query.getResultList(), 0L);
+        return DatabaseUtil.findOne(session.createQuery(hql, Long.class)
+            .setParameter("search", "%" + search + "%")
+            .getResultList(), 0L);
     }
 
     public List<GamesEntity> findAll (Session session, long page, int limit, Sort sort, String search) {
 
-        CriteriaBuilder cb = session.getCriteriaBuilder();
+        final String hql = "FROM GamesEntity WHERE name LIKE :search ORDER BY :order_column " + sort.getOrder().name;
 
-        CriteriaQuery<GamesEntity> q = cb.createQuery(GamesEntity.class);
-        Root<GamesEntity> entity = q.from(GamesEntity.class);
-
-        ParameterExpression<String> searchParam = cb.parameter(String.class);
-
-        q.select(entity);
-        q.where(cb.like(entity.get("name"), searchParam));
-        if (sort.getOrder() == Order.ASC) {
-            q.orderBy(cb.asc(entity.get(sort.getColumn())));
-        }
-        else {
-            q.orderBy(cb.desc(entity.get(sort.getColumn())));
-        }
-
-        TypedQuery<GamesEntity> query = session.createQuery(q);
-        query.setParameter(searchParam, "%" + search + "%");
-        query.setFirstResult((int) ((page - 1) * limit));
-        query.setMaxResults(limit);
-        return query.getResultList();
+        return session.createQuery(hql, GamesEntity.class)
+            .setParameter("search", "%" + search + "%")
+            .setParameter("order_column", sort.getColumn())
+            .setFirstResult((int) ((page - 1) * limit))
+            .setMaxResults(limit)
+            .getResultList();
     }
 
     public GamesEntity findOneBySlug (Session session, String slug) {
 
-        CriteriaBuilder cb = session.getCriteriaBuilder();
-        CriteriaQuery<GamesEntity> q = cb.createQuery(GamesEntity.class);
+        final String hql = "FROM GamesEntity WHERE slug = :slug";
 
-        ParameterExpression<String> slugParam = cb.parameter(String.class);
-
-        Root<GamesEntity> entity = q.from(GamesEntity.class);
-        q.select(entity);
-        q.where(cb.like(entity.get("slug"), slugParam));
-
-        TypedQuery<GamesEntity> query = session.createQuery(q);
-        query.setParameter(slugParam, slug);
-        return DatabaseUtil.findOne(query.getResultList());
+        return DatabaseUtil.findOne(session.createQuery(hql, GamesEntity.class)
+            .setParameter("slug", slug)
+            .setMaxResults(1)
+            .getResultList());
     }
 
     public List<FeaturedGamesEntity> findFeaturedGames (Session session) {
 
-        CriteriaBuilder cb = session.getCriteriaBuilder();
+        final String hql = "FROM FeaturedGamesEntity";
 
-        CriteriaQuery<FeaturedGamesEntity> q = cb.createQuery(FeaturedGamesEntity.class);
-
-        Root<FeaturedGamesEntity> entity = q.from(FeaturedGamesEntity.class);
-
-        q.select(entity);
-
-        TypedQuery<FeaturedGamesEntity> query = session.createQuery(q);
-        return query.getResultList();
+        return session.createQuery(hql, FeaturedGamesEntity.class)
+            .getResultList();
     }
 
     public long countAllProjectTypes (Session session) {
 
-        CriteriaBuilder cb = session.getCriteriaBuilder();
+        final String hql = "SELECT COUNT(*) FROM ProjectTypesEntity";
 
-        CriteriaQuery<Long> q = cb.createQuery(Long.class);
-
-        Root<ProjectTypesEntity> entity = q.from(ProjectTypesEntity.class);
-        q.select(cb.count(entity));
-
-        TypedQuery<Long> query = session.createQuery(q);
-        return DatabaseUtil.findOne(query.getResultList(), 0L);
+        return DatabaseUtil.findOne(session.createQuery(hql, Long.class)
+            .getResultList(), 0L);
     }
 
     public List<ProjectTypesEntity> findAllProjectTypesByGameSlug (Session session, String gameSlug) {
 
-        CriteriaBuilder cb = session.getCriteriaBuilder();
+        final String hql = "FROM ProjectTypesEntity WHERE game.slug = :game_slug";
 
-        CriteriaQuery<ProjectTypesEntity> q = cb.createQuery(ProjectTypesEntity.class);
-        Root<ProjectTypesEntity> entity = q.from(ProjectTypesEntity.class);
-        ParameterExpression<GamesEntity> gameParam = cb.parameter(GamesEntity.class);
-
-        q.select(entity);
-        q.where(cb.equal(entity.get("game"), gameParam));
-
-        TypedQuery<ProjectTypesEntity> query = session.createQuery(q);
-        query.setParameter(gameParam, new GamesEntity(gameSlug));
-        return query.getResultList();
+        return session.createQuery(hql, ProjectTypesEntity.class)
+            .setParameter("game_slug", gameSlug)
+            .getResultList();
     }
 }

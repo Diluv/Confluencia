@@ -1,11 +1,5 @@
 package com.diluv.confluencia.database;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import com.diluv.confluencia.Confluencia;
 import com.diluv.confluencia.ConfluenciaTest;
 import com.diluv.confluencia.database.record.GamesEntity;
@@ -14,13 +8,21 @@ import com.diluv.confluencia.database.record.ProjectsEntity;
 import com.diluv.confluencia.database.record.UsersEntity;
 import com.diluv.confluencia.database.sort.ProjectSort;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 public class TestProjectDatabase extends ConfluenciaTest {
 
     @Test
     public void countAllProjectsBySlug () {
 
         Confluencia.getTransaction(session -> {
-            Assertions.assertEquals(127, Confluencia.PROJECT.countAllByGameSlug(session, "minecraft-je"));
+            Assertions.assertEquals(126, Confluencia.PROJECT.countAllByGameSlug(session, "minecraft-je"));
         });
     }
 
@@ -66,12 +68,14 @@ public class TestProjectDatabase extends ConfluenciaTest {
 
 
     @Test
-    public void countAllByUsername () {
+    public void countAllByUserId () {
 
         Confluencia.getTransaction(session -> {
-            Assertions.assertEquals(0, Confluencia.PROJECT.countAllByUsername(session, "invalid", false));
-            Assertions.assertEquals(82, Confluencia.PROJECT.countAllByUsername(session, "darkhax", false));
-            Assertions.assertEquals(52, Confluencia.PROJECT.countAllByUsername(session, "jaredlll08", false));
+            Assertions.assertEquals(0, Confluencia.PROJECT.countAllByUserId(session, 0, false));
+            Assertions.assertEquals(82, Confluencia.PROJECT.countAllByUserId(session, 1, false));
+            Assertions.assertEquals(84, Confluencia.PROJECT.countAllByUserId(session, 1, true));
+            Assertions.assertEquals(52, Confluencia.PROJECT.countAllByUserId(session, 2, false));
+            Assertions.assertEquals(52, Confluencia.PROJECT.countAllByUserId(session, 2, true));
         });
     }
 
@@ -79,9 +83,9 @@ public class TestProjectDatabase extends ConfluenciaTest {
     public void findAllByUsername () {
 
         Confluencia.getTransaction(session -> {
-            Assertions.assertEquals(0, Confluencia.PROJECT.findAllByUsername(session, "invalid", false, 1, 200, ProjectSort.NEW).size());
-            Assertions.assertEquals(82, Confluencia.PROJECT.findAllByUsername(session, "darkhax", false, 1, 200, ProjectSort.NEW).size());
-            Assertions.assertEquals(52, Confluencia.PROJECT.findAllByUsername(session, "jaredlll08", false, 1, 200, ProjectSort.NEW).size());
+            Assertions.assertEquals(0, Confluencia.PROJECT.findAllByUserId(session, 0, false, 1, 200, ProjectSort.NEW).size());
+            Assertions.assertEquals(82, Confluencia.PROJECT.findAllByUserId(session, 1, false, 1, 200, ProjectSort.NEW).size());
+            Assertions.assertEquals(52, Confluencia.PROJECT.findAllByUserId(session, 2, false, 1, 200, ProjectSort.NEW).size());
         });
     }
 
@@ -114,13 +118,13 @@ public class TestProjectDatabase extends ConfluenciaTest {
     public void findAllProjectsByGameSlugAndProjectTypeAndVersion () {
 
         Confluencia.getTransaction(session -> {
-            Assertions.assertEquals(1, Confluencia.PROJECT.findAllByGameAndProjectType(session, "minecraft-je", "mods", "", 1, 10, ProjectSort.NEW, "1.15.2", new String[0], new String[0]).size());
-            Assertions.assertEquals(1, Confluencia.PROJECT.findAllByGameAndProjectType(session, "minecraft-je", "mods", "", 1, 10, ProjectSort.NEW, "1.15.2", new String[]{"tech"}, new String[0]).size());
-            Assertions.assertEquals(1, Confluencia.PROJECT.findAllByGameAndProjectType(session, "minecraft-je", "mods", "", 1, 10, ProjectSort.NEW, "1.15.2", new String[]{"tech"}, new String[]{"forge"}).size());
-            Assertions.assertEquals(0, Confluencia.PROJECT.findAllByGameAndProjectType(session, "minecraft-je", "mods", "", 1, 10, ProjectSort.NEW, null, new String[]{"tech", "magic"}, new String[]{"forge"}).size());
-            Assertions.assertEquals(1, Confluencia.PROJECT.findAllByGameAndProjectType(session, "minecraft-je", "mods", "", 1, 10, ProjectSort.NEW, null, new String[0], new String[]{"forge"}).size());
-            Assertions.assertEquals(2, Confluencia.PROJECT.findAllByGameAndProjectType(session, "minecraft-je", "mods", "", 1, 10, ProjectSort.NEW, null, new String[]{"magic"}, new String[0]).size());
-            Assertions.assertEquals(1, Confluencia.PROJECT.findAllByGameAndProjectType(session, "minecraft-je", "mods", "", 1, 10, ProjectSort.NEW, null, new String[]{"tech"}, new String[]{"forge"}).size());
+            Assertions.assertEquals(1, Confluencia.PROJECT.findAllByGameAndProjectType(session, "minecraft-je", "mods", "", 1, 10, ProjectSort.NEW, "1.15.2", Collections.emptySet(), Collections.emptySet()).size());
+            Assertions.assertEquals(1, Confluencia.PROJECT.findAllByGameAndProjectType(session, "minecraft-je", "mods", "", 1, 10, ProjectSort.NEW, "1.15.2", Collections.singleton("tech"), Collections.emptySet()).size());
+            Assertions.assertEquals(1, Confluencia.PROJECT.findAllByGameAndProjectType(session, "minecraft-je", "mods", "", 1, 10, ProjectSort.NEW, "1.15.2", Collections.singleton("tech"), Collections.singleton("forge")).size());
+            Assertions.assertEquals(0, Confluencia.PROJECT.findAllByGameAndProjectType(session, "minecraft-je", "mods", "", 1, 10, ProjectSort.NEW, null, new HashSet<>(Arrays.asList("tech", "magic")), Collections.singleton("forge")).size());
+            Assertions.assertEquals(1, Confluencia.PROJECT.findAllByGameAndProjectType(session, "minecraft-je", "mods", "", 1, 10, ProjectSort.NEW, null, Collections.emptySet(), Collections.singleton("forge")).size());
+            Assertions.assertEquals(2, Confluencia.PROJECT.findAllByGameAndProjectType(session, "minecraft-je", "mods", "", 1, 10, ProjectSort.NEW, null, Collections.singleton("magic"), Collections.emptySet()).size());
+            Assertions.assertEquals(1, Confluencia.PROJECT.findAllByGameAndProjectType(session, "minecraft-je", "mods", "", 1, 10, ProjectSort.NEW, null, Collections.singleton("tech"), Collections.singleton("forge")).size());
         });
     }
 
@@ -141,7 +145,7 @@ public class TestProjectDatabase extends ConfluenciaTest {
             project.setName("Insert");
             project.setSummary("Insert Summary");
             project.setDescription("Insert Description");
-            project.setOwner(new UsersEntity(2));
+            project.setOwner(new UsersEntity(3));
             project.setProjectType(new ProjectTypesEntity(new GamesEntity("minecraft-je"), "mods"));
             session.save(project);
             Assertions.assertTrue(project.getId() > 0);
@@ -164,9 +168,9 @@ public class TestProjectDatabase extends ConfluenciaTest {
     public void findAllTagsByGameSlugAndProjectTypeSlug () {
 
         Confluencia.getTransaction(session -> {
-            Assertions.assertEquals(0, Confluencia.PROJECT.findAllTagsByGameSlugAndProjectTypeSlug(session, new ProjectTypesEntity(new GamesEntity("invalid"), "invalid")).size());
-            Assertions.assertEquals(0, Confluencia.PROJECT.findAllTagsByGameSlugAndProjectTypeSlug(session, new ProjectTypesEntity(new GamesEntity("minecraft-je"), "invalid")).size());
-            Assertions.assertEquals(2, Confluencia.PROJECT.findAllTagsByGameSlugAndProjectTypeSlug(session, new ProjectTypesEntity(new GamesEntity("minecraft-je"), "mods")).size());
+            Assertions.assertEquals(0, Confluencia.PROJECT.findAllTagsByGameSlugAndProjectTypeSlug(session, "invalid", "invalid").size());
+            Assertions.assertEquals(0, Confluencia.PROJECT.findAllTagsByGameSlugAndProjectTypeSlug(session, "minecraft-je", "invalid").size());
+            Assertions.assertEquals(2, Confluencia.PROJECT.findAllTagsByGameSlugAndProjectTypeSlug(session, "minecraft-je", "mods").size());
         });
     }
 

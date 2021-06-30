@@ -16,7 +16,7 @@ public class TestSecurityDatabase extends ConfluenciaTest {
     public void findAPITokensByUserId () {
 
         Confluencia.getTransaction(session -> {
-            Assertions.assertEquals(2, Confluencia.SECURITY.findAPITokensByUserId(session, new UsersEntity(1)).size());
+            Assertions.assertEquals(2, Confluencia.SECURITY.findAPITokensByUserId(session, 1).size());
         });
     }
 
