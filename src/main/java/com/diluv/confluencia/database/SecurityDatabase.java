@@ -116,10 +116,9 @@ public class SecurityDatabase {
 
     public List<UserCompromisedPasswordsEntity> findAllPasswordByHash (Session session, String hash) {
 
-        final String hql = "FROM UserCompromisedPasswordsEntity WHERE passwordHash = :password_hash";
+        final String hql = "FROM UserCompromisedPasswordsEntity WHERE passwordHash LIKE :password_hash";
 
         return session.createQuery(hql, UserCompromisedPasswordsEntity.class)
-            .setMaxResults(1)
             .setParameter("password_hash", hash + "%")
             .getResultList();
     }

@@ -1,16 +1,24 @@
 package com.diluv.confluencia.database;
 
-import com.diluv.confluencia.Confluencia;
-import com.diluv.confluencia.ConfluenciaTest;
-import com.diluv.confluencia.database.record.NodeCDNCommitsEntity;
-import com.diluv.confluencia.database.record.UsersEntity;
+import java.util.UUID;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.UUID;
+import com.diluv.confluencia.Confluencia;
+import com.diluv.confluencia.ConfluenciaTest;
+import com.diluv.confluencia.database.record.NodeCDNCommitsEntity;
 
 public class TestSecurityDatabase extends ConfluenciaTest {
+
+    @Test
+    public void findAPITokensById () {
+
+        Confluencia.getTransaction(session -> {
+            Assertions.assertNotNull(Confluencia.SECURITY.findAPITokensById(session, 1));
+            Assertions.assertNull(Confluencia.SECURITY.findAPITokensById(session, 20));
+        });
+    }
 
     @Test
     public void findAPITokensByUserId () {
@@ -106,6 +114,25 @@ public class TestSecurityDatabase extends ConfluenciaTest {
         Confluencia.getTransaction(session -> {
             Assertions.assertFalse(Confluencia.SECURITY.existsEmailBlockList(session, "email@diluv.com"));
             Assertions.assertTrue(Confluencia.SECURITY.existsEmailBlockList(session, "blocked@diluv.com"));
+        });
+    }
+
+    @Test
+    public void findRegistrationCode () {
+
+        Confluencia.getTransaction(session -> {
+            Assertions.assertNotNull(Confluencia.SECURITY.findRegistrationCode(session, "9cfc7734-faff-4c51-8ce6-9d3b83d63be9"));
+            Assertions.assertNull(Confluencia.SECURITY.findRegistrationCode(session, "INVALID"));
+        });
+    }
+
+    @Test
+    public void findAllPasswordByHash () {
+
+        Confluencia.getTransaction(session -> {
+            // "Password"
+            Assertions.assertEquals(1, Confluencia.SECURITY.findAllPasswordByHash(session, "5BAA6").size());
+            Assertions.assertEquals(0, Confluencia.SECURITY.findAllPasswordByHash(session, "INVALID").size());
         });
     }
 }

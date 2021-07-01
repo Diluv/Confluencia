@@ -20,6 +20,14 @@ public class TestUserDatabase extends ConfluenciaTest {
     }
 
     @Test
+    public void countAllTempUsers () {
+
+        Confluencia.getTransaction(session -> {
+            Assertions.assertEquals(3, Confluencia.USER.countAllTempUsers(session));
+        });
+    }
+
+    @Test
     public void findOneByUsername () {
 
         Confluencia.getTransaction(session -> {
@@ -150,11 +158,20 @@ public class TestUserDatabase extends ConfluenciaTest {
     }
 
     @Test
-    public void findUserMFAEmail () {
+    public void findUserMFAEmailByUserId(){
 
         Confluencia.getTransaction(session -> {
-            Assertions.assertNull(Confluencia.USER.findUserMFAEmail(session, 1, "22222222"));
-            Assertions.assertNotNull(Confluencia.USER.findUserMFAEmail(session, 2, "22222222"));
+            Assertions.assertNull(Confluencia.USER.findUserMFAEmailByUserId(session, 1));
+            Assertions.assertNotNull(Confluencia.USER.findUserMFAEmailByUserId(session, 2));
+        });
+    }
+
+    @Test
+    public void findUserMFAEmailByUserIdAndCode () {
+
+        Confluencia.getTransaction(session -> {
+            Assertions.assertNull(Confluencia.USER.findUserMFAEmailByUserIdAndCode(session, 1, "22222222"));
+            Assertions.assertNotNull(Confluencia.USER.findUserMFAEmailByUserIdAndCode(session, 2, "22222222"));
         });
     }
 

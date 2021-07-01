@@ -19,6 +19,15 @@ import java.util.Set;
 public class TestProjectDatabase extends ConfluenciaTest {
 
     @Test
+    public void countAll () {
+
+        Confluencia.getTransaction(session -> {
+            Assertions.assertEquals(127, Confluencia.PROJECT.countAll(session, true));
+            Assertions.assertEquals(3, Confluencia.PROJECT.countAll(session, false));
+        });
+    }
+
+    @Test
     public void countAllProjectsBySlug () {
 
         Confluencia.getTransaction(session -> {

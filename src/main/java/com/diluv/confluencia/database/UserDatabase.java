@@ -131,7 +131,7 @@ public class UserDatabase {
     }
 
 
-    public UserMfaEmailEntity findUserMFAEmail (Session session, long userId) {
+    public UserMfaEmailEntity findUserMFAEmailByUserId (Session session, long userId) {
 
         final String hql = "FROM UserMfaEmailEntity WHERE user.id = :user_id AND createdAt >= :created_at";
 
@@ -141,7 +141,7 @@ public class UserDatabase {
             .getResultList());
     }
 
-    public UserMfaEmailEntity findUserMFAEmail (Session session, long userId, String code) {
+    public UserMfaEmailEntity findUserMFAEmailByUserIdAndCode (Session session, long userId, String code) {
 
         final String hql = "FROM UserMfaEmailEntity WHERE user.id = :user_id AND code= :code";
 
