@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.hibernate.Session;
+import org.hibernate.query.Query;
 
 import com.diluv.confluencia.database.record.FeaturedProjectsEntity;
 import com.diluv.confluencia.database.record.ProjectTypesEntity;
@@ -115,31 +116,45 @@ public class ProjectDatabase {
                                                              String search, long page, int limit,
                                                              Sort sort, String gameVersion, Set<String> tags, Set<String> loaders) {
 
-        final String hql = "FROM ProjectsEntity p WHERE p.released = TRUE AND p.name LIKE :search AND p.game.slug = :game_slug AND p.projectType.slug = :project_type_slug\n" +
-            "AND (:skip_tags = TRUE OR p.id IN (SELECT pt.project.id FROM ProjectTagsEntity pt WHERE pt.project.game.slug = :game_slug AND pt.project.projectType.slug = :project_type_slug AND pt.tag.slug IN (:tags) GROUP BY (pt.project.id) HAVING COUNT(pt.project.id) = :tag_count))\n" +
-            "AND (:skip_loaders = TRUE OR p.id IN (SELECT pfl.projectFile.project.id FROM ProjectFileLoadersEntity pfl WHERE pfl.projectFile.project.game.slug = :game_slug AND pfl.projectFile.project.projectType.slug = :project_type_slug AND pfl.loader.slug IN (:loaders) GROUP BY (pfl.projectFile.project.id) HAVING COUNT(pfl.projectFile.project.id) = :loader_count))\n" +
-            "AND (:skip_version = TRUE OR p.id IN (SELECT pfgv.projectFile.project.id FROM ProjectFileGameVersionsEntity pfgv WHERE pfgv.gameVersion.version = :game_version AND pfgv.projectFile.project.id = p.id))\n" +
-            "ORDER BY :order_column " + sort.getOrder().name;
+        String hql = "FROM ProjectsEntity p WHERE p.released = TRUE AND p.name LIKE :search AND p.game.slug = :game_slug AND p.projectType.slug = :project_type_slug\n";
 
-        return session.createQuery(hql, ProjectsEntity.class)
-            .setParameter("game_slug", gameSlug)
-            .setParameter("project_type_slug", projectTypeSlug)
-            .setParameter("search", "%" + search + "%")
+        if (tags.size() != 0) {
+            hql += "AND (p.id IN (SELECT pt.project.id FROM ProjectTagsEntity pt WHERE pt.project.game.slug = :game_slug AND pt.project.projectType.slug = :project_type_slug AND pt.tag.slug IN (:tags) GROUP BY (pt.project.id) HAVING COUNT(pt.project.id) = :tag_count))\n";
+        }
 
-            .setParameter("skip_tags", tags.size() == 0)
-            .setParameter("tags", tags)
-            .setParameter("tag_count", (long) tags.size())
+        if (loaders.size() != 0) {
+            hql += "AND (p.id IN (SELECT pfl.projectFile.project.id FROM ProjectFileLoadersEntity pfl WHERE pfl.projectFile.project.game.slug = :game_slug AND pfl.projectFile.project.projectType.slug = :project_type_slug AND pfl.loader.slug IN (:loaders) GROUP BY (pfl.projectFile.project.id) HAVING COUNT(pfl.projectFile.project.id) = :loader_count))\n";
+        }
 
-            .setParameter("skip_loaders", loaders.size() == 0)
-            .setParameter("loaders", loaders)
-            .setParameter("loader_count", (long) loaders.size())
+        if (gameVersion != null) {
+            hql += "AND (p.id IN (SELECT pfgv.projectFile.project.id FROM ProjectFileGameVersionsEntity pfgv WHERE pfgv.gameVersion.version = :game_version AND pfgv.projectFile.project.id = p.id))\n";
+        }
 
-            .setParameter("skip_version", gameVersion == null)
-            .setParameter("game_version", gameVersion)
-            .setParameter("order_column", sort.getColumn())
+        hql += "ORDER BY :order_column " + sort.getOrder().name;
+
+        final Query<ProjectsEntity> query = session.createQuery(hql, ProjectsEntity.class)
             .setFirstResult((int) ((page - 1) * limit))
             .setMaxResults(limit)
-            .getResultList();
+            .setParameter("order_column", sort.getColumn())
+            .setParameter("game_slug", gameSlug)
+            .setParameter("project_type_slug", projectTypeSlug)
+            .setParameter("search", "%" + search + "%");
+
+        if (tags.size() != 0) {
+            query.setParameter("tags", tags);
+            query.setParameter("tag_count", (long) tags.size());
+        }
+
+        if (loaders.size() != 0) {
+            query.setParameter("loaders", loaders);
+            query.setParameter("loader_count", (long) loaders.size());
+        }
+
+        if (gameVersion != null) {
+            query.setParameter("game_version", gameVersion);
+        }
+
+        return query.getResultList();
     }
 
     public List<FeaturedProjectsEntity> findFeaturedProjects (Session session) {

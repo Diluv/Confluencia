@@ -19,6 +19,7 @@ import com.diluv.confluencia.database.FileDatabase;
 import com.diluv.confluencia.database.GameDatabase;
 import com.diluv.confluencia.database.MiscDatabase;
 import com.diluv.confluencia.database.NewsDatabase;
+import com.diluv.confluencia.database.NotificationDatabase;
 import com.diluv.confluencia.database.ProjectDatabase;
 import com.diluv.confluencia.database.SecurityDatabase;
 import com.diluv.confluencia.database.UserDatabase;
@@ -34,6 +35,7 @@ public class Confluencia {
     public static final ProjectDatabase PROJECT = new ProjectDatabase();
     public static final SecurityDatabase SECURITY = new SecurityDatabase();
     public static final UserDatabase USER = new UserDatabase();
+    public static final NotificationDatabase NOTIFICATION = new NotificationDatabase();
 
     public static final Logger LOGGER = LogManager.getLogger("Confluencia");
     private static SessionFactory sessionFactory;
@@ -66,6 +68,7 @@ public class Confluencia {
         configuration.addAnnotatedClass(ImagesEntity.class);
         configuration.addAnnotatedClass(NewsEntity.class);
         configuration.addAnnotatedClass(NodeCDNCommitsEntity.class);
+        configuration.addAnnotatedClass(NotificationsEntity.class);
         configuration.addAnnotatedClass(PasswordResetEntity.class);
         configuration.addAnnotatedClass(APITokensEntity.class);
         configuration.addAnnotatedClass(ProjectAuthorPermissionsEntity.class);
@@ -76,6 +79,8 @@ public class Confluencia {
         configuration.addAnnotatedClass(ProjectFileGameVersionsEntity.class);
         configuration.addAnnotatedClass(ProjectFileLoadersEntity.class);
         configuration.addAnnotatedClass(ProjectFilesEntity.class);
+        configuration.addAnnotatedClass(NotificationProjectInvitePermissionsEntity.class);
+        configuration.addAnnotatedClass(NotificationProjectInvitesEntity.class);
         configuration.addAnnotatedClass(ProjectLinksEntity.class);
         configuration.addAnnotatedClass(ProjectRequestChangeEntity.class);
         configuration.addAnnotatedClass(ProjectReviewEntity.class);

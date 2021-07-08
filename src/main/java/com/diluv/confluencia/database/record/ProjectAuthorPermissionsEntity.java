@@ -10,7 +10,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
 @Entity
+@DynamicInsert
+@DynamicUpdate
 @Table(name = "project_author_permissions")
 @IdClass(ProjectAuthorPermissionsEntityPK.class)
 public class ProjectAuthorPermissionsEntity {
@@ -23,6 +28,16 @@ public class ProjectAuthorPermissionsEntity {
     @Id
     @Column(name = "permission")
     private String permission;
+
+    public ProjectAuthorPermissionsEntity () {
+
+    }
+
+    public ProjectAuthorPermissionsEntity (ProjectAuthorsEntity author, String permission) {
+
+        this.author = author;
+        this.permission = permission;
+    }
 
     public ProjectAuthorsEntity getAuthor () {
 

@@ -787,8 +787,7 @@ VALUES (94, 1, 'Coauthor'),
        (60, 2, 'Coauthor'),
        (29, 2, 'Coauthor'),
        (6, 2, 'Coauthor'),
-       (1, 2, 'Testing'),
-       (1, 3, 'Testing');
+       (1, 2, 'Testing');
 
 INSERT INTO project_author_permissions(project_author_id, permission)
 VALUES (6, 'project.upload'),
@@ -971,3 +970,24 @@ VALUES ('9cfc7734-faff-4c51-8ce6-9d3b83d63be9', TRUE, 1),
        ('8482bd6d-f4e4-46c1-b5f6-f319aa6802dc', FALSE, 1),
        ('9d54f2a1-1245-4343-a7ec-8a10e043f472', TRUE, 2),
        ('e6454299-4642-49d0-a24e-4991631965f8', FALSE, 2);
+
+INSERT INTO notifications(text, type, viewed_at, user_id)
+VALUES ('Project was released', 'GENERIC', NULL, 1),
+       ('You have been invited to join the project', 'PROJECT_INVITE', NULL, 1),
+       ('You have been invited to join the project', 'PROJECT_INVITE', NOW(), 1),
+       ('Project was released', 'GENERIC', NULL, 2),
+       ('Project was released', 'GENERIC', NOW(), 2),
+       ('You have been invited to join the project', 'PROJECT_INVITE', NULL, 2),
+       ('You have been invited to join the project', 'PROJECT_INVITE', NULL, 2),
+       ('You have been invited to join the project', 'PROJECT_INVITE', NULL, 2),
+       ('You have been invited to join the project', 'PROJECT_INVITE', NULL, 2),
+       ('You have been invited to join the project', 'PROJECT_INVITE', NULL, 3);
+
+INSERT INTO notification_project_invites(id, role, status, project_id, sender_id)
+VALUES (2, 'Test', 'PENDING', 83, 2),
+       (3, 'Test', 'PENDING', 83, 2),
+       (6, 'Test', 'PENDING', 12, 1),
+       (7, 'Test', 'CANCELLED', 12, 1),
+       (8, 'Test', 'ACCEPTED', 12, 1),
+       (9, 'Test', 'DECLINED', 12, 1),
+       (10, 'Test', 'EXPIRED', 12, 1);

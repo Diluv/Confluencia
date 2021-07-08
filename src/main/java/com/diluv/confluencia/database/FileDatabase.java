@@ -6,10 +6,10 @@ import java.util.List;
 import javax.persistence.LockModeType;
 
 import org.hibernate.Session;
+import org.hibernate.query.Query;
 
 import com.diluv.confluencia.database.record.FileProcessingStatus;
 import com.diluv.confluencia.database.record.ProjectFilesEntity;
-import com.diluv.confluencia.database.record.ProjectsEntity;
 import com.diluv.confluencia.database.sort.Sort;
 import com.diluv.confluencia.utils.DatabaseUtil;
 
@@ -82,21 +82,32 @@ public class FileDatabase {
 
     public List<ProjectFilesEntity> findAllByProject (Session session, long projectId, boolean authorized, long page, int limit, Sort sort, String gameVersion, String search) {
 
-        final String hql = "FROM ProjectFilesEntity pf\n" +
+        String hql = "FROM ProjectFilesEntity pf\n" +
             "WHERE pf.project.id = :project_id\n" +
-            "AND pf.name LIKE :search\n" +
-            "AND (:authorized = TRUE OR pf.released = TRUE)\n" +
-            "AND (:skip_version = TRUE OR pf.id IN (SELECT pfgv.projectFile.id FROM ProjectFileGameVersionsEntity pfgv WHERE pfgv.gameVersion.version = :game_version AND pfgv.projectFile.project.id = :project_id))";
+            "AND pf.name LIKE :search\n";
 
-        return session.createQuery(hql, ProjectFilesEntity.class)
-            .setParameter("project_id", projectId)
-            .setParameter("search", "%" + search + "%")
-            .setParameter("authorized", authorized)
-            .setParameter("skip_version", gameVersion == null)
-            .setParameter("game_version", gameVersion)
+        if (!authorized) {
+            hql += "AND (pf.released = TRUE)\n";
+        }
+
+        if (gameVersion != null) {
+            hql += "AND (pf.id IN (SELECT pfgv.projectFile.id FROM ProjectFileGameVersionsEntity pfgv WHERE pfgv.gameVersion.version = :game_version AND pfgv.projectFile.project.id = :project_id))\n";
+        }
+
+        hql += "ORDER BY :order_column " + sort.getOrder().name;
+
+        final Query<ProjectFilesEntity> query = session.createQuery(hql, ProjectFilesEntity.class)
             .setFirstResult((int) ((page - 1) * limit))
             .setMaxResults(limit)
-            .getResultList();
+            .setParameter("order_column", sort.getColumn())
+            .setParameter("project_id", projectId)
+            .setParameter("search", "%" + search + "%");
+
+        if (gameVersion != null) {
+            query.setParameter("game_version", gameVersion);
+        }
+
+        return query.getResultList();
     }
 
     public boolean existsByProjectIdAndVersion (Session session, long projectId, String version) {
@@ -132,21 +143,30 @@ public class FileDatabase {
             .getResultList();
     }
 
-    public long countByProjectParams (Session session, long projecetId, boolean authorized, String gameVersion, String search) {
+    public long countByProjectParams (Session session, long projectId, boolean authorized, String gameVersion, String search) {
 
-        final String hql = "SELECT COUNT(*) FROM ProjectFilesEntity pf\n" +
+        String hql = "SELECT COUNT(pf.id) FROM ProjectFilesEntity pf\n" +
             "WHERE pf.project.id = :project_id\n" +
-            "AND pf.name LIKE :search\n" +
-            "AND (:authorized = TRUE OR pf.released = TRUE)\n" +
-            "AND (:skip_version = TRUE OR pf.id IN (SELECT pfgv.projectFile.id FROM ProjectFileGameVersionsEntity pfgv WHERE pfgv.gameVersion.version = :game_version AND pfgv.projectFile.project.id = :project_id))";
+            "AND pf.name LIKE :search\n";
 
-        return DatabaseUtil.findOne(session.createQuery(hql, Long.class)
-            .setParameter("project_id", projecetId)
-            .setParameter("search", "%" + search + "%")
-            .setParameter("authorized", authorized)
-            .setParameter("skip_version", gameVersion == null)
-            .setParameter("game_version", gameVersion)
-            .getResultList(), 0L);
+        if (!authorized) {
+            hql += "AND (pf.released = TRUE)\n";
+        }
+
+        if (gameVersion != null) {
+            hql += "AND (pf.id IN (SELECT pfgv.projectFile.id FROM ProjectFileGameVersionsEntity pfgv WHERE pfgv.gameVersion.version = :game_version AND pfgv.projectFile.project.id = :project_id))";
+        }
+
+        final Query<Long> query = session.createQuery(hql, Long.class)
+            .setMaxResults(1)
+            .setParameter("project_id", projectId)
+            .setParameter("search", "%" + search + "%");
+
+        if (gameVersion != null) {
+            query.setParameter("game_version", gameVersion);
+        }
+
+        return DatabaseUtil.findOne(query.getResultList(), 0L);
     }
 
     public long countAllFileSize (Session session) {

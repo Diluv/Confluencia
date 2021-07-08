@@ -1,22 +1,22 @@
 package com.diluv.confluencia.database.record;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
+
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 @Entity
+@DynamicInsert
+@DynamicUpdate
 @Table(name = "project_authors")
 public class ProjectAuthorsEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private long id;
 
@@ -31,8 +31,18 @@ public class ProjectAuthorsEntity {
     @Column(name = "role")
     private String role;
 
-    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
-    private List<ProjectAuthorPermissionsEntity> permissions;
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProjectAuthorPermissionsEntity> permissions = new ArrayList<>();
+
+    public ProjectAuthorsEntity () {
+
+    }
+
+    public ProjectAuthorsEntity (UsersEntity user, String role) {
+
+        this.user = user;
+        this.role = role;
+    }
 
     public long getId () {
 
@@ -77,6 +87,11 @@ public class ProjectAuthorsEntity {
     public List<ProjectAuthorPermissionsEntity> getPermissions () {
 
         return this.permissions;
+    }
+
+    public void addPermission (String permission) {
+
+        this.permissions.add(new ProjectAuthorPermissionsEntity(this, permission));
     }
 
     public void setPermissions (List<ProjectAuthorPermissionsEntity> permissions) {

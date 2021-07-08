@@ -243,9 +243,10 @@ public class ProjectsEntity {
         return this.authors;
     }
 
-    public void setAuthors (List<ProjectAuthorsEntity> authors) {
+    public void addAuthor (ProjectAuthorsEntity author) {
 
-        this.authors = authors;
+        author.setProject(this);
+        this.authors.add(author);
     }
 
     public GamesEntity getGame () {
