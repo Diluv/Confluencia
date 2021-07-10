@@ -33,7 +33,6 @@ public class MiscDatabase {
         final String hql = "FROM RegistrationCodesEntity WHERE valid = TRUE AND user.id = :user_id";
 
         return session.createQuery(hql, RegistrationCodesEntity.class)
-            .setMaxResults(1)
             .setParameter("user_id", userId)
             .getResultList();
     }
