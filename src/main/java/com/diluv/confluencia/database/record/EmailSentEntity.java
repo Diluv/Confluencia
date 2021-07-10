@@ -1,6 +1,6 @@
 package com.diluv.confluencia.database.record;
 
-import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Objects;
 
 import javax.persistence.Column;
@@ -23,7 +23,7 @@ public class EmailSentEntity {
     private String type;
 
     @Column(name = "sent_at")
-    private Timestamp sentAt;
+    private Instant sentAt;
 
     public String getMessageId () {
 
@@ -55,12 +55,12 @@ public class EmailSentEntity {
         this.type = type;
     }
 
-    public Timestamp getSentAt () {
+    public Instant getSentAt () {
 
         return this.sentAt;
     }
 
-    public void setSentAt (Timestamp sentAt) {
+    public void setSentAt (Instant sentAt) {
 
         this.sentAt = sentAt;
     }

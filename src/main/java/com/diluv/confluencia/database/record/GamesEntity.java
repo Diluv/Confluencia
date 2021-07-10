@@ -1,6 +1,6 @@
 package com.diluv.confluencia.database.record;
 
-import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 
@@ -35,7 +35,7 @@ public class GamesEntity {
     private String url;
 
     @Column(name = "created_at", updatable = false)
-    private Timestamp createdAt;
+    private Instant createdAt;
 
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
     private List<ProjectTypesEntity> projectTypes;
@@ -85,12 +85,12 @@ public class GamesEntity {
         this.url = url;
     }
 
-    public Timestamp getCreatedAt () {
+    public Instant getCreatedAt () {
 
         return this.createdAt;
     }
 
-    public void setCreatedAt (Timestamp createdAt) {
+    public void setCreatedAt (Instant createdAt) {
 
         this.createdAt = createdAt;
     }

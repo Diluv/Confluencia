@@ -1,15 +1,13 @@
 package com.diluv.confluencia.database.record;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.*;
 
-import org.hibernate.annotations.DiscriminatorFormula;
-import org.hibernate.annotations.DiscriminatorOptions;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -29,7 +27,7 @@ public class NotificationProjectInvitesEntity extends NotificationsEntity implem
     private NotificationProjectInvitesStatus status = NotificationProjectInvitesStatus.PENDING;
 
     @Column(name = "updated_at")
-    private Timestamp updatedAt;
+    private Instant updatedAt;
 
     @ManyToOne
     @JoinColumn(name = "sender_id")
@@ -66,12 +64,12 @@ public class NotificationProjectInvitesEntity extends NotificationsEntity implem
         this.status = status;
     }
 
-    public Timestamp getUpdatedAt () {
+    public Instant getUpdatedAt () {
 
         return this.updatedAt;
     }
 
-    public void setUpdatedAt (Timestamp updatedAt) {
+    public void setUpdatedAt (Instant updatedAt) {
 
         this.updatedAt = updatedAt;
     }

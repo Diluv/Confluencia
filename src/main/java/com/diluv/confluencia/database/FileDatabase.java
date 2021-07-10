@@ -1,6 +1,6 @@
 package com.diluv.confluencia.database;
 
-import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 
 import javax.persistence.LockModeType;
@@ -21,7 +21,7 @@ public class FileDatabase {
 
         return session.createQuery(hql)
             .setParameter("status", status)
-            .setParameter("processing_time", new Timestamp(System.currentTimeMillis()))
+            .setParameter("processing_time", Instant.now())
             .setParameter("id", id)
             .executeUpdate() == 1;
     }
@@ -32,7 +32,7 @@ public class FileDatabase {
 
         return session.createQuery(hql)
             .setParameter("status", set)
-            .setParameter("processing_time", new Timestamp(System.currentTimeMillis()))
+            .setParameter("processing_time", Instant.now())
             .setParameter("where_status", where)
             .executeUpdate() >= 0;
     }
@@ -121,7 +121,7 @@ public class FileDatabase {
             .getResultList()) != null;
     }
 
-    public int updateAllForRelease (Session session, Timestamp time) {
+    public int updateAllForRelease (Session session, Instant time) {
 
         final String hql = "UPDATE ProjectFilesEntity SET released = TRUE WHERE released = FALSE and processingStatus = :status AND processingStatusChanged <= :processing_time";
 

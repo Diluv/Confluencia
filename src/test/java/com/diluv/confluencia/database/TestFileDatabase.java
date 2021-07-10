@@ -1,15 +1,20 @@
 package com.diluv.confluencia.database;
 
-import com.diluv.confluencia.Confluencia;
-import com.diluv.confluencia.ConfluenciaTest;
-import com.diluv.confluencia.database.record.*;
-import com.diluv.confluencia.database.sort.ProjectFileSort;
-import com.diluv.confluencia.database.sort.ProjectSort;
+import java.time.Instant;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.sql.Timestamp;
+import com.diluv.confluencia.Confluencia;
+import com.diluv.confluencia.ConfluenciaTest;
+import com.diluv.confluencia.database.record.FileProcessingStatus;
+import com.diluv.confluencia.database.record.ProjectFileAntivirusEntity;
+import com.diluv.confluencia.database.record.ProjectFileDownloadsEntity;
+import com.diluv.confluencia.database.record.ProjectFilesEntity;
+import com.diluv.confluencia.database.record.ProjectsEntity;
+import com.diluv.confluencia.database.record.UsersEntity;
+import com.diluv.confluencia.database.sort.ProjectFileSort;
+import com.diluv.confluencia.database.sort.ProjectSort;
 
 public class TestFileDatabase extends ConfluenciaTest {
 
@@ -129,7 +134,7 @@ public class TestFileDatabase extends ConfluenciaTest {
     public void updateAllForRelease () {
 
         Confluencia.getTransaction(session -> {
-            Assertions.assertEquals(1, Confluencia.FILE.updateAllForRelease(session, new Timestamp(System.currentTimeMillis())));
+            Assertions.assertEquals(1, Confluencia.FILE.updateAllForRelease(session, Instant.now()));
         });
     }
 

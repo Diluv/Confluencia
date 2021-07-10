@@ -1,6 +1,6 @@
 package com.diluv.confluencia.database.record;
 
-import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Objects;
 
 import javax.persistence.Column;
@@ -51,7 +51,7 @@ public class UsersEntity {
     private String mfaSecret;
 
     @Column(name = "created_at")
-    private Timestamp createdAt;
+    private Instant createdAt;
 
     @OneToOne
     @JoinColumn(name = "id")
@@ -146,12 +146,12 @@ public class UsersEntity {
         this.mfaSecret = mfaSecret;
     }
 
-    public Timestamp getCreatedAt () {
+    public Instant getCreatedAt () {
 
         return this.createdAt;
     }
 
-    public void setCreatedAt (Timestamp createdAt) {
+    public void setCreatedAt (Instant createdAt) {
 
         this.createdAt = createdAt;
     }

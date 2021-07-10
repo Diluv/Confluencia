@@ -1,6 +1,6 @@
 package com.diluv.confluencia.database;
 
-import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -19,7 +19,7 @@ public class MiscDatabase {
             .getResultList()) != null;
     }
 
-    public int updateAllImagesForRelease (Session session, Timestamp createdAt) {
+    public int updateAllImagesForRelease (Session session, Instant createdAt) {
 
         final String hql = "UPDATE ImagesEntity SET released = TRUE WHERE released = FALSE AND released = FALSE AND createdAt <= :created_at";
 

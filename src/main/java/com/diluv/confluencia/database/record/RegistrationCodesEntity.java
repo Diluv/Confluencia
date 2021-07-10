@@ -1,6 +1,6 @@
 package com.diluv.confluencia.database.record;
 
-import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Objects;
 
 import javax.persistence.Column;
@@ -32,7 +32,7 @@ public class RegistrationCodesEntity {
     private UsersEntity user;
 
     @Column(name = "created_at", updatable = false)
-    private Timestamp createdAt;
+    private Instant createdAt;
 
     public RegistrationCodesEntity () {
 
@@ -74,7 +74,7 @@ public class RegistrationCodesEntity {
         this.user = user;
     }
 
-    public Timestamp getCreatedAt () {
+    public Instant getCreatedAt () {
 
         return this.createdAt;
     }

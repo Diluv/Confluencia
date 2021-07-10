@@ -1,6 +1,6 @@
 package com.diluv.confluencia.database.record;
 
-import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Objects;
 
 import javax.persistence.Column;
@@ -26,7 +26,7 @@ public class NodeCDNCommitsEntity {
     private boolean completed;
 
     @Column(name = "created_at")
-    private Timestamp createdAt;
+    private Instant createdAt;
 
     public NodeCDNCommitsEntity () {
 
@@ -67,12 +67,12 @@ public class NodeCDNCommitsEntity {
         this.completed = completed;
     }
 
-    public Timestamp getCreatedAt () {
+    public Instant getCreatedAt () {
 
         return this.createdAt;
     }
 
-    public void setCreatedAt (Timestamp createdAt) {
+    public void setCreatedAt (Instant createdAt) {
 
         this.createdAt = createdAt;
     }

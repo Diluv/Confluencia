@@ -1,6 +1,7 @@
 package com.diluv.confluencia.database;
 
-import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -137,7 +138,7 @@ public class UserDatabase {
 
         return DatabaseUtil.findOne(session.createQuery(hql, UserMfaEmailEntity.class)
             .setParameter("user_id", userId)
-            .setParameter("created_at", new Timestamp(System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(10)))
+            .setParameter("created_at", Instant.now().minus(10, ChronoUnit.MINUTES))
             .getResultList());
     }
 

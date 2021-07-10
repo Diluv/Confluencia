@@ -1,6 +1,6 @@
 package com.diluv.confluencia.database.record;
 
-import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Objects;
 
 import javax.persistence.Column;
@@ -20,7 +20,7 @@ public class UserCompromisedPasswordsEntity {
     private long occurrences;
 
     @Column(name = "last_updated")
-    private Timestamp lastUpdated;
+    private Instant lastUpdated;
 
     public String getPasswordHash () {
 
@@ -42,12 +42,12 @@ public class UserCompromisedPasswordsEntity {
         this.occurrences = occurrences;
     }
 
-    public Timestamp getLastUpdated () {
+    public Instant getLastUpdated () {
 
         return this.lastUpdated;
     }
 
-    public void setLastUpdated (Timestamp lastUpdated) {
+    public void setLastUpdated (Instant lastUpdated) {
 
         this.lastUpdated = lastUpdated;
     }

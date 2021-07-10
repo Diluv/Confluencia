@@ -1,6 +1,6 @@
 package com.diluv.confluencia.database.record;
 
-import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Objects;
 
 import javax.persistence.Column;
@@ -28,7 +28,7 @@ public class GameVersionsEntity {
     private String type;
 
     @Column(name = "released")
-    private Timestamp releasedAt;
+    private Instant releasedAt;
 
     @ManyToOne
     @JoinColumn(name = "game_slug")
@@ -74,12 +74,12 @@ public class GameVersionsEntity {
         this.type = type;
     }
 
-    public Timestamp getReleasedAt () {
+    public Instant getReleasedAt () {
 
         return this.releasedAt;
     }
 
-    public void setReleasedAt (Timestamp releasedAt) {
+    public void setReleasedAt (Instant releasedAt) {
 
         this.releasedAt = releasedAt;
     }

@@ -1,6 +1,6 @@
 package com.diluv.confluencia.database.record;
 
-import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -48,10 +48,10 @@ public class ProjectFilesEntity {
     private String changelog;
 
     @Column(name = "created_at")
-    private Timestamp createdAt;
+    private Instant createdAt;
 
     @Column(name = "updated_at")
-    private Timestamp updatedAt;
+    private Instant updatedAt;
 
     @Column(name = "release_type")
     private String releaseType;
@@ -63,7 +63,7 @@ public class ProjectFilesEntity {
     private FileProcessingStatus processingStatus;
 
     @Column(name = "processing_status_changed")
-    private Timestamp processingStatusChanged;
+    private Instant processingStatusChanged;
 
     @Column(name = "released")
     private boolean released;
@@ -174,22 +174,22 @@ public class ProjectFilesEntity {
         this.changelog = changelog;
     }
 
-    public Timestamp getCreatedAt () {
+    public Instant getCreatedAt () {
 
         return this.createdAt;
     }
 
-    public void setCreatedAt (Timestamp createdAt) {
+    public void setCreatedAt (Instant createdAt) {
 
         this.createdAt = createdAt;
     }
 
-    public Timestamp getUpdatedAt () {
+    public Instant getUpdatedAt () {
 
         return this.updatedAt;
     }
 
-    public void setUpdatedAt (Timestamp updatedAt) {
+    public void setUpdatedAt (Instant updatedAt) {
 
         this.updatedAt = updatedAt;
     }
@@ -224,12 +224,12 @@ public class ProjectFilesEntity {
         this.processingStatus = processingStatus;
     }
 
-    public Timestamp getProcessingStatusChanged () {
+    public Instant getProcessingStatusChanged () {
 
         return this.processingStatusChanged;
     }
 
-    public void setProcessingStatusChanged (Timestamp processingStatusChanged) {
+    public void setProcessingStatusChanged (Instant processingStatusChanged) {
 
         this.processingStatusChanged = processingStatusChanged;
     }

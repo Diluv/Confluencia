@@ -1,6 +1,6 @@
 package com.diluv.confluencia.database.record;
 
-import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -48,10 +48,10 @@ public class ProjectsEntity {
     private boolean released;
 
     @Column(name = "created_at", updatable = false)
-    private Timestamp createdAt;
+    private Instant createdAt;
 
     @Column(name = "updated_at")
-    private Timestamp updatedAt;
+    private Instant updatedAt;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -172,22 +172,22 @@ public class ProjectsEntity {
         this.released = released;
     }
 
-    public Timestamp getCreatedAt () {
+    public Instant getCreatedAt () {
 
         return this.createdAt;
     }
 
-    public void setCreatedAt (Timestamp createdAt) {
+    public void setCreatedAt (Instant createdAt) {
 
         this.createdAt = createdAt;
     }
 
-    public Timestamp getUpdatedAt () {
+    public Instant getUpdatedAt () {
 
         return this.updatedAt;
     }
 
-    public void setUpdatedAt (Timestamp updatedAt) {
+    public void setUpdatedAt (Instant updatedAt) {
 
         this.updatedAt = updatedAt;
     }

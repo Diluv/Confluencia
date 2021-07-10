@@ -5,7 +5,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 
-import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Objects;
 
 @Entity
@@ -30,10 +30,10 @@ public class NotificationsEntity {
     private NotificationType type;
 
     @Column(name = "created_at", updatable = false)
-    private Timestamp createdAt;
+    private Instant createdAt;
 
     @Column(name = "viewed_at")
-    private Timestamp viewedAt;
+    private Instant viewedAt;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -69,22 +69,22 @@ public class NotificationsEntity {
         this.type = type;
     }
 
-    public Timestamp getCreatedAt () {
+    public Instant getCreatedAt () {
 
         return this.createdAt;
     }
 
-    public void setCreatedAt (Timestamp createdAt) {
+    public void setCreatedAt (Instant createdAt) {
 
         this.createdAt = createdAt;
     }
 
-    public Timestamp getViewedAt () {
+    public Instant getViewedAt () {
 
         return this.viewedAt;
     }
 
-    public void setViewedAt (Timestamp viewedAt) {
+    public void setViewedAt (Instant viewedAt) {
 
         this.viewedAt = viewedAt;
     }

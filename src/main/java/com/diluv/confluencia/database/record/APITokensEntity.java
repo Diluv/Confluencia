@@ -1,6 +1,6 @@
 package com.diluv.confluencia.database.record;
 
-import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Objects;
 
 import javax.persistence.Column;
@@ -32,10 +32,10 @@ public class APITokensEntity {
     private String name;
 
     @Column(name = "created_at", updatable = false)
-    private Timestamp createdAt;
+    private Instant createdAt;
 
     @Column(name = "last_used")
-    private Timestamp lastUsed;
+    private Instant lastUsed;
 
     @Column(name = "deleted")
     private boolean deleted;
@@ -74,22 +74,22 @@ public class APITokensEntity {
         this.name = name;
     }
 
-    public Timestamp getCreatedAt () {
+    public Instant getCreatedAt () {
 
         return this.createdAt;
     }
 
-    public void setCreatedAt (Timestamp createdAt) {
+    public void setCreatedAt (Instant createdAt) {
 
         this.createdAt = createdAt;
     }
 
-    public Timestamp getLastUsed () {
+    public Instant getLastUsed () {
 
         return this.lastUsed;
     }
 
-    public void setLastUsed (Timestamp lastUsed) {
+    public void setLastUsed (Instant lastUsed) {
 
         this.lastUsed = lastUsed;
     }

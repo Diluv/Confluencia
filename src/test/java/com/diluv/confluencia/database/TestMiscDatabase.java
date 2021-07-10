@@ -1,12 +1,12 @@
 package com.diluv.confluencia.database;
 
-import java.sql.Timestamp;
+import com.diluv.confluencia.Confluencia;
+import com.diluv.confluencia.ConfluenciaTest;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import com.diluv.confluencia.Confluencia;
-import com.diluv.confluencia.ConfluenciaTest;
+import java.time.Instant;
 
 public class TestMiscDatabase extends ConfluenciaTest {
 
@@ -22,7 +22,7 @@ public class TestMiscDatabase extends ConfluenciaTest {
     public void updateAllImagesForRelease () {
 
         Confluencia.getTransaction(session -> {
-            Assertions.assertEquals(1, Confluencia.MISC.updateAllImagesForRelease(session, new Timestamp(System.currentTimeMillis())));
+            Assertions.assertEquals(1, Confluencia.MISC.updateAllImagesForRelease(session, Instant.now()));
         });
     }
 
