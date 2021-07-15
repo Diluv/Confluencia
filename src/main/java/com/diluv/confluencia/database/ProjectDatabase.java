@@ -106,6 +106,51 @@ public class ProjectDatabase {
             .getResultList();
     }
 
+    public long countAllByGameAndProjectType (Session session, String gameSlug, String projectTypeSlug, String search) {
+
+        return this.countAllByGameAndProjectType(session, gameSlug, projectTypeSlug, search, null, Collections.emptySet(), Collections.emptySet());
+    }
+
+    public long countAllByGameAndProjectType (Session session, String gameSlug, String projectTypeSlug,
+                                              String search, String gameVersion, Set<String> tags, Set<String> loaders) {
+
+        String hql = "SELECT COUNT(p.id) FROM ProjectsEntity p WHERE p.released = TRUE AND p.name LIKE :search AND p.game.slug = :game_slug AND p.projectType.slug = :project_type_slug\n";
+
+        if (tags.size() != 0) {
+            hql += "AND (p.id IN (SELECT pt.project.id FROM ProjectTagsEntity pt WHERE pt.project.game.slug = :game_slug AND pt.project.projectType.slug = :project_type_slug AND pt.tag.slug IN (:tags) GROUP BY (pt.project.id) HAVING COUNT(pt.project.id) = :tag_count))\n";
+        }
+
+        if (loaders.size() != 0) {
+            hql += "AND (p.id IN (SELECT pfl.projectFile.project.id FROM ProjectFileLoadersEntity pfl WHERE pfl.projectFile.project.game.slug = :game_slug AND pfl.projectFile.project.projectType.slug = :project_type_slug AND pfl.loader.slug IN (:loaders) GROUP BY (pfl.projectFile.project.id) HAVING COUNT(pfl.projectFile.project.id) = :loader_count))\n";
+        }
+
+        if (gameVersion != null) {
+            hql += "AND (p.id IN (SELECT pfgv.projectFile.project.id FROM ProjectFileGameVersionsEntity pfgv WHERE pfgv.gameVersion.version = :game_version AND pfgv.projectFile.project.id = p.id))\n";
+        }
+
+        final Query<Long> query = session.createQuery(hql, Long.class)
+            .setMaxResults(1)
+            .setParameter("game_slug", gameSlug)
+            .setParameter("project_type_slug", projectTypeSlug)
+            .setParameter("search", "%" + search + "%");
+
+        if (tags.size() != 0) {
+            query.setParameter("tags", tags);
+            query.setParameter("tag_count", (long) tags.size());
+        }
+
+        if (loaders.size() != 0) {
+            query.setParameter("loaders", loaders);
+            query.setParameter("loader_count", (long) loaders.size());
+        }
+
+        if (gameVersion != null) {
+            query.setParameter("game_version", gameVersion);
+        }
+
+        return DatabaseUtil.findOne(query.getResultList(), 0L);
+    }
+
     public List<ProjectsEntity> findAllByGameAndProjectType (Session session, String gameSlug, String projectTypeSlug,
                                                              String search, long page, int limit, Sort sort) {
 

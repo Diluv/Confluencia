@@ -1,5 +1,13 @@
 package com.diluv.confluencia.database;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 import com.diluv.confluencia.Confluencia;
 import com.diluv.confluencia.ConfluenciaTest;
 import com.diluv.confluencia.database.record.GamesEntity;
@@ -7,14 +15,6 @@ import com.diluv.confluencia.database.record.ProjectTypesEntity;
 import com.diluv.confluencia.database.record.ProjectsEntity;
 import com.diluv.confluencia.database.record.UsersEntity;
 import com.diluv.confluencia.database.sort.ProjectSort;
-
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
 public class TestProjectDatabase extends ConfluenciaTest {
 
@@ -112,6 +112,24 @@ public class TestProjectDatabase extends ConfluenciaTest {
         });
     }
 
+    @Test
+    public void countAllByGameAndProjectType () {
+
+        Confluencia.getTransaction(session -> {
+            Assertions.assertEquals(0, Confluencia.PROJECT.countAllByGameAndProjectType(session, "invalid", "invalid", ""));
+            Assertions.assertEquals(0, Confluencia.PROJECT.countAllByGameAndProjectType(session, "minecraft-je", "invalid", ""));
+            Assertions.assertEquals(126, Confluencia.PROJECT.countAllByGameAndProjectType(session, "minecraft-je", "mods", ""));
+
+            Assertions.assertEquals(1, Confluencia.PROJECT.countAllByGameAndProjectType(session, "minecraft-je", "mods", "", "1.15.2", Collections.emptySet(), Collections.emptySet()));
+            Assertions.assertEquals(1, Confluencia.PROJECT.countAllByGameAndProjectType(session, "minecraft-je", "mods", "", "1.15.2", Collections.singleton("tech"), Collections.emptySet()));
+            Assertions.assertEquals(1, Confluencia.PROJECT.countAllByGameAndProjectType(session, "minecraft-je", "mods", "", "1.15.2", Collections.singleton("tech"), Collections.singleton("forge")));
+            Assertions.assertEquals(0, Confluencia.PROJECT.countAllByGameAndProjectType(session, "minecraft-je", "mods", "", null, new HashSet<>(Arrays.asList("tech", "magic")), Collections.singleton("forge")));
+            Assertions.assertEquals(1, Confluencia.PROJECT.countAllByGameAndProjectType(session, "minecraft-je", "mods", "", null, Collections.emptySet(), Collections.singleton("forge")));
+            Assertions.assertEquals(2, Confluencia.PROJECT.countAllByGameAndProjectType(session, "minecraft-je", "mods", "", null, Collections.singleton("magic"), Collections.emptySet()));
+            Assertions.assertEquals(1, Confluencia.PROJECT.countAllByGameAndProjectType(session, "minecraft-je", "mods", "", null, Collections.singleton("tech"), Collections.singleton("forge")));
+            Assertions.assertEquals(1, Confluencia.PROJECT.countAllByGameAndProjectType(session, "minecraft-je", "mods", "book", null, Collections.emptySet(), Collections.singleton("forge")));
+        });
+    }
 
     @Test
     public void findAllProjectsByGameSlugAndProjectType () {
@@ -134,6 +152,7 @@ public class TestProjectDatabase extends ConfluenciaTest {
             Assertions.assertEquals(1, Confluencia.PROJECT.findAllByGameAndProjectType(session, "minecraft-je", "mods", "", 1, 10, ProjectSort.NEW, null, Collections.emptySet(), Collections.singleton("forge")).size());
             Assertions.assertEquals(2, Confluencia.PROJECT.findAllByGameAndProjectType(session, "minecraft-je", "mods", "", 1, 10, ProjectSort.NEW, null, Collections.singleton("magic"), Collections.emptySet()).size());
             Assertions.assertEquals(1, Confluencia.PROJECT.findAllByGameAndProjectType(session, "minecraft-je", "mods", "", 1, 10, ProjectSort.NEW, null, Collections.singleton("tech"), Collections.singleton("forge")).size());
+            Assertions.assertEquals(1, Confluencia.PROJECT.findAllByGameAndProjectType(session, "minecraft-je", "mods", "book", 1, 10, ProjectSort.NEW, null, Collections.emptySet(), Collections.singleton("forge")).size());
         });
     }
 
