@@ -34,4 +34,9 @@ public class Sort {
 
         return this.order;
     }
+
+    public String getSQL () {
+
+        return String.format("ORDER BY %s %s", this.getColumn(), this.getOrder().name);
+    }
 }

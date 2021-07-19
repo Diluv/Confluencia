@@ -23,11 +23,10 @@ public class GameDatabase {
 
     public List<GamesEntity> findAll (Session session, long page, int limit, Sort sort, String search) {
 
-        final String hql = "FROM GamesEntity WHERE name LIKE :search ORDER BY :order_column " + sort.getOrder().name;
+        final String hql = "FROM GamesEntity WHERE name LIKE :search " + sort.getSQL();
 
         return session.createQuery(hql, GamesEntity.class)
             .setParameter("search", "%" + search + "%")
-            .setParameter("order_column", sort.getColumn())
             .setFirstResult((int) ((page - 1) * limit))
             .setMaxResults(limit)
             .getResultList();

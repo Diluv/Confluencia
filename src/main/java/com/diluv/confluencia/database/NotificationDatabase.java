@@ -68,11 +68,10 @@ public class NotificationDatabase {
             }
         }
 
-        hql += "ORDER BY :order_column " + sort.getOrder().name;
+        hql += sort.getSQL();
 
         final Query<NotificationsEntity> query = session.createQuery(hql, NotificationsEntity.class)
             .setParameter("user_id", userId)
-            .setParameter("order_column", sort.getColumn())
             .setFirstResult((int) ((page - 1) * limit))
             .setMaxResults(limit);
 
@@ -121,12 +120,11 @@ public class NotificationDatabase {
             hql += "AND status = :status\n";
         }
 
-        hql += "ORDER BY :order_column " + sort.getOrder().name;
+        hql += sort.getSQL();
 
         final Query<NotificationProjectInvitesEntity> query = session.createQuery(hql, NotificationProjectInvitesEntity.class)
             .setFirstResult((int) ((page - 1) * limit))
             .setMaxResults(limit)
-            .setParameter("order_column", sort.getColumn())
             .setParameter("user_id", userId);
 
         if (status != null) {

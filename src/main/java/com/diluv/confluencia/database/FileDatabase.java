@@ -94,12 +94,11 @@ public class FileDatabase {
             hql += "AND (pf.id IN (SELECT pfgv.projectFile.id FROM ProjectFileGameVersionsEntity pfgv WHERE pfgv.gameVersion.version = :game_version AND pfgv.projectFile.project.id = :project_id))\n";
         }
 
-        hql += "ORDER BY :order_column " + sort.getOrder().name;
+        hql += sort.getSQL();
 
         final Query<ProjectFilesEntity> query = session.createQuery(hql, ProjectFilesEntity.class)
             .setFirstResult((int) ((page - 1) * limit))
             .setMaxResults(limit)
-            .setParameter("order_column", sort.getColumn())
             .setParameter("project_id", projectId)
             .setParameter("search", "%" + search + "%");
 
@@ -133,11 +132,10 @@ public class FileDatabase {
 
     public List<ProjectFilesEntity> findProjectFilesByHash (Session session, String sha512, long page, int limit, Sort sort) {
 
-        final String hql = "FROM ProjectFilesEntity where sha512 = :sha512 AND released = TRUE ORDER BY :order_column " + sort.getOrder().name;
+        final String hql = "FROM ProjectFilesEntity where sha512 = :sha512 AND released = TRUE " + sort.getSQL();
 
         return session.createQuery(hql, ProjectFilesEntity.class)
             .setParameter("sha512", sha512)
-            .setParameter("order_column", sort.getColumn())
             .setFirstResult((int) ((page - 1) * limit))
             .setMaxResults(limit)
             .getResultList();

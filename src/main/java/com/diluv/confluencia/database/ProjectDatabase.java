@@ -76,22 +76,29 @@ public class ProjectDatabase {
 
     public long countAllByUserId (Session session, long userId, boolean authorized) {
 
-        final String hql = "SELECT COUNT(*) FROM ProjectsEntity p WHERE (:authorized = TRUE OR p.released = TRUE) AND (p.user.id = :user_id OR p.id IN (SELECT pa.project.id FROM ProjectAuthorsEntity pa WHERE pa.user.id = :user_id AND pa.project.released = TRUE))";
+        String hql = "SELECT COUNT(*) FROM ProjectsEntity p WHERE (p.user.id = :user_id OR p.id IN (SELECT pa.project.id FROM ProjectAuthorsEntity pa WHERE pa.user.id = :user_id AND pa.project.released = TRUE))\n";
+
+        if (!authorized) {
+            hql += "AND p.released = TRUE";
+        }
 
         return DatabaseUtil.findOne(session.createQuery(hql, Long.class)
             .setParameter("user_id", userId)
-            .setParameter("authorized", authorized)
             .getResultList(), 0L);
     }
 
     public List<ProjectsEntity> findAllByUserId (Session session, long userId, boolean authorized, long page, int limit, Sort sort) {
 
-        final String hql = "FROM ProjectsEntity p WHERE (:authorized = TRUE OR p.released = TRUE) AND (p.user.id = :user_id OR p.id IN (SELECT pa.project.id FROM ProjectAuthorsEntity pa WHERE pa.user.id = :user_id AND pa.project.released = TRUE)) ORDER BY :order_column " + sort.getOrder().name;
+        String hql = "FROM ProjectsEntity p WHERE (p.user.id = :user_id OR p.id IN (SELECT pa.project.id FROM ProjectAuthorsEntity pa WHERE pa.user.id = :user_id AND pa.project.released = TRUE))\n";
+
+        if (!authorized) {
+            hql += "AND p.released = TRUE\n";
+        }
+
+        hql += sort.getSQL();
 
         return session.createQuery(hql, ProjectsEntity.class)
-            .setParameter("authorized", authorized)
             .setParameter("user_id", userId)
-            .setParameter("order_column", sort.getColumn())
             .setFirstResult((int) ((page - 1) * limit))
             .setMaxResults(limit)
             .getResultList();
@@ -175,12 +182,11 @@ public class ProjectDatabase {
             hql += "AND (p.id IN (SELECT pfgv.projectFile.project.id FROM ProjectFileGameVersionsEntity pfgv WHERE pfgv.gameVersion.version = :game_version AND pfgv.projectFile.project.id = p.id))\n";
         }
 
-        hql += "ORDER BY :order_column " + sort.getOrder().name;
+        hql += sort.getSQL();
 
         final Query<ProjectsEntity> query = session.createQuery(hql, ProjectsEntity.class)
             .setFirstResult((int) ((page - 1) * limit))
             .setMaxResults(limit)
-            .setParameter("order_column", sort.getColumn())
             .setParameter("game_slug", gameSlug)
             .setParameter("project_type_slug", projectTypeSlug)
             .setParameter("search", "%" + search + "%");

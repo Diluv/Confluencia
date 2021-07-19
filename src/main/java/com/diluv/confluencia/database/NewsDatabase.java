@@ -12,12 +12,11 @@ public class NewsDatabase {
 
     public List<NewsEntity> findAll (Session session, long page, int limit, Sort sort) {
 
-        final String hql = "FROM NewsEntity ORDER BY :order_column " + sort.getOrder().name;
+        final String hql = "FROM NewsEntity " + sort.getSQL();
 
         return session.createQuery(hql, NewsEntity.class)
             .setFirstResult((int) ((page - 1) * limit))
             .setMaxResults(limit)
-            .setParameter("order_column", sort.getColumn())
             .getResultList();
     }
 

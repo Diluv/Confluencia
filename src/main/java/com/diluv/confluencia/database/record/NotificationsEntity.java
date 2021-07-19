@@ -1,12 +1,12 @@
 package com.diluv.confluencia.database.record;
 
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
+import java.time.Instant;
+import java.util.Objects;
 
 import javax.persistence.*;
 
-import java.time.Instant;
-import java.util.Objects;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 @Entity
 @DynamicInsert
