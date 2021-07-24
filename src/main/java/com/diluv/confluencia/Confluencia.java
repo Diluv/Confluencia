@@ -55,6 +55,8 @@ public class Confluencia {
         settings.put(Environment.ENABLE_LAZY_LOAD_NO_TRANS, true);
         configuration.setProperties(settings);
 
+        configuration.addAnnotatedClass(APITokenPermissionsEntity.class);
+        configuration.addAnnotatedClass(APITokensEntity.class);
         configuration.addAnnotatedClass(ContainsUsernameBlockListEntity.class);
         configuration.addAnnotatedClass(EmailBlockListEntity.class);
         configuration.addAnnotatedClass(EmailBounceEntity.class);
@@ -70,7 +72,6 @@ public class Confluencia {
         configuration.addAnnotatedClass(NodeCDNCommitsEntity.class);
         configuration.addAnnotatedClass(NotificationsEntity.class);
         configuration.addAnnotatedClass(PasswordResetEntity.class);
-        configuration.addAnnotatedClass(APITokensEntity.class);
         configuration.addAnnotatedClass(ProjectAuthorPermissionsEntity.class);
         configuration.addAnnotatedClass(ProjectAuthorsEntity.class);
         configuration.addAnnotatedClass(ProjectFileAntivirusEntity.class);

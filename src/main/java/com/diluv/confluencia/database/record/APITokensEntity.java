@@ -1,13 +1,16 @@
 package com.diluv.confluencia.database.record;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Objects;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.DynamicInsert;
@@ -43,6 +46,9 @@ public class APITokensEntity {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UsersEntity user;
+
+    @OneToMany(mappedBy = "apiToken", cascade = CascadeType.ALL)
+    private List<APITokenPermissionsEntity> permissions;
 
     public long getId () {
 
@@ -114,18 +120,45 @@ public class APITokensEntity {
         this.user = user;
     }
 
+    public List<APITokenPermissionsEntity> getPermissions () {
+
+        return this.permissions;
+    }
+
+    public void setPermissions (List<APITokenPermissionsEntity> permissions) {
+
+        this.permissions = permissions;
+    }
+
     @Override
     public boolean equals (Object o) {
 
         if (this == o) return true;
         if (!(o instanceof APITokensEntity)) return false;
+
         APITokensEntity that = (APITokensEntity) o;
-        return Objects.equals(getId(), that.getId());
+
+        if (this.id != that.id) return false;
+        if (this.deleted != that.deleted) return false;
+        if (!Objects.equals(this.token, that.token)) return false;
+        if (!Objects.equals(this.name, that.name)) return false;
+        if (!Objects.equals(this.createdAt, that.createdAt)) return false;
+        if (!Objects.equals(this.lastUsed, that.lastUsed)) return false;
+        if (!Objects.equals(this.user, that.user)) return false;
+        return Objects.equals(this.permissions, that.permissions);
     }
 
     @Override
     public int hashCode () {
 
-        return Objects.hash(getId());
+        int result = (int) (this.id ^ (this.id >>> 32));
+        result = 31 * result + (this.token != null ? this.token.hashCode() : 0);
+        result = 31 * result + (this.name != null ? this.name.hashCode() : 0);
+        result = 31 * result + (this.createdAt != null ? this.createdAt.hashCode() : 0);
+        result = 31 * result + (this.lastUsed != null ? this.lastUsed.hashCode() : 0);
+        result = 31 * result + (this.deleted ? 1 : 0);
+        result = 31 * result + (this.user != null ? this.user.hashCode() : 0);
+        result = 31 * result + (this.permissions != null ? this.permissions.hashCode() : 0);
+        return result;
     }
 }
