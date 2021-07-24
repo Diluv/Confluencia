@@ -29,6 +29,15 @@ public class APITokenPermissionsEntity {
     @Column(name = "permission")
     private String permission;
 
+    public APITokenPermissionsEntity () {
+
+    }
+
+    public APITokenPermissionsEntity (String permission) {
+
+        this.permission = permission;
+    }
+
     public APITokensEntity getApiToken () {
 
         return this.apiToken;

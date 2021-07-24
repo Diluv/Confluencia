@@ -1,17 +1,11 @@
 package com.diluv.confluencia.database.record;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -25,6 +19,7 @@ import org.hibernate.annotations.Where;
 public class APITokensEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private long id;
 
@@ -47,8 +42,8 @@ public class APITokensEntity {
     @JoinColumn(name = "user_id")
     private UsersEntity user;
 
-    @OneToMany(mappedBy = "apiToken", cascade = CascadeType.ALL)
-    private List<APITokenPermissionsEntity> permissions;
+    @OneToMany(mappedBy = "apiToken", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<APITokenPermissionsEntity> permissions = new ArrayList<>();
 
     public long getId () {
 
@@ -125,9 +120,10 @@ public class APITokensEntity {
         return this.permissions;
     }
 
-    public void setPermissions (List<APITokenPermissionsEntity> permissions) {
+    public void addPermissions (APITokenPermissionsEntity permissions) {
 
-        this.permissions = permissions;
+        permissions.setApiToken(this);
+        this.permissions.add(permissions);
     }
 
     @Override

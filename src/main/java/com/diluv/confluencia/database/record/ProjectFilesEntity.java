@@ -22,8 +22,8 @@ import org.hibernate.annotations.Where;
 public class ProjectFilesEntity {
 
     @Id
-    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private long id;
 
     @Column(name = "version")
